@@ -1,36 +1,28 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+git commit convention제목 : 제목은 간단하게 해당 커밋의 목적을 요약해서 작성합니다.`Feat: "로그인 함수 추가"`
 
-## Getting Started
+1. 50자 이내
+2. 시작할 때는 대문자로 시작 (보통 Fix, Add, Change 등의 명령어로 시작)
+3. 마칠 때 마침표 등의 특수문자 없이 작성,
+4. 개조식으로 작성
+5. “타입: 내용” 의 형식으로 작성
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```
+Feat : 새로운 기능 추가
+Fix : 버그 수정
+Env : 개발 환경 관련 설정
+Style : 코드 스타일 수정 (세미 콜론, 인덴트 등의 스타일적인 부분만)
+Refactor : 코드 리팩토링 (더 효율적인 코드로 변경 등)
+Design : CSS 등 디자인 추가/수정
+Comment : 주석 추가/수정
+Docs : 내부 문서 추가/수정
+Test : 테스트 추가/수정
+Chore : 빌드 관련 코드 수정
+Rename : 파일 및 폴더명 수정
+Remove : 파일 삭제
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+본문은 다음과 같이 작성합니다.`로그인 기능 구현을 위해 로그인 요청을 보내는 axios 함수 작성`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+1. 한 줄 당 72자 이내
+2. 아무리 길어도 괜찮으니, 최대한 상세히 작성
+3. 무엇을, 왜 변경했는지 작성 (코드 자체를 상세히 적는 것은 지양)
