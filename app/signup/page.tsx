@@ -1,9 +1,15 @@
 'use client';
 import type { NextPage } from 'next';
 import { useState } from 'react';
+type FormData = {
+  id : string,
+  password : string,
+  name : string,
+  picture : string,
+}
 
 const signup: NextPage = () => {
-  const [formData, setFormData] = useState<any>({
+  const [formData, setFormData] = useState<FormData>({
     id: '',
     password: '',
     name: '',
@@ -95,7 +101,7 @@ async function checkUserIdAvailability(id:string){
 
 }
 
-async function signupUser (formData:any){
+async function signupUser (formData:FormData){
   const resdata = await fetch('https://fastcampus-chat.net/signup', {
       headers: {
         'content-type': 'application/json',

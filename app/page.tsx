@@ -24,7 +24,7 @@ async function loginUser(loginData: LoginData) {
 }
 
 const main: NextPage = () => {
-  const [loginData, setLoginData] = useState<any>({
+  const [loginData, setLoginData] = useState<LoginData>({
     id: '',
     password: '',
   });
