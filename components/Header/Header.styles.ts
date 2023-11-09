@@ -20,6 +20,10 @@ export const LeftIcons = styled.div`
   }
 `;
 
+export const SearchIconWrapper = styled.div`
+  margin-top: 5px;
+`;
+
 export const RightIcons = styled.div`
   ${flexCenter}
   & > *:not(:last-child) {
