@@ -1,9 +1,15 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import * as Styles from './MyPageToggle.styles';
 
 interface MyPageToggleProps {
   isVisible: boolean;
   onClose: () => void;
+}
+
+interface User {
+  id: string;
+  name: string;
+  picture: string;
 }
 
 const MyPageToggle: React.FC<MyPageToggleProps> = ({ isVisible, onClose }) => {

@@ -11,8 +11,6 @@ export const Sidebar = styled.div<{ isVisible: boolean }>`
   transition: left 0.3s ease-in-out;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
   padding: 20px;
   color: white;
 `;
@@ -47,4 +45,58 @@ export const TotalStudentsLabel = styled.span`
 export const TotalStudentsCount = styled.span`
   color: yellow;
   font-size: 14px;
+`;
+
+export const UserList = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 30px 0;
+
+  max-height: 90vh;
+  overflow-y: auto;
+`;
+
+export const UserItem = styled.div`
+  border: 1px solid #4a4a4a;
+  border-radius: 5px;
+
+  padding: 15px;
+  width: 17rem;
+  margin: 5px auto;
+
+  display: flex;
+  align-items: center;
+`;
+
+export const ProfileImage = styled.img`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin: 0 10px;
+  object-fit: cover;
+`;
+
+export const UserInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-left: 20px;
+`;
+
+export const Username = styled.span`
+  font-size: 12px;
+  color: white;
+  padding-bottom: 2px;
+`;
+
+export const UserDormitory = styled.span`
+  font-size: 12px;
+  color: red;
+`;
+
+export const Emoji = styled.span`
+  font-size: 6px;
+  margin-left: 3px;
+  vertical-align: middle;
 `;
