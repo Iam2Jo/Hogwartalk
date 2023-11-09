@@ -12,7 +12,7 @@ import {
   ravenclawChatIdState,
   slytherinChatIdState,
 } from '@recoil/dormChatId';
-import { useSetRecoilState } from 'recoil';
+import { useSetRecoilState, useRecoilState } from 'recoil';
 
 interface RequestBody {
   name: string;
@@ -53,7 +53,9 @@ const SelectDormitory = () => {
   const [hasHufflepuff, setHasHufflepuff] = useState(true);
   const [hasRavenclaw, setHasRavenclaw] = useState(true);
 
-  const setGryffindorChatId = useSetRecoilState(gryffindorChatIdState);
+  const [gryffindorChatId, setGryffindorChatId] = useRecoilState(
+    gryffindorChatIdState,
+  );
   const setHufflepuffChatId = useSetRecoilState(hufflepuffChatIdState);
   const setRavenclawChatId = useSetRecoilState(ravenclawChatIdState);
   const setSlytherinChatId = useSetRecoilState(slytherinChatIdState);
@@ -62,6 +64,8 @@ const SelectDormitory = () => {
   const ACCESS_TOKEN =
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGQ2MTZiOmhhcnJ5cG90dGVyIiwiaWF0IjoxNjk5MzQ1NDkzLCJleHAiOjE2OTk5NTAyOTN9.b5s4_9f-pVBj9ki17SXc6VvoiApMJZCJXfk5G2wskyo';
   const CREATE_CHAT_URL = 'https://fastcampus-chat.net/chat';
+  const FIND_ALL_USER_URL = 'https://fastcampus-chat.net/users';
+  const FIND_MY_CHAT_URL = 'https://fastcampus-chat.net/chat';
 
   const headers = {
     'Content-Type': 'application/json',
@@ -90,7 +94,6 @@ const SelectDormitory = () => {
   };
 
   useEffect(() => {
-    // 채팅방 데이터 상태관리변수에 저장
     setChatData(data);
   }, [data]);
 
@@ -99,6 +102,28 @@ const SelectDormitory = () => {
       console.log('chatData.chats', chatData.chats);
     }
   }, [chatData]);
+
+  useEffect(() => {
+    axios
+      .get(FIND_ALL_USER_URL, { headers })
+      .then((response) => {
+        console.log('모든 유저 조회 성공!', response.data);
+      })
+      .catch((error) => {
+        console.error('모든 유저 조회 실패!', error);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get(FIND_MY_CHAT_URL, { headers })
+      .then((response) => {
+        console.log('나의 채팅방 조회 성공!', response.data);
+      })
+      .catch((error) => {
+        console.error('나의 채팅방 조회 실패!', error);
+      });
+  }, []);
 
   useEffect(() => {
     if (chatData) {
@@ -188,6 +213,7 @@ const SelectDormitory = () => {
         });
     } else {
       if (chatData) {
+        console.log('chatData', chatData);
         for (let i = chatData.chats.length - 1; i >= 0; i--) {
           if (chatData.chats[i].name === 'gryffindor') {
             setGryffindorChatId(chatData.chats[i].id);
@@ -196,7 +222,7 @@ const SelectDormitory = () => {
         }
       }
     }
-  }, [hasGryffindor]);
+  }, [hasGryffindor, chatData]);
 
   useEffect(() => {
     if (!hasHufflepuff) {
@@ -213,13 +239,13 @@ const SelectDormitory = () => {
       if (chatData) {
         for (let i = chatData.chats.length - 1; i >= 0; i--) {
           if (chatData.chats[i].name === 'hufflepuff') {
-            setGryffindorChatId(chatData.chats[i].id);
+            setHufflepuffChatId(chatData.chats[i].id);
             break;
           }
         }
       }
     }
-  }, [hasHufflepuff]);
+  }, [hasHufflepuff, chatData]);
 
   useEffect(() => {
     if (!hasRavenclaw) {
@@ -236,13 +262,13 @@ const SelectDormitory = () => {
       if (chatData) {
         for (let i = chatData.chats.length - 1; i >= 0; i--) {
           if (chatData.chats[i].name === 'ravenclaw') {
-            setGryffindorChatId(chatData.chats[i].id);
+            setRavenclawChatId(chatData.chats[i].id);
             break;
           }
         }
       }
     }
-  }, [hasRavenclaw]);
+  }, [hasRavenclaw, chatData]);
 
   useEffect(() => {
     if (!hasSlytherin) {
@@ -259,13 +285,17 @@ const SelectDormitory = () => {
       if (chatData) {
         for (let i = chatData.chats.length - 1; i >= 0; i--) {
           if (chatData.chats[i].name === 'slytherin') {
-            setGryffindorChatId(chatData.chats[i].id);
+            setSlytherinChatId(chatData.chats[i].id);
             break;
           }
         }
       }
     }
-  }, [hasSlytherin]);
+  }, [hasSlytherin, chatData]);
+
+  useEffect(() => {
+    console.log('gryffindorChatId', gryffindorChatId);
+  }, [gryffindorChatId]);
 
   return (
     <styled.Wrapper>
