@@ -1,13 +1,30 @@
-import { StyledImage } from './Icon.styles';
+import React from 'react';
+import styled, { css } from 'styled-components';
+import { commonIconStyles } from './Icon.styles';
 
-const SearchIcon = () => {
+interface SearchIconProps {
+  onClick: () => void;
+  isToggled: boolean;
+}
+
+const IconContainer = styled.div<{ isToggled: boolean }>`
+  ${commonIconStyles}
+  filter: ${(props) =>
+    props.isToggled
+      ? 'sepia(89%) saturate(6054%) brightness(97%) contrast(113%)'
+      : 'none'};
+`;
+
+const SearchIcon: React.FC<SearchIconProps> = ({ onClick, isToggled }) => {
   return (
-    <StyledImage
-      src="/assets/icons/search.svg"
-      alt="Search"
-      width="18"
-      height="18"
-    />
+    <IconContainer onClick={onClick} isToggled={isToggled}>
+      <img
+        src="/assets/icons/search.svg"
+        alt="My Page"
+        width="17"
+        height="17"
+      />
+    </IconContainer>
   );
 };
 
