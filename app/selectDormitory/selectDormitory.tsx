@@ -301,13 +301,13 @@ const SelectDormitory = () => {
     <styled.Wrapper>
       <styled.LeftSection>
         <Link
-          href="/dormitory/gryffindor"
+          href="/selectDormitory/gryffindor"
           style={{ width: '100%', height: '100%' }}
         >
           <styled.GryffindorSVG />
         </Link>
         <Link
-          href="/dormitory/ravenclaw"
+          href="/selectDormitory/ravenclaw"
           style={{ width: '100%', height: '100%' }}
         >
           <styled.RavenclawSVG />
@@ -318,13 +318,13 @@ const SelectDormitory = () => {
       </styled.CenterSection>
       <styled.RightSection>
         <Link
-          href="/dormitory/hufflepuff"
+          href="/selectDormitory/hufflepuff"
           style={{ width: '100%', height: '100%' }}
         >
           <styled.HufflepuffSVG />
         </Link>
         <Link
-          href="/dormitory/slytherin"
+          href="/selectDormitory/slytherin"
           style={{ width: '100%', height: '100%' }}
         >
           <styled.SlytherinSVG />
