@@ -25,10 +25,11 @@ export const AnswerLabel = styled.label`
   text-align: center;
   display: inline-block;
   line-height: 4.3rem;
+  cursor: pointer;
 
   &:hover {
     background-color: var(--color-main-yellow);
-    font: #000;
+    color: #000;
     box-shadow: 0px 0px 20px 0px rgba(242, 204, 0, 0.49);
   }
 `;
@@ -37,7 +38,7 @@ export const AnswerInput = styled.input`
   display: none;
   &:checked + label {
     background-color: var(--color-main-yellow);
-    font: #000;
+    color: #000;
     box-shadow: 0px 0px 20px 0px rgba(242, 204, 0, 0.49);
   }
 `;
@@ -45,6 +46,7 @@ export const AnswerInput = styled.input`
 export const BtnWrap = styled.div`
   display: flex;
   justify-content: space-between;
+  flex-direction: row-reverse;
 `;
 
 export const SubmitBtn = styled.button`
@@ -53,10 +55,11 @@ export const SubmitBtn = styled.button`
   background-color: #000;
   color: #fff;
   border: 1px solid #262626;
+  cursor: pointer;
 
   &:hover {
     background-color: var(--color-main-yellow);
-    font: #000;
+    color: #000;
     box-shadow: 0px 0px 20px 0px rgba(242, 204, 0, 0.49);
   }
 `;
