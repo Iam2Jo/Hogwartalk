@@ -4,7 +4,7 @@ export const Sidebar = styled.div<{ isVisible: boolean }>`
   position: fixed;
   top: 50px;
   left: ${(props) => (props.isVisible ? '0' : '-300px')};
-  width: 300px;
+  width: 20rem;
   height: 100vh;
   background-color: rgba(3, 3, 3, 0.84);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
@@ -37,8 +37,8 @@ export const ProfileSection = styled.div`
 `;
 
 export const ProfileImage = styled.img`
-  width: 11.25rem;
-  height: 11.25rem;
+  width: 13rem;
+  height: 13rem;
   border-radius: 50%;
   border: 3px solid #d32b2b;
   margin: 3.125rem 0;

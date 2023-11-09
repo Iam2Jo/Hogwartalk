@@ -11,7 +11,7 @@ const MyPageToggle: React.FC<MyPageToggleProps> = ({ isVisible, onClose }) => {
     <Styles.Sidebar isVisible={isVisible}>
       <Styles.CloseButton onClick={onClose}>
         <img src="/assets/icons/close.svg" alt="Close" />
-      </Styles.CloseButton>{' '}
+      </Styles.CloseButton>
       <Styles.ProfileSection>
         <Styles.ProfileImage src="/assets/img/HarryPotter.png" alt="Profile" />
         <Styles.LabelsContainer>
