@@ -1,23 +1,20 @@
 'use client';
 import type { NextPage } from 'next';
-import Hat from '../../assets/img/Hat.svg';
-import Logo from '../../assets/img/Logo.svg';
 import * as style from './page.styles';
-import QuizForm from './components/form/QuizForm';
+import Content from './components/content/Content';
+import { useRecoilValue } from 'recoil';
+import { modalState } from '@/recoil/atom';
+import Modal from './components/content/modal/Modal';
 
 const quiz: NextPage = () => {
+  const modalOpen = useRecoilValue(modalState);
   return (
-    <style.Container>
-      <style.Logo>
-        <Logo />
-      </style.Logo>
-      <style.Content>
-        <style.HatImg>
-          <Hat />
-        </style.HatImg>
-        <QuizForm />
-      </style.Content>
-    </style.Container>
+    <>
+      {modalOpen && <Modal />}
+      <style.Container>
+        <Content />
+      </style.Container>
+    </>
   );
 };
 
