@@ -1,4 +1,4 @@
-import * as Styles from './FriendSearchToggle.styles';
+import * as styled from './FriendSearchToggle.styles';
 
 interface FriendSearchToggleProps {
   isVisible: boolean;
@@ -16,126 +16,126 @@ const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
   onClose,
 }) => {
   return (
-    <Styles.Sidebar isVisible={isVisible}>
-      <Styles.CloseButton onClick={onClose}>
+    <styled.Sidebar isVisible={isVisible}>
+      <styled.CloseButton onClick={onClose}>
         <img src="/assets/icons/close.svg" alt="Close" />
-      </Styles.CloseButton>
-      <Styles.TotalStudents>
-        <Styles.TotalStudentsLabel>전체 학생 수</Styles.TotalStudentsLabel>
-        <Styles.TotalStudentsCount>30</Styles.TotalStudentsCount>
-      </Styles.TotalStudents>
+      </styled.CloseButton>
+      <styled.TotalStudents>
+        <styled.TotalStudentsLabel>전체 학생 수</styled.TotalStudentsLabel>
+        <styled.TotalStudentsCount>30</styled.TotalStudentsCount>
+      </styled.TotalStudents>
 
-      <Styles.UserList>
-        <Styles.UserItem>
-          <Styles.ProfileImage
+      <styled.UserList>
+        <styled.UserItem>
+          <styled.ProfileImage
             src="/assets/img/HarryPotter.png"
             alt="Profile"
           />
-          <Styles.UserInfo>
-            <Styles.Username>
-              해리포터 <Styles.Emoji>🟢</Styles.Emoji>
-            </Styles.Username>
-            <Styles.UserDormitory>그리핀도르</Styles.UserDormitory>
-          </Styles.UserInfo>
-        </Styles.UserItem>
-        <Styles.UserItem>
-          <Styles.ProfileImage
+          <styled.UserInfo>
+            <styled.Username>
+              해리포터 <styled.Emoji>🟢</styled.Emoji>
+            </styled.Username>
+            <styled.UserDormitory>그리핀도르</styled.UserDormitory>
+          </styled.UserInfo>
+        </styled.UserItem>
+        <styled.UserItem>
+          <styled.ProfileImage
             src="/assets/img/HarryPotter.png"
             alt="Profile"
           />
-          <Styles.UserInfo>
-            <Styles.Username>
-              해리포터 <Styles.Emoji>🔴</Styles.Emoji>
-            </Styles.Username>
-            <Styles.UserDormitory>그리핀도르</Styles.UserDormitory>
-          </Styles.UserInfo>
-        </Styles.UserItem>
-        <Styles.UserItem>
-          <Styles.ProfileImage
+          <styled.UserInfo>
+            <styled.Username>
+              해리포터 <styled.Emoji>🔴</styled.Emoji>
+            </styled.Username>
+            <styled.UserDormitory>그리핀도르</styled.UserDormitory>
+          </styled.UserInfo>
+        </styled.UserItem>
+        <styled.UserItem>
+          <styled.ProfileImage
             src="/assets/img/HarryPotter.png"
             alt="Profile"
           />
-          <Styles.UserInfo>
-            <Styles.Username>
-              해리포터 <Styles.Emoji>🔴</Styles.Emoji>
-            </Styles.Username>
-            <Styles.UserDormitory>그리핀도르</Styles.UserDormitory>
-          </Styles.UserInfo>
-        </Styles.UserItem>
-        <Styles.UserItem>
-          <Styles.ProfileImage
+          <styled.UserInfo>
+            <styled.Username>
+              해리포터 <styled.Emoji>🔴</styled.Emoji>
+            </styled.Username>
+            <styled.UserDormitory>그리핀도르</styled.UserDormitory>
+          </styled.UserInfo>
+        </styled.UserItem>
+        <styled.UserItem>
+          <styled.ProfileImage
             src="/assets/img/HarryPotter.png"
             alt="Profile"
           />
-          <Styles.UserInfo>
-            <Styles.Username>
-              해리포터 <Styles.Emoji>🟢</Styles.Emoji>
-            </Styles.Username>
-            <Styles.UserDormitory>그리핀도르</Styles.UserDormitory>
-          </Styles.UserInfo>
-        </Styles.UserItem>
-        <Styles.UserItem>
-          <Styles.ProfileImage
+          <styled.UserInfo>
+            <styled.Username>
+              해리포터 <styled.Emoji>🟢</styled.Emoji>
+            </styled.Username>
+            <styled.UserDormitory>그리핀도르</styled.UserDormitory>
+          </styled.UserInfo>
+        </styled.UserItem>
+        <styled.UserItem>
+          <styled.ProfileImage
             src="/assets/img/HarryPotter.png"
             alt="Profile"
           />
-          <Styles.UserInfo>
-            <Styles.Username>
-              해리포터 <Styles.Emoji>🟢</Styles.Emoji>
-            </Styles.Username>
-            <Styles.UserDormitory>그리핀도르</Styles.UserDormitory>
-          </Styles.UserInfo>
-        </Styles.UserItem>
-        <Styles.UserItem>
-          <Styles.ProfileImage
+          <styled.UserInfo>
+            <styled.Username>
+              해리포터 <styled.Emoji>🟢</styled.Emoji>
+            </styled.Username>
+            <styled.UserDormitory>그리핀도르</styled.UserDormitory>
+          </styled.UserInfo>
+        </styled.UserItem>
+        <styled.UserItem>
+          <styled.ProfileImage
             src="/assets/img/HarryPotter.png"
             alt="Profile"
           />
-          <Styles.UserInfo>
-            <Styles.Username>
-              해리포터 <Styles.Emoji>🟢</Styles.Emoji>
-            </Styles.Username>
-            <Styles.UserDormitory>그리핀도르</Styles.UserDormitory>
-          </Styles.UserInfo>
-        </Styles.UserItem>
-        <Styles.UserItem>
-          <Styles.ProfileImage
+          <styled.UserInfo>
+            <styled.Username>
+              해리포터 <styled.Emoji>🟢</styled.Emoji>
+            </styled.Username>
+            <styled.UserDormitory>그리핀도르</styled.UserDormitory>
+          </styled.UserInfo>
+        </styled.UserItem>
+        <styled.UserItem>
+          <styled.ProfileImage
             src="/assets/img/HarryPotter.png"
             alt="Profile"
           />
-          <Styles.UserInfo>
-            <Styles.Username>
-              해리포터 <Styles.Emoji>🔴</Styles.Emoji>
-            </Styles.Username>
-            <Styles.UserDormitory>그리핀도르</Styles.UserDormitory>
-          </Styles.UserInfo>
-        </Styles.UserItem>
-        <Styles.UserItem>
-          <Styles.ProfileImage
+          <styled.UserInfo>
+            <styled.Username>
+              해리포터 <styled.Emoji>🔴</styled.Emoji>
+            </styled.Username>
+            <styled.UserDormitory>그리핀도르</styled.UserDormitory>
+          </styled.UserInfo>
+        </styled.UserItem>
+        <styled.UserItem>
+          <styled.ProfileImage
             src="/assets/img/HarryPotter.png"
             alt="Profile"
           />
-          <Styles.UserInfo>
-            <Styles.Username>
-              해리포터 <Styles.Emoji>🟢</Styles.Emoji>
-            </Styles.Username>
-            <Styles.UserDormitory>그리핀도르</Styles.UserDormitory>
-          </Styles.UserInfo>
-        </Styles.UserItem>
-        <Styles.UserItem>
-          <Styles.ProfileImage
+          <styled.UserInfo>
+            <styled.Username>
+              해리포터 <styled.Emoji>🟢</styled.Emoji>
+            </styled.Username>
+            <styled.UserDormitory>그리핀도르</styled.UserDormitory>
+          </styled.UserInfo>
+        </styled.UserItem>
+        <styled.UserItem>
+          <styled.ProfileImage
             src="/assets/img/HarryPotter.png"
             alt="Profile"
           />
-          <Styles.UserInfo>
-            <Styles.Username>
-              해리포터 <Styles.Emoji>🟢</Styles.Emoji>
-            </Styles.Username>
-            <Styles.UserDormitory>그리핀도르</Styles.UserDormitory>
-          </Styles.UserInfo>
-        </Styles.UserItem>
-      </Styles.UserList>
-    </Styles.Sidebar>
+          <styled.UserInfo>
+            <styled.Username>
+              해리포터 <styled.Emoji>🟢</styled.Emoji>
+            </styled.Username>
+            <styled.UserDormitory>그리핀도르</styled.UserDormitory>
+          </styled.UserInfo>
+        </styled.UserItem>
+      </styled.UserList>
+    </styled.Sidebar>
   );
 };
 
