@@ -14,6 +14,7 @@
     "http-proxy-middleware": "^2.0.6",
     "next": "14.0.1",
     "react": "^18",
+    "react-cookies": "^0.1.1",
     "react-dom": "^18",
     "react-router-dom": "^6.18.0",
     "recoil": "^0.7.7",

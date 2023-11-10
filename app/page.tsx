@@ -1,95 +1,91 @@
-import Image from 'next/image';
-import styles from './page.module.css';
+'use client';
+import type { NextPage } from 'next';
+import { Fragment, useState } from 'react';
+import cookies from 'react-cookies';
+import { LoginContainer, LoginFormStyle } from './loginStyle';
+import { useRouter } from 'next/navigation';
+type LoginData = {
+  id: string;
+  password: string;
+};
 
-export default function Home() {
-  return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  );
+async function loginUser(loginData: LoginData) {
+  const res = await fetch('https://fastcampus-chat.net/login', {
+    method: 'POST',
+    body: JSON.stringify(loginData),
+    headers: {
+      'content-type': 'application/json',
+      serverId: '660d616b',
+    },
+  });
+  if (res.ok) {
+    const tokenData = await res.json();
+    return tokenData;
+  }
 }
+
+const main: NextPage = () => {
+  const router = useRouter();
+  const [loginData, setLoginData] = useState<LoginData>({
+    id: '',
+    password: '',
+  });
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setLoginData({ ...loginData, [id]: value });
+  };
+  const handleButtonClick = async () => {
+    const token = await loginUser(loginData);
+    cookies.save('acessToken', token.accessToken);
+    cookies.save('refreshToken', token.refreshToken);
+  };
+
+  return (
+    <LoginContainer>
+      <header>
+        <img src="/LoginTitle.png" alt="" />
+      </header>
+      <main>
+        <LoginFormStyle>
+          <form>
+            <div className="form__input">
+              <label htmlFor="id">아이디</label>
+              <input
+                type="text"
+                name=""
+                id="id"
+                value={loginData.id}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className="form__input">
+              <label htmlFor="password">비밀번호</label>
+              <input
+                type="password"
+                name=""
+                id="password"
+                value={loginData.password}
+                onChange={handleInputChange}
+              />
+            </div>
+            <footer>
+              <button type="button" onClick={handleButtonClick}>
+                등교하기
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  router.push('/signup');
+                }}
+              >
+                입학하기
+              </button>
+            </footer>
+          </form>
+        </LoginFormStyle>
+      </main>
+    </LoginContainer>
+  );
+};
+
+export default main;
