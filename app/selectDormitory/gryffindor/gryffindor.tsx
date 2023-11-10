@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { readChatting } from '@hooks/readChatting';
 import { findMyId } from '@hooks/findMyId';
 import { io } from 'socket.io-client';
 import { gryffindorChatIdState } from '@recoil/dormChatId';
 import { useRecoilValue } from 'recoil';
 import * as styled from './gryffindor.styles';
+import isEqual from 'lodash/isEqual';
 
 interface RequestBody {
   chatId: string;
@@ -36,6 +37,7 @@ interface Message {
 
 const Gryffindor = () => {
   const [currentUser, setCurrentUser] = useState<string>(null);
+  const messageContainerRef = useRef(null);
   const gryffindorChatId = useRecoilValue(gryffindorChatIdState);
   const data: ResponseValue | null = readChatting();
   const [text, setText] = useState<RequestData>('');
@@ -100,27 +102,64 @@ const Gryffindor = () => {
     setCurrentUser(ACCESS_TOKEN_HERMIONE);
   }, []);
 
+  const prevMessagesRef = useRef(previousMessages);
+
+  useEffect(() => {
+    // 현재 상태와 이전 상태를 비교해서 변화가 있을 때만 스크롤 맨 아래로 이동
+    const messagesChanged = !isEqual(previousMessages, prevMessagesRef.current);
+    if (messagesChanged && messageContainerRef.current) {
+      messageContainerRef.current.scrollTop =
+        messageContainerRef.current.scrollHeight;
+    }
+    prevMessagesRef.current = previousMessages;
+  }, [previousMessages]);
+
   return (
     <styled.GryffindorContainer>
-      <div>그리핀도르</div>
-      <div>
+      <styled.MessageContainer ref={messageContainerRef}>
+        {previousMessages
+          .slice()
+          .reverse()
+          .map((message) => {
+            const messageDate = new Date(message.createdAt);
+            const timeString = messageDate.toLocaleString('en-US', {
+              timeZone: 'Asia/Seoul',
+              hour12: false,
+              hour: 'numeric',
+              minute: 'numeric',
+            });
+            return (
+              <styled.MessageWrapper
+                key={message.id}
+                $isCurrentUser={message.userId.split(':')[1] === myId}
+              >
+                <div>
+                  {message.userId.split(':')[1] !== myId && (
+                    <span>{message.userId.split(':')[1]}: </span>
+                  )}
+                  <span>{timeString}</span>
+                </div>
+                <div>
+                  <span>{message.text}</span>
+                </div>
+              </styled.MessageWrapper>
+            );
+          })}
+      </styled.MessageContainer>
+      <styled.InputWrapper>
         <input
           type="text"
           value={text}
           onChange={(e) => setText(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              sendMessage();
+            }
+          }}
         />
         <button onClick={sendMessage}>Send</button>
-      </div>
-      {previousMessages.map((message) => (
-        <styled.MessageWrapper
-          key={message.id}
-          $isCurrentUser={message.userId.split(':')[1] === myId}
-        >
-          <span>{message.userId}: </span>
-          <span>{message.text}</span>
-          <span>{message.createdAt}</span>
-        </styled.MessageWrapper>
-      ))}
+      </styled.InputWrapper>
     </styled.GryffindorContainer>
   );
 };
