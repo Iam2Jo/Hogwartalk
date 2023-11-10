@@ -9,14 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@svgr/webpack": "^8.1.0",
     "next": "14.0.1",
     "react": "^18",
     "react-dom": "^18",
     "recoil": "^0.7.7",
-    "styled-components": "^6.1.0"
+    "styled-components": "^6.1.1"
   },
+
   "devDependencies": {
-    "@svgr/webpack": "^8.1.0",
+   
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

@@ -23,11 +23,10 @@
     }
   },
   "include": [
-    "custom.d.ts",
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-
+    "custom.d.ts",
     ".next/types/**/*.ts"
   ],
   "exclude": ["node_modules"]
