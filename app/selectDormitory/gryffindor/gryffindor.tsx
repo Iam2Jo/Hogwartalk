@@ -84,8 +84,18 @@ const Gryffindor = () => {
 
   useEffect(() => {
     try {
+      chatSocket.on('message-to-client', (messageObject: any) => {
+        console.log(messageObject);
+        console.log('S->C 메시지 전송 성공!');
+      });
+    } catch (error) {
+      console.error('S->C 메시지 전송 실패!', error);
+    }
+  }, [chatSocket]);
+
+  useEffect(() => {
+    try {
       chatSocket.on('messages-to-client', (messageObject: any) => {
-        console.log('messageObject', messageObject);
         setPreviousMessages(messageObject.messages);
         console.log('S->C 이전 대화목록 가져오기 성공!');
       });

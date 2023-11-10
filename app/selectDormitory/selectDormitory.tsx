@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState } from 'react';
 import * as styled from './selectDormitory.styles';
-import type { NextPage } from 'next';
 import { readChatting } from '@hooks/readChatting';
+import { participateChatting } from '@hooks/participateChatting';
 import Link from 'next/link';
 import axios from 'axios';
 import {
@@ -12,7 +12,7 @@ import {
   ravenclawChatIdState,
   slytherinChatIdState,
 } from '@recoil/dormChatId';
-import { useSetRecoilState, useRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 
 interface RequestBody {
   name: string;
@@ -56,9 +56,13 @@ const SelectDormitory = () => {
   const [gryffindorChatId, setGryffindorChatId] = useRecoilState(
     gryffindorChatIdState,
   );
-  const setHufflepuffChatId = useSetRecoilState(hufflepuffChatIdState);
-  const setRavenclawChatId = useSetRecoilState(ravenclawChatIdState);
-  const setSlytherinChatId = useSetRecoilState(slytherinChatIdState);
+  const [hufflepuffChatId, setHufflepuffChatId] = useRecoilState(
+    hufflepuffChatIdState,
+  );
+  const [ravenclawChatId, setRavenclawChatId] =
+    useRecoilState(ravenclawChatIdState);
+  const [slytherinChatId, setSlytherinChatId] =
+    useRecoilState(slytherinChatIdState);
 
   const SERVER_KEY = '660d616b';
   const ACCESS_TOKEN =
@@ -91,6 +95,10 @@ const SelectDormitory = () => {
   const slytherinRequestData: RequestBody = {
     name: 'slytherin',
     users: ['ron'],
+  };
+
+  const handleParticipate = (chatId: string) => {
+    participateChatting(chatId);
   };
 
   useEffect(() => {
@@ -304,13 +312,17 @@ const SelectDormitory = () => {
           href="/selectDormitory/gryffindor"
           style={{ width: '100%', height: '100%' }}
         >
-          <styled.GryffindorSVG />
+          <styled.GryffindorSVG
+            onClick={() => handleParticipate(gryffindorChatId)}
+          />
         </Link>
         <Link
           href="/selectDormitory/ravenclaw"
           style={{ width: '100%', height: '100%' }}
         >
-          <styled.RavenclawSVG />
+          <styled.RavenclawSVG
+            onClick={() => handleParticipate(ravenclawChatId)}
+          />
         </Link>
       </styled.LeftSection>
       <styled.CenterSection>
@@ -321,13 +333,17 @@ const SelectDormitory = () => {
           href="/selectDormitory/hufflepuff"
           style={{ width: '100%', height: '100%' }}
         >
-          <styled.HufflepuffSVG />
+          <styled.HufflepuffSVG
+            onClick={() => handleParticipate(hufflepuffChatId)}
+          />
         </Link>
         <Link
           href="/selectDormitory/slytherin"
           style={{ width: '100%', height: '100%' }}
         >
-          <styled.SlytherinSVG />
+          <styled.SlytherinSVG
+            onClick={() => handleParticipate(slytherinChatId)}
+          />
         </Link>
       </styled.RightSection>
     </styled.Wrapper>
