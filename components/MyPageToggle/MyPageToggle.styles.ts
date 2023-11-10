@@ -91,3 +91,8 @@ export const EditButton = styled.button`
   border: 2px solid rgba(255, 255, 255, 0.15);
   cursor: pointer;
 `;
+
+export const PleaseLoginText = styled.p`
+  color: white;
+  font-size: 12px;
+`;
