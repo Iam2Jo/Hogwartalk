@@ -78,10 +78,13 @@ const tmp = () => {
 
       <ChatRoomInfoModal
         title={data.title}
+        numParticipants={data.numParticipants}
+        host={data.host}
         creationDate={data.creationDate}
-        onClose={closeModal}
+        participants={data.participants}
         onTitleChange={handleTitleChange}
         isOpen={isModalOpen}
+        onClose={closeModal}
         isConnected={isConnected}
       />
     </div>
