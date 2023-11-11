@@ -215,6 +215,7 @@ const SelectDormitory = () => {
     }
   }, [chatData]);
 
+  // 모듈화 필요
   useEffect(() => {
     axios.get(GET_MY_INFO_URL, { headers }).then((res) => {
       setMyName(res.data.user.name);
