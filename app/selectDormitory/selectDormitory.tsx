@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import * as styled from './selectDormitory.styles';
 import { readChatting } from '@hooks/readChatting';
-import { participateChatting } from '@hooks/participateChatting';
 import Link from 'next/link';
 import axios from 'axios';
 import {
@@ -13,6 +12,10 @@ import {
   slytherinChatIdState,
 } from '@recoil/dormChatId';
 import { useRecoilState } from 'recoil';
+
+interface RequestBodyParticipate {
+  chatId: string;
+}
 
 interface RequestBody {
   name: string;
@@ -66,7 +69,7 @@ const SelectDormitory = () => {
 
   const SERVER_KEY = '660d616b';
   const ACCESS_TOKEN =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGQ2MTZiOmhhcnJ5cG90dGVyIiwiaWF0IjoxNjk5MzQ1NDkzLCJleHAiOjE2OTk5NTAyOTN9.b5s4_9f-pVBj9ki17SXc6VvoiApMJZCJXfk5G2wskyo';
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGQ2MTZiOmhlcm1pb25lIiwiaWF0IjoxNjk5NDIzOTI4LCJleHAiOjE3MDAwMjg3Mjh9.9FA24mkoipWSd4KlpxTX0L8mKmJj7LAVd_XEcW1Xt7w';
   const CREATE_CHAT_URL = 'https://fastcampus-chat.net/chat';
   const FIND_ALL_USER_URL = 'https://fastcampus-chat.net/users';
   const FIND_MY_CHAT_URL = 'https://fastcampus-chat.net/chat';
@@ -98,7 +101,18 @@ const SelectDormitory = () => {
   };
 
   const handleParticipate = (chatId: string) => {
-    participateChatting(chatId);
+    const PARTICIPATE_CHAT_URL = 'https://fastcampus-chat.net/chat/participate';
+    const requestData: RequestBodyParticipate = {
+      chatId: chatId,
+    };
+    axios
+      .patch(PARTICIPATE_CHAT_URL, requestData, { headers })
+      .then((response) => {
+        console.log('채팅 참여 성공!', response.data);
+      })
+      .catch((error) => {
+        console.error('채팅 참여 실패!', error);
+      });
   };
 
   useEffect(() => {
@@ -304,6 +318,15 @@ const SelectDormitory = () => {
   useEffect(() => {
     console.log('gryffindorChatId', gryffindorChatId);
   }, [gryffindorChatId]);
+  useEffect(() => {
+    console.log('ravenclawChatId', ravenclawChatId);
+  }, [ravenclawChatId]);
+  useEffect(() => {
+    console.log('hufflepuffChatId', hufflepuffChatId);
+  }, [hufflepuffChatId]);
+  useEffect(() => {
+    console.log('slytherinChatId', slytherinChatId);
+  }, [slytherinChatId]);
 
   return (
     <styled.Wrapper>
