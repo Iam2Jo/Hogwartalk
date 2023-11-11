@@ -11,8 +11,6 @@ import Slytherin from '../../../../../assets/img/Slytherin.svg';
 
 const Modal = () => {
   const team = useRecoilValue(teamState);
-  const modalOpen = useRecoilValue(modalState);
-  const setModalOpen = useSetRecoilState(modalState);
 
   return (
     <style.Modal>
