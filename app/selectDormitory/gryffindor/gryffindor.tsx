@@ -1,45 +1,23 @@
 'use client';
 
-import React, { useEffect, useState, useRef } from 'react';
-import { readChatting } from '@hooks/readChatting';
+import React, { useState, useRef } from 'react';
 import { findMyId } from '@hooks/findMyId';
 import { io } from 'socket.io-client';
 import { gryffindorChatIdState } from '@recoil/dormChatId';
 import { useRecoilValue } from 'recoil';
 import * as styled from './gryffindor.styles';
-import isEqual from 'lodash/isEqual';
-
-interface RequestBody {
-  chatId: string;
-}
-
-type ResponseValue = any;
-// type ResponseValue = Chat[]
-
-type RequestData = string;
-
-interface User {
-  id: string;
-  name: string;
-  picture: string;
-}
-
-interface ResponseData {
-  messages: Message[];
-}
-
-interface Message {
-  id: string;
-  text: string;
-  userId: string;
-  createdAt: string;
-}
+import {
+  useFetchMessages,
+  useMessageToClient,
+  useMessagesToClient,
+  useScrollToBottom,
+} from '@hooks/chatSocket';
+import { RequestData } from '@/@types/Socket/emit/messageToServer.types';
+import { Message } from '@/@types/Socket/on/messagesToClient.types';
 
 const Gryffindor = () => {
-  const [currentUser, setCurrentUser] = useState<string>(null);
   const messageContainerRef = useRef(null);
   const gryffindorChatId = useRecoilValue(gryffindorChatIdState);
-  const data: ResponseValue | null = readChatting();
   const [text, setText] = useState<RequestData>('');
   const [previousMessages, setPreviousMessages] = useState<Message[]>([]);
 
@@ -53,7 +31,6 @@ const Gryffindor = () => {
     Authorization: `Bearer ${ACCESS_TOKEN_HERMIONE}`,
     serverId: SERVER_KEY,
   };
-
   const chatSocket = io(
     `https://fastcampus-chat.net/chat?chatId=${gryffindorChatId}`,
     {
@@ -73,56 +50,10 @@ const Gryffindor = () => {
     }
   };
 
-  useEffect(() => {
-    try {
-      chatSocket.emit('fetch-messages');
-      console.log('C->S 이전 대화목록 가져오기 성공!');
-    } catch (error) {
-      console.error('C->S 이전 대화목록 가져오기 실패!', error);
-    }
-  }, [chatSocket]);
-
-  useEffect(() => {
-    try {
-      chatSocket.on('message-to-client', (messageObject: any) => {
-        console.log(messageObject);
-        console.log('S->C 메시지 전송 성공!');
-      });
-    } catch (error) {
-      console.error('S->C 메시지 전송 실패!', error);
-    }
-  }, [chatSocket]);
-
-  useEffect(() => {
-    try {
-      chatSocket.on('messages-to-client', (messageObject: any) => {
-        setPreviousMessages(messageObject.messages);
-        console.log('S->C 이전 대화목록 가져오기 성공!');
-      });
-    } catch (error) {
-      console.error('S->C 이전 대화목록 가져오기 실패!', error);
-    }
-  }, [chatSocket]);
-
-  useEffect(() => {
-    console.log('gryffindorChatId', gryffindorChatId);
-  }, [gryffindorChatId]);
-
-  useEffect(() => {
-    setCurrentUser(ACCESS_TOKEN_HERMIONE);
-  }, []);
-
-  const prevMessagesRef = useRef(previousMessages);
-
-  useEffect(() => {
-    // 현재 상태와 이전 상태를 비교해서 변화가 있을 때만 스크롤 맨 아래로 이동
-    const messagesChanged = !isEqual(previousMessages, prevMessagesRef.current);
-    if (messagesChanged && messageContainerRef.current) {
-      messageContainerRef.current.scrollTop =
-        messageContainerRef.current.scrollHeight;
-    }
-    prevMessagesRef.current = previousMessages;
-  }, [previousMessages]);
+  useFetchMessages(chatSocket);
+  useMessageToClient(chatSocket);
+  useMessagesToClient(chatSocket, setPreviousMessages);
+  useScrollToBottom(messageContainerRef, previousMessages);
 
   return (
     <styled.GryffindorContainer>

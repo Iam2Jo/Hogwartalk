@@ -12,41 +12,10 @@ import {
   slytherinChatIdState,
 } from '@recoil/dormChatId';
 import { useRecoilState } from 'recoil';
-
-interface RequestBodyParticipate {
-  chatId: string;
-}
-
-interface RequestBody {
-  name: string;
-  users: string[];
-  isPrivate?: boolean;
-}
-
+import { RequestBody as RequestBodyCreate } from '@/@types/RESTAPI/createChatting.types';
+import { RequestBody as RequestBodyParticipate } from '@/@types/RESTAPI/participateChatting.types';
 type ResponseValue = any;
 // type ResponseValue = Chat[]
-
-interface Chat {
-  id: string;
-  name: string;
-  users: User[]; // 속한 유저 정보
-  isPrivate: boolean;
-  latestMessage: Message | null;
-  updatedAt: Date;
-}
-
-interface User {
-  id: string;
-  name: string;
-  picture: string;
-}
-
-interface Message {
-  id: string;
-  text: string;
-  userId: string;
-  createAt: Date;
-}
 
 const SelectDormitory = () => {
   const data: ResponseValue | null = readChatting();
@@ -68,6 +37,7 @@ const SelectDormitory = () => {
     useRecoilState(slytherinChatIdState);
 
   const SERVER_KEY = '660d616b';
+  // 현재 헤르미온느 ACCESS_TOKEN임!
   const ACCESS_TOKEN =
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGQ2MTZiOmhlcm1pb25lIiwiaWF0IjoxNjk5NDIzOTI4LCJleHAiOjE3MDAwMjg3Mjh9.9FA24mkoipWSd4KlpxTX0L8mKmJj7LAVd_XEcW1Xt7w';
   const CREATE_CHAT_URL = 'https://fastcampus-chat.net/chat';
@@ -80,22 +50,22 @@ const SelectDormitory = () => {
     serverId: SERVER_KEY,
   };
 
-  const gryffindorRequestData: RequestBody = {
+  const gryffindorRequestData: RequestBodyCreate = {
     name: 'gryffindor',
     users: ['ron'],
   };
 
-  const hufflepuffRequestData: RequestBody = {
+  const hufflepuffRequestData: RequestBodyCreate = {
     name: 'hufflepuff',
     users: ['ron'],
   };
 
-  const ravenclawRequestData: RequestBody = {
+  const ravenclawRequestData: RequestBodyCreate = {
     name: 'ravenclaw',
     users: ['ron'],
   };
 
-  const slytherinRequestData: RequestBody = {
+  const slytherinRequestData: RequestBodyCreate = {
     name: 'slytherin',
     users: ['ron'],
   };
