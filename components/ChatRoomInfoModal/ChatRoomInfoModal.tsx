@@ -1,5 +1,4 @@
-// ChatRoomInfoModal.js
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import * as styled from './ChatRoomInfoModal.styles';
 import {
   UserItem,
@@ -10,31 +9,46 @@ import {
   UserDormitory,
 } from '../FriendSearchToggle/FriendSearchToggle.styles';
 
-interface Participant {
-  id: number;
-  name: string;
-}
-
 interface ChatRoomInfoModalProps {
   title?: string;
-  maxParticipants?: number;
+  numParticipants?: number;
   host?: string;
   creationDate?: string;
-  participants?: Participant[];
+  participants?: string[];
   isOpen: boolean;
   onClose: () => void;
+  onTitleChange: (newTitle: string) => void;
+  isConnected: string[];
 }
 
-const ChatRoomInfoModal: React.FC<ChatRoomInfoModalProps> = ({
+const ChatRoomInfoModal = ({
   title,
-  maxParticipants,
+  numParticipants,
   host,
   creationDate,
   participants,
   isOpen,
   onClose,
-}) => {
+  onTitleChange,
+  isConnected,
+}: ChatRoomInfoModalProps) => {
   if (!isOpen) return null;
+
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [newTitle, setNewTitle] = useState(title || '');
+
+  useEffect(() => {
+    setNewTitle(title || '');
+  }, [title]);
+
+  const handleTitleEditClick = () => {
+    setIsEditingTitle(true);
+  };
+
+  const handleTitleSaveClick = () => {
+    onTitleChange(newTitle);
+    setIsEditingTitle(false);
+  };
 
   const handleOverlayClick = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
@@ -44,22 +58,42 @@ const ChatRoomInfoModal: React.FC<ChatRoomInfoModalProps> = ({
     }
   };
 
+  const getStatusCircleColor = (participant: string): boolean => {
+    return isConnected.includes(participant);
+  };
+
   return (
     <styled.ModalOverlay onClick={handleOverlayClick}>
       <styled.ModalContainer>
-        <styled.ModalHeader>채팅방 정보</styled.ModalHeader>
+        <styled.ModalHeader>
+          채팅방 정보{' '}
+          {isEditingTitle ? null : (
+            <styled.EditIcon onClick={handleTitleEditClick} />
+          )}
+        </styled.ModalHeader>
         <styled.ModalContent>
           <styled.TopWrapper>
             <styled.ModalLabel>채팅방 제목</styled.ModalLabel>
-            <styled.ModalValue>{title}</styled.ModalValue>
+            {isEditingTitle ? (
+              <styled.InputWrapper>
+                <styled.TitleInput
+                  type="text"
+                  value={newTitle}
+                  onChange={(e) => setNewTitle(e.target.value)}
+                />
+                <styled.SaveIcon onClick={handleTitleSaveClick} />
+              </styled.InputWrapper>
+            ) : (
+              <styled.ModalValue>{newTitle}</styled.ModalValue>
+            )}
           </styled.TopWrapper>
 
           <styled.MiddleWrapper>
-            <styled.ModalLabel>최대 인원수</styled.ModalLabel>
+            <styled.ModalLabel>인원수</styled.ModalLabel>
             <styled.ModalLabel>호스트</styled.ModalLabel>
             <styled.ModalLabel>채팅방 개설일</styled.ModalLabel>
 
-            <styled.ModalValue>{maxParticipants}</styled.ModalValue>
+            <styled.ModalValue>{numParticipants}</styled.ModalValue>
             <styled.ModalValue>{host}</styled.ModalValue>
             <styled.ModalValue>{creationDate}</styled.ModalValue>
           </styled.MiddleWrapper>
@@ -67,15 +101,20 @@ const ChatRoomInfoModal: React.FC<ChatRoomInfoModalProps> = ({
           <styled.ModalLabel>참여자 목록</styled.ModalLabel>
           <styled.ParticipantsWrapper>
             <styled.ParticipantsGrid>
-              {participants.map((participant) => (
-                <UserItem key={participant.id}>
+              {participants.map((participant, index) => (
+                <UserItem key={index}>
                   <ProfileImage
                     src="/assets/img/HarryPotter.png"
                     alt="Profile"
                   />
                   <UserInfo>
                     <Username>
-                      {participant.name} <Emoji>🟢</Emoji>
+                      {participant}{' '}
+                      {getStatusCircleColor(participant) ? (
+                        <Emoji>🟢</Emoji>
+                      ) : (
+                        <Emoji>🔴</Emoji>
+                      )}
                     </Username>
                     <UserDormitory>그리핀도르</UserDormitory>
                   </UserInfo>
