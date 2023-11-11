@@ -12,6 +12,7 @@ import {
   ravenclawChatIdState,
   slytherinChatIdState,
 } from '@recoil/dormChatId';
+import * as dormChatInfo from '@/recoil/dormChatInfo';
 import { useSetRecoilState, useRecoilState } from 'recoil';
 
 interface RequestBody {
@@ -45,6 +46,14 @@ interface Message {
   createAt: Date;
 }
 
+interface DormChatInfo {
+  name: string | null;
+  users: string[];
+  isPrivate: boolean | null;
+  updatedAt: string | null;
+  host: string | null;
+}
+
 const SelectDormitory = () => {
   const data: ResponseValue | null = readChatting();
   const [chatData, setChatData] = useState<ResponseValue | null>();
@@ -52,6 +61,7 @@ const SelectDormitory = () => {
   const [hasSlytherin, setHasSlytherin] = useState(true);
   const [hasHufflepuff, setHasHufflepuff] = useState(true);
   const [hasRavenclaw, setHasRavenclaw] = useState(true);
+  const [myName, setMyName] = useState('');
 
   const [gryffindorChatId, setGryffindorChatId] = useRecoilState(
     gryffindorChatIdState,
@@ -60,12 +70,17 @@ const SelectDormitory = () => {
   const setRavenclawChatId = useSetRecoilState(ravenclawChatIdState);
   const setSlytherinChatId = useSetRecoilState(slytherinChatIdState);
 
+  const setGryffindorChatInfo = useSetRecoilState(
+    dormChatInfo.gryffindorChatInfoState,
+  );
+
   const SERVER_KEY = '660d616b';
   const ACCESS_TOKEN =
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGQ2MTZiOmhhcnJ5cG90dGVyIiwiaWF0IjoxNjk5MzQ1NDkzLCJleHAiOjE2OTk5NTAyOTN9.b5s4_9f-pVBj9ki17SXc6VvoiApMJZCJXfk5G2wskyo';
   const CREATE_CHAT_URL = 'https://fastcampus-chat.net/chat';
   const FIND_ALL_USER_URL = 'https://fastcampus-chat.net/users';
   const FIND_MY_CHAT_URL = 'https://fastcampus-chat.net/chat';
+  const GET_MY_INFO_URL = 'https://fastcampus-chat.net/auth/me';
 
   const headers = {
     'Content-Type': 'application/json',
@@ -201,12 +216,33 @@ const SelectDormitory = () => {
   }, [chatData]);
 
   useEffect(() => {
+    axios.get(GET_MY_INFO_URL, { headers }).then((res) => {
+      setMyName(res.data.user.name);
+    });
+  }, []);
+
+  useEffect(() => {
     if (!hasGryffindor) {
       axios
         .post(CREATE_CHAT_URL, gryffindorRequestData, { headers })
         .then((response) => {
           console.log('Gryffindor 채팅방 생성 완료', response.data);
           setGryffindorChatId(response.data.id);
+
+          let host = '';
+          if (response.data.users.includes(myName)) {
+            host = myName;
+          }
+
+          const dormChatInfo: DormChatInfo = {
+            name: response.data.name,
+            users: response.data.users,
+            isPrivate: response.data.isPrivate,
+            updatedAt: response.data.updatedAt,
+            host,
+          };
+
+          setGryffindorChatInfo(dormChatInfo);
         })
         .catch((error) => {
           console.error('Error sending the request:', error);

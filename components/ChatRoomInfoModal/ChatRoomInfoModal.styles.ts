@@ -1,4 +1,21 @@
 import styled from 'styled-components';
+import EditSVG from '@assets/img/Edit.svg';
+import SaveSVG from '@assets/img/Save.svg';
+import { InputWrap } from './../../app/quiz/components/content/form/QuizForm.style';
+
+export const EditIcon = styled(EditSVG)`
+  fill: var(--color-white);
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+`;
+
+export const SaveIcon = styled(SaveSVG)`
+  fill: var(--color-white);
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+`;
 
 export const ModalOverlay = styled.div`
   position: fixed;
@@ -52,23 +69,22 @@ export const ModalContent = styled.div`
 `;
 
 export const TopWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 40px;
 `;
 
 export const MiddleWrapper = styled.div`
-    display: grid;
-    grid-template-rows: 1fr 1fr;
-    grid-template-columns: 1fr 1fr 1fr;
-    margin-bottom: 20px;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
+  margin-bottom: 20px;
 `;
 
 export const ModalLabel = styled.span`
   font-weight: bold;
   margin-bottom: 10px;
 `;
-
 
 export const ModalValue = styled.span`
   color: var(--color-white);
@@ -124,3 +140,19 @@ export const ParticipantName = styled.span`
   color: var(--color-white);
 `;
 
+export const TitleInput = styled.input`
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-top: 8px;
+  color: #000;
+  width: 90%;
+  margin-right: 20px;
+`;
+
+export const InputWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 20px;
+`;
