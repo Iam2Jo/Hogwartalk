@@ -3,9 +3,9 @@
 import React, { useState, useRef } from 'react';
 import { findMyId } from '@hooks/findMyId';
 import { io } from 'socket.io-client';
-import { gryffindorChatIdState } from '@recoil/dormChatId';
+import { hufflepuffChatIdState } from '@recoil/dormChatId';
 import { useRecoilValue } from 'recoil';
-import * as styled from './gryffindor.styles';
+import * as styled from './hufflepuff.styles';
 import {
   useFetchMessages,
   useMessageToClient,
@@ -15,9 +15,9 @@ import {
 import { RequestData } from '@/@types/Socket/emit/messageToServer.types';
 import { Message } from '@/@types/Socket/on/messagesToClient.types';
 
-const Gryffindor = () => {
+const Hufflepuff = () => {
   const messageContainerRef = useRef(null);
-  const gryffindorChatId = useRecoilValue(gryffindorChatIdState);
+  const hufflepuffChatId = useRecoilValue(hufflepuffChatIdState);
   const [text, setText] = useState<RequestData>('');
   const [previousMessages, setPreviousMessages] = useState<Message[]>([]);
 
@@ -32,7 +32,7 @@ const Gryffindor = () => {
     serverId: SERVER_KEY,
   };
   const chatSocket = io(
-    `https://fastcampus-chat.net/chat?chatId=${gryffindorChatId}`,
+    `https://fastcampus-chat.net/chat?chatId=${hufflepuffChatId}`,
     {
       extraHeaders: headers,
     },
@@ -105,4 +105,4 @@ const Gryffindor = () => {
   );
 };
 
-export default Gryffindor;
+export default Hufflepuff;
