@@ -8,6 +8,8 @@ import {
   Emoji,
   UserDormitory,
 } from '../FriendSearchToggle/FriendSearchToggle.styles';
+import { useSetRecoilState } from 'recoil';
+import * as dormChatInfo from '@/recoil/dormChatInfo';
 
 interface ChatRoomInfoModalProps {
   title?: string;
@@ -37,6 +39,10 @@ const ChatRoomInfoModal = ({
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [newTitle, setNewTitle] = useState(title || '');
 
+  const setGryffindorChatInfo = useSetRecoilState(
+    dormChatInfo.gryffindorChatInfoState,
+  );
+
   useEffect(() => {
     setNewTitle(title || '');
   }, [title]);
@@ -48,6 +54,14 @@ const ChatRoomInfoModal = ({
   const handleTitleSaveClick = () => {
     onTitleChange(newTitle);
     setIsEditingTitle(false);
+    setGryffindorChatInfo((prevChatInfo) => {
+      const newChatInfo = {
+        ...prevChatInfo,
+        name: newTitle,
+      };
+
+      return newChatInfo;
+    });
   };
 
   const handleOverlayClick = (
