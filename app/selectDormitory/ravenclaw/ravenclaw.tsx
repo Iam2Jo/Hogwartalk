@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { findMyId } from '@hooks/findMyId';
 import { io } from 'socket.io-client';
 import { ravenclawChatIdState } from '@recoil/dormChatId';
@@ -12,15 +12,18 @@ import {
   useMessagesToClient,
   useScrollToBottom,
 } from '@hooks/useChatSocketHooks';
+import { scrollToBottom, handleScroll } from '@utils/scrollUtils';
+
 import { RequestData } from '@/@types/Socket/emit/messageToServer.types';
 import { Message } from '@/@types/Socket/on/messagesToClient.types';
 
 const Ravenclaw = () => {
-  const messageContainerRef = useRef(null);
   const ravenclawChatId = useRecoilValue(ravenclawChatIdState);
   const [text, setText] = useState<RequestData>('');
   const [previousMessages, setPreviousMessages] = useState<Message[]>([]);
-
+  const [isAtBottom, setIsAtBottom] = useState(true);
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const messageContainerRef = useRef<HTMLDivElement | null>(null);
   const SERVER_KEY = '660d616b';
   const ACCESS_TOKEN_HARRY =
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGQ2MTZiOmhhcnJ5cG90dGVyIiwiaWF0IjoxNjk5MzQ1NDkzLCJleHAiOjE2OTk5NTAyOTN9.b5s4_9f-pVBj9ki17SXc6VvoiApMJZCJXfk5G2wskyo';
@@ -55,9 +58,18 @@ const Ravenclaw = () => {
   useMessagesToClient(chatSocket, setPreviousMessages);
   useScrollToBottom(messageContainerRef, previousMessages);
 
+  useEffect(() => {
+    if (isAtBottom) {
+      scrollToBottom(messagesEndRef);
+    }
+  }, [isAtBottom]);
+
   return (
     <styled.DormitoryContainer>
-      <styled.MessageContainer ref={messageContainerRef}>
+      <styled.MessageContainer
+        ref={messageContainerRef}
+        onScroll={(e) => handleScroll(e, setIsAtBottom, messageContainerRef)}
+      >
         {previousMessages
           .slice()
           .reverse()
@@ -74,19 +86,32 @@ const Ravenclaw = () => {
                 key={message.id}
                 $isCurrentUser={message.userId.split(':')[1] === myId}
               >
-                <div>
+                <styled.MessageInfo>
                   {message.userId.split(':')[1] !== myId && (
-                    <span>{message.userId.split(':')[1]}: </span>
+                    <styled.MessageUserId>
+                      {message.userId.split(':')[1]}
+                    </styled.MessageUserId>
                   )}
-                  <span>{timeString}</span>
-                </div>
+                  <styled.MessageTime>{timeString}</styled.MessageTime>
+                </styled.MessageInfo>
                 <div>
-                  <span>{message.text}</span>
+                  <styled.MessageText
+                    $isCurrentUser={message.userId.split(':')[1] === myId}
+                  >
+                    {message.text}
+                  </styled.MessageText>
                 </div>
               </styled.MessageWrapper>
             );
           })}
+        <div ref={messagesEndRef} />
       </styled.MessageContainer>
+      <styled.ScrollToBottomButton
+        onClick={() => scrollToBottom(messagesEndRef)}
+        $isVisible={!isAtBottom}
+      >
+        <styled.BottomIcon />
+      </styled.ScrollToBottomButton>
       <styled.InputWrapper>
         <input
           type="text"
@@ -99,7 +124,7 @@ const Ravenclaw = () => {
             }
           }}
         />
-        <button onClick={sendMessage}>Send</button>
+        <button onClick={sendMessage}>전송</button>
       </styled.InputWrapper>
     </styled.DormitoryContainer>
   );
