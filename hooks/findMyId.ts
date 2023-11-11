@@ -3,17 +3,6 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
-interface ResponseValue {
-  auth: boolean;
-  user?: User;
-}
-
-interface User {
-  id: string;
-  name: string;
-  picture: string;
-}
-
 export function findMyId(ACCESS_TOKEN) {
   const SERVER_KEY = '660d616b';
   const FIND_MY_ID_URL = 'https://fastcampus-chat.net/auth/me';
