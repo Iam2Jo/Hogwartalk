@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import Gryffindor from './gryffindor';
 
-const B: NextPage = () => {
+const DormGryffindor: NextPage = () => {
   return (
     <>
       <Gryffindor />
@@ -9,4 +9,4 @@ const B: NextPage = () => {
   );
 };
 
-export default B;
+export default DormGryffindor;
