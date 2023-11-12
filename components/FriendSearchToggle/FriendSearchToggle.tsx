@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import * as Styles from './FriendSearchToggle.styles';
 
 interface FriendSearchToggleProps {
@@ -15,6 +16,40 @@ const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
   isVisible,
   onClose,
 }) => {
+  const [users, setUsers] = useState<User[]>([]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const accessToken = document.cookie
+          .split('; ')
+          .find((row) => row.startsWith('accessToken='))
+          .split('=')[1];
+
+        const response = await fetch('https://fastcampus-chat.net/users', {
+          method: 'GET',
+          headers: {
+            'content-type': 'application/json',
+            serverId: '660d616b',
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (response.ok) {
+          const data: User[] = await response.json();
+          setUsers(data);
+          alert('Success');
+        } else {
+          console.error('Failed to fetch users');
+        }
+      } catch (error) {
+        console.error('Error fetching users', error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
   return (
     <Styles.Sidebar isVisible={isVisible}>
       <Styles.CloseButton onClick={onClose}>
@@ -22,118 +57,23 @@ const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
       </Styles.CloseButton>
       <Styles.TotalStudents>
         <Styles.TotalStudentsLabel>전체 학생 수</Styles.TotalStudentsLabel>
-        <Styles.TotalStudentsCount>30</Styles.TotalStudentsCount>
+        <Styles.TotalStudentsCount>{users.length}</Styles.TotalStudentsCount>
       </Styles.TotalStudents>
 
       <Styles.UserList>
-        <Styles.UserItem>
-          <Styles.ProfileImage
-            src="/assets/img/HarryPotter.png"
-            alt="Profile"
-          />
-          <Styles.UserInfo>
-            <Styles.Username>
-              해리포터 <Styles.Emoji>🟢</Styles.Emoji>
-            </Styles.Username>
-            <Styles.UserDormitory>그리핀도르</Styles.UserDormitory>
-          </Styles.UserInfo>
-        </Styles.UserItem>
-        <Styles.UserItem>
-          <Styles.ProfileImage
-            src="/assets/img/HarryPotter.png"
-            alt="Profile"
-          />
-          <Styles.UserInfo>
-            <Styles.Username>
-              해리포터 <Styles.Emoji>🔴</Styles.Emoji>
-            </Styles.Username>
-            <Styles.UserDormitory>그리핀도르</Styles.UserDormitory>
-          </Styles.UserInfo>
-        </Styles.UserItem>
-        <Styles.UserItem>
-          <Styles.ProfileImage
-            src="/assets/img/HarryPotter.png"
-            alt="Profile"
-          />
-          <Styles.UserInfo>
-            <Styles.Username>
-              해리포터 <Styles.Emoji>🔴</Styles.Emoji>
-            </Styles.Username>
-            <Styles.UserDormitory>그리핀도르</Styles.UserDormitory>
-          </Styles.UserInfo>
-        </Styles.UserItem>
-        <Styles.UserItem>
-          <Styles.ProfileImage
-            src="/assets/img/HarryPotter.png"
-            alt="Profile"
-          />
-          <Styles.UserInfo>
-            <Styles.Username>
-              해리포터 <Styles.Emoji>🟢</Styles.Emoji>
-            </Styles.Username>
-            <Styles.UserDormitory>그리핀도르</Styles.UserDormitory>
-          </Styles.UserInfo>
-        </Styles.UserItem>
-        <Styles.UserItem>
-          <Styles.ProfileImage
-            src="/assets/img/HarryPotter.png"
-            alt="Profile"
-          />
-          <Styles.UserInfo>
-            <Styles.Username>
-              해리포터 <Styles.Emoji>🟢</Styles.Emoji>
-            </Styles.Username>
-            <Styles.UserDormitory>그리핀도르</Styles.UserDormitory>
-          </Styles.UserInfo>
-        </Styles.UserItem>
-        <Styles.UserItem>
-          <Styles.ProfileImage
-            src="/assets/img/HarryPotter.png"
-            alt="Profile"
-          />
-          <Styles.UserInfo>
-            <Styles.Username>
-              해리포터 <Styles.Emoji>🟢</Styles.Emoji>
-            </Styles.Username>
-            <Styles.UserDormitory>그리핀도르</Styles.UserDormitory>
-          </Styles.UserInfo>
-        </Styles.UserItem>
-        <Styles.UserItem>
-          <Styles.ProfileImage
-            src="/assets/img/HarryPotter.png"
-            alt="Profile"
-          />
-          <Styles.UserInfo>
-            <Styles.Username>
-              해리포터 <Styles.Emoji>🔴</Styles.Emoji>
-            </Styles.Username>
-            <Styles.UserDormitory>그리핀도르</Styles.UserDormitory>
-          </Styles.UserInfo>
-        </Styles.UserItem>
-        <Styles.UserItem>
-          <Styles.ProfileImage
-            src="/assets/img/HarryPotter.png"
-            alt="Profile"
-          />
-          <Styles.UserInfo>
-            <Styles.Username>
-              해리포터 <Styles.Emoji>🟢</Styles.Emoji>
-            </Styles.Username>
-            <Styles.UserDormitory>그리핀도르</Styles.UserDormitory>
-          </Styles.UserInfo>
-        </Styles.UserItem>
-        <Styles.UserItem>
-          <Styles.ProfileImage
-            src="/assets/img/HarryPotter.png"
-            alt="Profile"
-          />
-          <Styles.UserInfo>
-            <Styles.Username>
-              해리포터 <Styles.Emoji>🟢</Styles.Emoji>
-            </Styles.Username>
-            <Styles.UserDormitory>그리핀도르</Styles.UserDormitory>
-          </Styles.UserInfo>
-        </Styles.UserItem>
+        {users.map((user) => (
+          <Styles.UserItem key={user.id}>
+            <Styles.ProfileImage
+              src={user.picture}
+              alt={`Profile of ${user.name}`}
+            />
+            <Styles.UserInfo>
+              <Styles.Username>
+                {user.name} <Styles.Emoji>🟢</Styles.Emoji>
+              </Styles.Username>
+            </Styles.UserInfo>
+          </Styles.UserItem>
+        ))}
       </Styles.UserList>
     </Styles.Sidebar>
   );
