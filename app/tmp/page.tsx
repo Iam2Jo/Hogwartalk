@@ -15,6 +15,7 @@ const tmp = () => {
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
   const [isConnected, setIsConnected] = useState([]);
+  const [myName, setMyName] = useState('');
 
   // const chatId = useRecoilValue(dormChatId.gryffindorChatIdState);
   const chatId = 'd3d7bff2-5b10-41c0-b6cd-5b5366995e31'; // 임시 chatId
@@ -36,6 +37,7 @@ const tmp = () => {
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGQ2MTZiOnJvbiIsImlhdCI6MTY5OTQyNDAzMSwiZXhwIjoxNzAwMDI4ODMxfQ.P5KjgZ9K7zuN6X6sJm4f_DJV0opEqruAuVbRe9VlDZQ';
   const CHATROOM_LEAVE_URL = 'https://fastcampus-chat.net/chat/leave';
   const CHATROOM_JOIN_URL = 'https://fastcampus-chat.net/chat/participate';
+  const GET_MY_INFO_URL = 'https://fastcampus-chat.net/auth/me';
 
   const headers = {
     Authorization: `Bearer ${ACCESS_TOKEN_RON}`,
@@ -49,6 +51,12 @@ const tmp = () => {
       serverId: SERVER_KEY,
     },
   });
+
+  useEffect(() => {
+    axios.get(GET_MY_INFO_URL, { headers }).then((res) => {
+      setMyName(res.data.user.name);
+    });
+  }, []);
 
   useEffect(() => {
     try {
@@ -122,8 +130,7 @@ const tmp = () => {
       .patch(CHATROOM_JOIN_URL, { chatId }, { headers })
       .then((response) => {
         console.log(response.data);
-        // 배열의 가장 끝에 추가되는 원소를 가져옴(수정필요)
-        alert(`${response.data.users[users.length].username}님 환영합니다!`);
+        alert(`${myName}님 환영합니다!`);
       })
       .catch((err) => {
         console.error(err);
