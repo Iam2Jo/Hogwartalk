@@ -336,9 +336,6 @@ const SelectDormitory = () => {
 
   return (
     <styled.Container>
-      <Link href="/tmp">
-        <button>tmp</button>
-      </Link>
       <styled.Wrapper>
         <styled.LeftSection>
           <Link href="/selectDormitory/gryffindor">

@@ -85,19 +85,25 @@ const ChatRoomInfoModal = ({
     }
   };
 
+  // 모듈화
   const getStatusCircleColor = (participant: string): boolean => {
     return isConnected?.includes(participant);
   };
 
   useEffect(() => {
-    axios.get(GET_MY_INFO_URL, { headers }).then((response) => {
-      console.log('현재 유저 이름: ', response.data.user.name);
-      console.log('호스트 유저 이름: ', host);
+    axios
+      .get(GET_MY_INFO_URL, { headers })
+      .then((response) => {
+        console.log('현재 유저 이름: ', response.data.user.name);
+        console.log('호스트 유저 이름: ', host);
 
-      if (host === response.data.user.name) {
-        setIsHost(true);
-      }
-    });
+        if (host === response.data.user.name) {
+          setIsHost(true);
+        }
+      })
+      .catch((error) => {
+        console.error('현재 유저 정보 fetch 실패!', error);
+      });
   }, []);
 
   return (

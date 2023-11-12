@@ -17,7 +17,7 @@ const tmp = () => {
   const [isConnected, setIsConnected] = useState([]);
 
   // const chatId = useRecoilValue(dormChatId.gryffindorChatIdState);
-  const chatId = 'ce1f3908-2348-41b9-89df-6cb1b3d8fbd3'; // 임시 chatId
+  const chatId = 'd3d7bff2-5b10-41c0-b6cd-5b5366995e31'; // 임시 chatId
   const { name, users, updatedAt, host } = useRecoilValue(
     dormChatInfo.gryffindorChatInfoState,
   );
@@ -122,7 +122,7 @@ const tmp = () => {
       .patch(CHATROOM_JOIN_URL, { chatId }, { headers })
       .then((response) => {
         console.log(response.data);
-        // 배열의 가장 끝에 추가되는 원소를 가져옴
+        // 배열의 가장 끝에 추가되는 원소를 가져옴(수정필요)
         alert(`${response.data.users[users.length].username}님 환영합니다!`);
       })
       .catch((err) => {

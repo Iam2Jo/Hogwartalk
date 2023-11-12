@@ -1,12 +1,21 @@
 import styled from 'styled-components';
 import InviteSVG from '@assets/img/Invite.svg';
+import InviteAllSVG from '@assets/img/InviteAll.svg';
 
 export const InviteIcon = styled(InviteSVG)`
   fill: var(--color-white);
   width: 25px;
   height: 25px;
   cursor: pointer;
-  margin-left: 60px;
+  margin-left: 20px;
+`;
+
+export const InviteAllIcon = styled(InviteAllSVG)`
+  fill: var(--color-white);
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  margin-left: 20px;
 `;
 
 export const ModalOverlay = styled.div`
@@ -29,8 +38,18 @@ export const ModalContainer = styled.div`
   border: 1px solid #ccc;
   border-radius: 8px;
   width: 800px;
-  height: 600px;
+  max-height: 600px;
   position: relative;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #666;
+    border-radius: 12px;
+  }
 `;
 
 export const ModalHeader = styled.h2`
@@ -52,7 +71,7 @@ export const ParticipantsWrapper = styled.div`
   border-radius: 8px;
   padding: 20px;
   margin-top: 20px;
-  max-height: 450px;
+  max-height: 400px;
   overflow-y: auto;
 
   &::-webkit-scrollbar {
@@ -100,4 +119,37 @@ export const CloseButton = styled.button`
   right: 50px;
   display: flex;
   align-items: center;
+`;
+
+export const CancelButton = styled.button`
+  background: none;
+  color: var(--color-white);
+  border: none;
+  padding: 10px;
+  font-size: 15px;
+  cursor: pointer;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  margin-left: 80px;
+`;
+
+export const InvitedUsersWrapper = styled.div`
+  margin-top: 20px;
+`;
+
+export const InvitedUsersGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 16px;
+`;
+
+export const UserInfo = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
 `;
