@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import ChatRoomInfoModal from '@/components/ChatRoomInfoModal/ChatRoomInfoModal';
+import InviteToChatRoomModal from '@components/InviteToChatRoomModal/InviteToChatRoomModal';
 import { io } from 'socket.io-client';
 import { useRecoilValue } from 'recoil';
 import * as dormChatId from '@/recoil/dormChatId';
@@ -11,11 +12,12 @@ import cutStringAfterColon from '@/utils/cutStringAfterColon';
 import axios from 'axios';
 
 const tmp = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
   const [isConnected, setIsConnected] = useState([]);
 
   // const chatId = useRecoilValue(dormChatId.gryffindorChatIdState);
-  const chatId = '1521f809-caf5-4d21-998d-9367d8133bfa';
+  const chatId = 'ce1f3908-2348-41b9-89df-6cb1b3d8fbd3'; // 임시 chatId
   const { name, users, updatedAt, host } = useRecoilValue(
     dormChatInfo.gryffindorChatInfoState,
   );
@@ -42,17 +44,11 @@ const tmp = () => {
 
   const socket = io(`https://fastcampus-chat.net/chat?chatId=${chatId}`, {
     extraHeaders: {
+      // harry token으로 socket 생성
       Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGQ2MTZiOmhhcnJ5cG90dGVyIiwiaWF0IjoxNjk5MzQ1NDkzLCJleHAiOjE2OTk5NTAyOTN9.b5s4_9f-pVBj9ki17SXc6VvoiApMJZCJXfk5G2wskyo`,
       serverId: SERVER_KEY,
     },
   });
-
-  // const server = io(`https://fastcampus-chat.net/server`, {
-  //   extraHeaders: {
-  //     Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGQ2MTZiOmhhcnJ5cG90dGVyIiwiaWF0IjoxNjk5MzQ1NDkzLCJleHAiOjE2OTk5NTAyOTN9.b5s4_9f-pVBj9ki17SXc6VvoiApMJZCJXfk5G2wskyo`,
-  //     serverId: SERVER_KEY,
-  //   },
-  // });
 
   useEffect(() => {
     try {
@@ -63,17 +59,18 @@ const tmp = () => {
     }
   }, [socket]);
 
-  useEffect(() => {
-    try {
-      socket.on('users-to-client', (response) => {
-        console.log('접속 상태 유저 목록: ', response.users);
-        console.log('S->C 접속 상태 유저 목록 pull 성공!');
-        setIsConnected(response.users);
-      });
-    } catch (error) {
-      console.error('S->C 접속 상태 유저 목록 pull 실패!', error);
-    }
-  }, [socket]);
+  // 무한호출 에러 해결 필요
+  // useEffect(() => {
+  //   try {
+  //     socket.on('users-to-client', (response) => {
+  //       console.log('접속 상태 유저 목록: ', response.users);
+  //       console.log('S->C 접속 상태 유저 목록 pull 성공!');
+  //       setIsConnected(response.users);
+  //     });
+  //   } catch (error) {
+  //     console.error('S->C 접속 상태 유저 목록 pull 실패!', error);
+  //   }
+  // }, [socket]);
 
   try {
     socket.on('join', (response) => {
@@ -98,12 +95,20 @@ const tmp = () => {
     console.error('S->C 유저 퇴장 정보 불러오기 실패!', error);
   }
 
-  const openModal = () => {
-    setIsModalOpen(true);
+  const openInfoModal = () => {
+    setIsInfoModalOpen(true);
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
+  const closeInfoModal = () => {
+    setIsInfoModalOpen(false);
+  };
+
+  const openInviteModal = () => {
+    setIsInviteModalOpen(true);
+  };
+
+  const closeInviteModal = () => {
+    setIsInviteModalOpen(false);
   };
 
   const handleTitleChange = (newTitle) => {
@@ -138,11 +143,13 @@ const tmp = () => {
 
   return (
     <div>
-      <button onClick={openModal}>채팅방 정보 보기</button>
+      <button onClick={openInfoModal}>채팅방 정보 보기</button>
       <br />
       <button onClick={joinChatRoom}>참여하기</button>
       <br />
       <button onClick={leaveChatRoom}>나가기</button>
+      <br />
+      <button onClick={openInviteModal}>초대하기</button>
 
       <ChatRoomInfoModal
         title={data.title}
@@ -151,9 +158,15 @@ const tmp = () => {
         creationDate={data.creationDate}
         participants={data.participants}
         onTitleChange={handleTitleChange}
-        isOpen={isModalOpen}
-        onClose={closeModal}
+        isOpen={isInfoModalOpen}
+        onClose={closeInfoModal}
         isConnected={isConnected}
+      />
+
+      <InviteToChatRoomModal
+        isOpen={isInviteModalOpen}
+        onClose={closeInviteModal}
+        chatId={chatId}
       />
     </div>
   );

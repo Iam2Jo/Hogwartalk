@@ -36,6 +36,7 @@ const ChatRoomInfoModal = ({
   isConnected,
 }: ChatRoomInfoModalProps) => {
   if (!isOpen) return null;
+
   const SERVER_KEY = '660d616b';
   const ACCESS_TOKEN =
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGQ2MTZiOmhhcnJ5cG90dGVyIiwiaWF0IjoxNjk5MzQ1NDkzLCJleHAiOjE2OTk5NTAyOTN9.b5s4_9f-pVBj9ki17SXc6VvoiApMJZCJXfk5G2wskyo';
@@ -89,11 +90,11 @@ const ChatRoomInfoModal = ({
   };
 
   useEffect(() => {
-    axios.get(GET_MY_INFO_URL, { headers }).then((res) => {
-      console.log('현재 유저 이름: ', res.data.user.name);
+    axios.get(GET_MY_INFO_URL, { headers }).then((response) => {
+      console.log('현재 유저 이름: ', response.data.user.name);
       console.log('호스트 유저 이름: ', host);
 
-      if (host === res.data.user.name) {
+      if (host === response.data.user.name) {
         setIsHost(true);
       }
     });
