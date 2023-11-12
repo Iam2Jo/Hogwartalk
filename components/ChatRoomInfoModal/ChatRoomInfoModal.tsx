@@ -85,7 +85,7 @@ const ChatRoomInfoModal = ({
   };
 
   const getStatusCircleColor = (participant: string): boolean => {
-    return isConnected.includes(participant);
+    return isConnected?.includes(participant);
   };
 
   useEffect(() => {
