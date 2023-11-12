@@ -44,7 +44,6 @@ const SelectDormitory = () => {
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGQ2MTZiOmhlcm1pb25lIiwiaWF0IjoxNjk5NDIzOTI4LCJleHAiOjE3MDAwMjg3Mjh9.9FA24mkoipWSd4KlpxTX0L8mKmJj7LAVd_XEcW1Xt7w';
   const CREATE_CHAT_URL = 'https://fastcampus-chat.net/chat';
   const FIND_ALL_USER_URL = 'https://fastcampus-chat.net/users';
-  const FIND_MY_CHAT_URL = 'https://fastcampus-chat.net/chat';
 
   const headers = {
     'Content-Type': 'application/json',
@@ -102,21 +101,14 @@ const SelectDormitory = () => {
       });
   }, []);
 
-  useEffect(() => {
-    axios
-      .get(FIND_MY_CHAT_URL, { headers })
-      .then((response) => {
-        console.log('나의 채팅방 조회 성공!', response.data);
-      })
-      .catch((error) => {
-        console.error('나의 채팅방 조회 실패!', error);
-      });
-  }, []);
-
   doesDormitoryExist('gryffindor', chatData, setHasGryffindor);
   doesDormitoryExist('slytherin', chatData, setHasSlytherin);
   doesDormitoryExist('hufflepuff', chatData, setHasHufflepuff);
   doesDormitoryExist('ravenclaw', chatData, setHasRavenclaw);
+
+  useEffect(() => {
+    console.log('gryffindorChatId', gryffindorChatId);
+  }, [gryffindorChatId]);
 
   useEffect(() => {
     createDormitoryIfNone(

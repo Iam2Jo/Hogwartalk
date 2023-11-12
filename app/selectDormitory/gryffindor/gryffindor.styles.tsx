@@ -11,10 +11,10 @@ interface ScrollToBottomButtonProps {
 
 export const DormitoryContainer = styled.div`
   background-color: white;
-  width: 100vw;
+  width: 73.4vw;
+  height: calc(100vh -2rem); // 패딩 1rem 해줬어서
   height: 100vh;
   overflow-y: hidden;
-
   ::-webkit-scrollbar {
     width: 10px;
   }
@@ -34,7 +34,6 @@ export const MessageContainer = styled.div`
   width: 100%;
   height: 90%;
   overflow-y: auto;
-  padding-right: 1rem;
 `;
 
 export const MessageWrapper = styled.div<MessageProps>`

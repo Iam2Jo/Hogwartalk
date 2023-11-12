@@ -70,40 +70,33 @@ const Hufflepuff = () => {
         ref={messageContainerRef}
         onScroll={(e) => handleScroll(e, setIsAtBottom, messageContainerRef)}
       >
-        {previousMessages
-          .slice()
-          .reverse()
-          .map((message) => {
-            const messageDate = new Date(message.createdAt);
-            const timeString = messageDate.toLocaleString('en-US', {
-              timeZone: 'Asia/Seoul',
-              hour12: false,
-              hour: 'numeric',
-              minute: 'numeric',
-            });
-            return (
-              <styled.MessageWrapper
-                key={message.id}
-                $isCurrentUser={message.userId.split(':')[1] === myId}
-              >
-                <styled.MessageInfo>
-                  {message.userId.split(':')[1] !== myId && (
-                    <styled.MessageUserId>
-                      {message.userId.split(':')[1]}
-                    </styled.MessageUserId>
-                  )}
-                  <styled.MessageTime>{timeString}</styled.MessageTime>
-                </styled.MessageInfo>
-                <div>
-                  <styled.MessageText
-                    $isCurrentUser={message.userId.split(':')[1] === myId}
-                  >
-                    {message.text}
-                  </styled.MessageText>
-                </div>
-              </styled.MessageWrapper>
-            );
-          })}
+        {previousMessages.map((message) => {
+          const messageDate = new Date(message.createdAt);
+          const timeString = messageDate.toLocaleString('en-US', {
+            timeZone: 'Asia/Seoul',
+            hour12: false,
+            hour: 'numeric',
+            minute: 'numeric',
+          });
+          return (
+            <styled.MessageWrapper
+              key={message.id}
+              $isCurrentUser={message.userId === myId}
+            >
+              <styled.MessageInfo>
+                {message.userId !== myId && (
+                  <styled.MessageUserId>{message.userId}</styled.MessageUserId>
+                )}
+                <styled.MessageTime>{timeString}</styled.MessageTime>
+              </styled.MessageInfo>
+              <div>
+                <styled.MessageText $isCurrentUser={message.userId === myId}>
+                  {message.text}
+                </styled.MessageText>
+              </div>
+            </styled.MessageWrapper>
+          );
+        })}
         <div ref={messagesEndRef} />
       </styled.MessageContainer>
       <styled.ScrollToBottomButton
