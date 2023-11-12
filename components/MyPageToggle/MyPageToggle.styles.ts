@@ -79,6 +79,15 @@ export const ActualDormitory = styled.p`
   font-size: 12px;
   color: #fff;
   display: inline-block;
+  margin-bottom: 20px;
+`;
+
+export const ProfileImageLabel = styled.p`
+  font-size: 12px;
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 10px;
+  display: inline-block;
 `;
 
 export const EditButton = styled.button`
@@ -95,4 +104,81 @@ export const EditButton = styled.button`
 export const PleaseLoginText = styled.p`
   color: white;
   font-size: 12px;
+`;
+
+export const EditInput = styled.input`
+  font-size: 12px;
+  margin-bottom: 16px;
+  display: inline-block;
+  background-color: black;
+  color: white;
+`;
+
+export const FlexContainer = styled.div`
+  display: flex;
+
+  background-color: #000;
+  color: #fff;
+  font-size: 10px;
+  margin-bottom: 50px;
+
+  cursor: pointer;
+`;
+
+export const SaveButton = styled.button`
+  font-size: 12px;
+  margin-bottom: 16px;
+  display: inline-block;
+  background-color: black;
+  color: white;
+
+  margin-right: 10px;
+  padding: 5px 30px;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+`;
+
+export const CancelButton = styled.button`
+  font-size: 12px;
+  margin-bottom: 16px;
+  display: inline-block;
+  background-color: black;
+  color: white;
+
+  padding: 5px 30px;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+`;
+
+export const ProfileImageEditButton = styled.button`
+  font-size: 12px;
+  margin-bottom: 16px;
+  display: inline-block;
+  background-color: black;
+  color: white;
+
+  padding: 5px 15px;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+`;
+
+export const ProfileImageInput = styled.img`
+  width: 13rem;
+  height: 13rem;
+  border-radius: 50%;
+  border: 3px solid #d32b2b;
+  margin: 3.125rem 0;
+  object-fit: cover;
+`;
+
+export const ProfileImagePreview = styled.img`
+  font-size: 10px;
+
+  width: 3rem;
+  height: 3rem;
+  margin-left: 4rem;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+
+  object-fit: cover;
 `;

@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { commonIconStyles } from './Icon.styles';
 
 interface SearchIconProps {
@@ -7,17 +7,19 @@ interface SearchIconProps {
   isToggled: boolean;
 }
 
-const IconContainer = styled.div<{ isToggled: boolean }>`
+const IconContainer = styled.div<{ $isToggled: boolean }>`
   ${commonIconStyles}
-  filter: ${(props) =>
-    props.isToggled
-      ? 'sepia(89%) saturate(6054%) brightness(97%) contrast(113%)'
-      : 'none'};
+
+  ${({ $isToggled }) =>
+    $isToggled &&
+    css`
+      filter: sepia(89%) saturate(6054%) brightness(97%) contrast(113%);
+    `}
 `;
 
 const SearchIcon: React.FC<SearchIconProps> = ({ onClick, isToggled }) => {
   return (
-    <IconContainer onClick={onClick} isToggled={isToggled}>
+    <IconContainer onClick={onClick} $isToggled={isToggled}>
       <img
         src="/assets/icons/search.svg"
         alt="My Page"
