@@ -21,16 +21,23 @@ const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const accessToken = document.cookie
+        const accessTokenCookie = document.cookie
           .split('; ')
-          .find((row) => row.startsWith('accessToken='))
-          .split('=')[1];
+          .find((row) => row.startsWith('acessToken='));
+
+        if (!accessTokenCookie) {
+          // 쿠키에 액세스 토큰이 없는 경우
+          return;
+        }
+        const accessToken = accessTokenCookie.split('=')[1];
+
+        const serverId = 'nREmPe9B';
 
         const response = await fetch('https://fastcampus-chat.net/users', {
           method: 'GET',
           headers: {
             'content-type': 'application/json',
-            serverId: '660d616b',
+            serverId: serverId,
             Authorization: `Bearer ${accessToken}`,
           },
         });
