@@ -215,6 +215,7 @@ const SelectDormitory = () => {
     }
   }, [chatData]);
 
+  // 모듈화 필요
   useEffect(() => {
     axios.get(GET_MY_INFO_URL, { headers }).then((res) => {
       setMyName(res.data.user.name);
@@ -334,39 +335,29 @@ const SelectDormitory = () => {
   }, [gryffindorChatId]);
 
   return (
-    <styled.Wrapper>
-      <styled.LeftSection>
-        <Link
-          href="/selectDormitory/gryffindor"
-          style={{ width: '100%', height: '100%' }}
-        >
-          <styled.GryffindorSVG />
-        </Link>
-        <Link
-          href="/selectDormitory/ravenclaw"
-          style={{ width: '100%', height: '100%' }}
-        >
-          <styled.RavenclawSVG />
-        </Link>
-      </styled.LeftSection>
-      <styled.CenterSection>
-        <styled.ClubSVG />
-      </styled.CenterSection>
-      <styled.RightSection>
-        <Link
-          href="/selectDormitory/hufflepuff"
-          style={{ width: '100%', height: '100%' }}
-        >
-          <styled.HufflepuffSVG />
-        </Link>
-        <Link
-          href="/selectDormitory/slytherin"
-          style={{ width: '100%', height: '100%' }}
-        >
-          <styled.SlytherinSVG />
-        </Link>
-      </styled.RightSection>
-    </styled.Wrapper>
+    <styled.Container>
+      <styled.Wrapper>
+        <styled.LeftSection>
+          <Link href="/selectDormitory/gryffindor">
+            <styled.GryffindorSVG />
+          </Link>
+          <Link href="/selectDormitory/ravenclaw">
+            <styled.RavenclawSVG />
+          </Link>
+        </styled.LeftSection>
+        <styled.CenterSection>
+          <styled.ClubSVG />
+        </styled.CenterSection>
+        <styled.RightSection>
+          <Link href="/selectDormitory/hufflepuff">
+            <styled.HufflepuffSVG />
+          </Link>
+          <Link href="/selectDormitory/slytherin">
+            <styled.SlytherinSVG />
+          </Link>
+        </styled.RightSection>
+      </styled.Wrapper>
+    </styled.Container>
   );
 };
 

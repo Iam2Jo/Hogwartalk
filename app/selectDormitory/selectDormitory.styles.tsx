@@ -11,21 +11,32 @@ export const HufflepuffSVG = styled(Hufflepuff)``;
 export const RavenclawSVG = styled(Ravenclaw)``;
 export const ClubSVG = styled(Club)``;
 
+export const Container = styled.div`
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 export const Wrapper = styled.div`
+  width: 50%;
   display: grid;
   grid-template-columns: 1fr 2fr 1fr;
 `;
 
 export const LeftSection = styled.div`
   display: flex;
-  align-items: center;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
 `;
 
 export const RightSection = styled.div`
   display: flex;
-  align-items: center;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
 `;
 
 export const CenterSection = styled.div`
