@@ -221,6 +221,8 @@ const SelectDormitory = () => {
         >
           <styled.GryffindorSVG
             onClick={() => handleParticipate(gryffindorChatInfo.id)}
+            width="224"
+            height="272"
           />
         </Link>
         <Link
@@ -229,6 +231,8 @@ const SelectDormitory = () => {
         >
           <styled.RavenclawSVG
             onClick={() => handleParticipate(ravenclawChatInfo.id)}
+            width="224"
+            height="272"
           />
         </Link>
       </styled.LeftSection>
@@ -242,6 +246,8 @@ const SelectDormitory = () => {
         >
           <styled.HufflepuffSVG
             onClick={() => handleParticipate(hufflepuffChatInfo.id)}
+            width="224"
+            height="272"
           />
         </Link>
         <Link
@@ -250,6 +256,8 @@ const SelectDormitory = () => {
         >
           <styled.SlytherinSVG
             onClick={() => handleParticipate(slytherinChatInfo.id)}
+            width="224"
+            height="272"
           />
         </Link>
       </styled.RightSection>

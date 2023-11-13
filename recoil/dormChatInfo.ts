@@ -2,21 +2,13 @@ import { atom } from 'recoil';
 
 export const gryffindorChatInfoState = atom({
   key: 'gryffindorChatInfoState',
-  // default: {
-    // id: '',
-    // name: '',
-    // users: [],
-    // isPrivate: false,
-    // updatedAt: '',
-    // host: '',
-  // },
   default: {
     id: '',
-    name: 'gryffindor',
-    users: ['harry', 'ron'],
+    name: '',
+    users: [],
     isPrivate: false,
-    updatedAt: '2021-08-31T14:00:00.000Z',
-    host: 'harry',
+    updatedAt: '',
+    host: '',
   },
 });
 
