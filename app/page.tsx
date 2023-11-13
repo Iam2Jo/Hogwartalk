@@ -36,7 +36,7 @@ const main: NextPage = () => {
   };
   const handleButtonClick = async () => {
     const token = await loginUser(loginData);
-    cookies.save('acessToken', token.accessToken);
+    cookies.save('accessToken', token.accessToken);
     cookies.save('refreshToken', token.refreshToken);
   };
 

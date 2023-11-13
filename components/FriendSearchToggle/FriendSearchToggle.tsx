@@ -1,4 +1,6 @@
-import * as Styles from './FriendSearchToggle.styles';
+import React, { useState, useEffect } from 'react';
+import io from 'socket.io-client';
+import * as styled from './FriendSearchToggle.styles';
 
 interface FriendSearchToggleProps {
   isVisible: boolean;
@@ -9,133 +11,126 @@ interface User {
   id: string;
   name: string;
   picture: string;
+  isOnline?: boolean;
 }
 
 const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
   isVisible,
   onClose,
 }) => {
-  return (
-    <Styles.Sidebar isVisible={isVisible}>
-      <Styles.CloseButton onClick={onClose}>
-        <img src="/assets/icons/close.svg" alt="Close" />
-      </Styles.CloseButton>
-      <Styles.TotalStudents>
-        <Styles.TotalStudentsLabel>전체 학생 수</Styles.TotalStudentsLabel>
-        <Styles.TotalStudentsCount>30</Styles.TotalStudentsCount>
-      </Styles.TotalStudents>
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [initialized, setInitialized] = useState(false);
 
-      <Styles.UserList>
-        <Styles.UserItem>
-          <Styles.ProfileImage
-            src="/assets/img/HarryPotter.png"
-            alt="Profile"
-          />
-          <Styles.UserInfo>
-            <Styles.Username>
-              해리포터 <Styles.Emoji>🟢</Styles.Emoji>
-            </Styles.Username>
-            <Styles.UserDormitory>그리핀도르</Styles.UserDormitory>
-          </Styles.UserInfo>
-        </Styles.UserItem>
-        <Styles.UserItem>
-          <Styles.ProfileImage
-            src="/assets/img/HarryPotter.png"
-            alt="Profile"
-          />
-          <Styles.UserInfo>
-            <Styles.Username>
-              해리포터 <Styles.Emoji>🔴</Styles.Emoji>
-            </Styles.Username>
-            <Styles.UserDormitory>그리핀도르</Styles.UserDormitory>
-          </Styles.UserInfo>
-        </Styles.UserItem>
-        <Styles.UserItem>
-          <Styles.ProfileImage
-            src="/assets/img/HarryPotter.png"
-            alt="Profile"
-          />
-          <Styles.UserInfo>
-            <Styles.Username>
-              해리포터 <Styles.Emoji>🔴</Styles.Emoji>
-            </Styles.Username>
-            <Styles.UserDormitory>그리핀도르</Styles.UserDormitory>
-          </Styles.UserInfo>
-        </Styles.UserItem>
-        <Styles.UserItem>
-          <Styles.ProfileImage
-            src="/assets/img/HarryPotter.png"
-            alt="Profile"
-          />
-          <Styles.UserInfo>
-            <Styles.Username>
-              해리포터 <Styles.Emoji>🟢</Styles.Emoji>
-            </Styles.Username>
-            <Styles.UserDormitory>그리핀도르</Styles.UserDormitory>
-          </Styles.UserInfo>
-        </Styles.UserItem>
-        <Styles.UserItem>
-          <Styles.ProfileImage
-            src="/assets/img/HarryPotter.png"
-            alt="Profile"
-          />
-          <Styles.UserInfo>
-            <Styles.Username>
-              해리포터 <Styles.Emoji>🟢</Styles.Emoji>
-            </Styles.Username>
-            <Styles.UserDormitory>그리핀도르</Styles.UserDormitory>
-          </Styles.UserInfo>
-        </Styles.UserItem>
-        <Styles.UserItem>
-          <Styles.ProfileImage
-            src="/assets/img/HarryPotter.png"
-            alt="Profile"
-          />
-          <Styles.UserInfo>
-            <Styles.Username>
-              해리포터 <Styles.Emoji>🟢</Styles.Emoji>
-            </Styles.Username>
-            <Styles.UserDormitory>그리핀도르</Styles.UserDormitory>
-          </Styles.UserInfo>
-        </Styles.UserItem>
-        <Styles.UserItem>
-          <Styles.ProfileImage
-            src="/assets/img/HarryPotter.png"
-            alt="Profile"
-          />
-          <Styles.UserInfo>
-            <Styles.Username>
-              해리포터 <Styles.Emoji>🔴</Styles.Emoji>
-            </Styles.Username>
-            <Styles.UserDormitory>그리핀도르</Styles.UserDormitory>
-          </Styles.UserInfo>
-        </Styles.UserItem>
-        <Styles.UserItem>
-          <Styles.ProfileImage
-            src="/assets/img/HarryPotter.png"
-            alt="Profile"
-          />
-          <Styles.UserInfo>
-            <Styles.Username>
-              해리포터 <Styles.Emoji>🟢</Styles.Emoji>
-            </Styles.Username>
-            <Styles.UserDormitory>그리핀도르</Styles.UserDormitory>
-          </Styles.UserInfo>
-        </Styles.UserItem>
-        <Styles.UserItem>
-          <Styles.ProfileImage
-            src="/assets/img/HarryPotter.png"
-            alt="Profile"
-          />
-          <Styles.UserInfo>
-            <Styles.Username>
-              해리포터 <Styles.Emoji>🟢</Styles.Emoji>
-            </Styles.Username>
-            <Styles.UserDormitory>그리핀도르</Styles.UserDormitory>
-          </Styles.UserInfo>
-        </Styles.UserItem>
-      </Styles.UserList>
-    </Styles.Sidebar>
+  useEffect(() => {
+    if (isVisible && !initialized) {
+      fetchUsers();
+      setInitialized(true);
+    }
+  }, [isVisible, initialized]);
+
+  useEffect(() => {
+    const accessTokenCookie = document.cookie
+      .split('; ')
+      .find((row) => row.startsWith('accessToken='));
+
+    if (!accessTokenCookie) {
+      console.error('Access token not found in cookies');
+      return;
+    }
+
+    const accessToken = accessTokenCookie.split('=')[1];
+
+    const serverId = '660d616b';
+
+    const socket = io('https://fastcampus-chat.net', {
+      extraHeaders: {
+        'content-type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+        serverId: serverId,
+      },
+    });
+
+    socket.on('users-to-client', (data: { user: string[] }) => {
+      const onlineUsers = data.user.map((userId) => ({
+        id: userId,
+        isOnline: true,
+        ...users.find((u) => u.id === userId),
+      }));
+      setUsers(onlineUsers);
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [users]);
+
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+
+      const accessTokenCookie = document.cookie
+        .split('; ')
+        .find((row) => row.startsWith('accessToken='));
+
+      if (!accessTokenCookie) {
+        console.error('Access token not found in cookies');
+        return;
+      }
+
+      const accessToken = accessTokenCookie.split('=')[1];
+
+      const serverId = '660d616b';
+
+      const response = await fetch('https://fastcampus-chat.net/users', {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+          serverId: serverId,
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      if (response.ok) {
+        const data: User[] = await response.json();
+        setUsers(data);
+      } else {
+        console.error('Failed to fetch users');
+      }
+    } catch (error) {
+      console.error('Error fetching users', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <styled.Sidebar isVisible={isVisible}>
+      <styled.CloseButton onClick={onClose}>
+        <img src="/assets/icons/close.svg" alt="Close" />
+      </styled.CloseButton>
+      <styled.TotalStudents>
+        <styled.TotalStudentsLabel>전체 학생 수</styled.TotalStudentsLabel>
+        <styled.TotalStudentsCount>{users.length}</styled.TotalStudentsCount>
+      </styled.TotalStudents>
+      <styled.UserList>
+        {loading && <p>유저 목록 가져오는 중...</p>}
+        {users.map((user) => (
+          <styled.UserItem key={user.id}>
+            <styled.ProfileImage
+              src={user.picture}
+              alt={`Profile of ${user.name}`}
+            />
+            <styled.UserInfo>
+              <styled.Username>
+                {user.name}{' '}
+                <styled.Emoji>{user.isOnline ? '🟢' : '🔴'}</styled.Emoji>
+              </styled.Username>
+            </styled.UserInfo>
+          </styled.UserItem>
+        ))}
+      </styled.UserList>
+    </styled.Sidebar>
   );
 };
 

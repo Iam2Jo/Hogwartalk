@@ -1,10 +1,5 @@
 import React, { useState } from 'react';
-import {
-  SearchIconWrapper,
-  HeaderWrapper,
-  LeftIcons,
-  RightIcons,
-} from './Header.styles';
+import * as styled from './Header.styles';
 import MyPageIcon from './icons/MyPageIcon';
 import SearchIcon from './icons/SearchIcon';
 import ChatIcon from './icons/ChatIcon';
@@ -28,18 +23,18 @@ const Header = () => {
   };
 
   return (
-    <HeaderWrapper>
-      <LeftIcons>
+    <styled.HeaderWrapper>
+      <styled.LeftIcons>
         <MyPageIcon onClick={toggleMyPage} isToggled={isMyPageVisible} />
-        <SearchIconWrapper>
+        <styled.SearchIconWrapper>
           <SearchIcon onClick={toggleSearch} isToggled={isSearchVisible} />
-        </SearchIconWrapper>
+        </styled.SearchIconWrapper>
         <ChatIcon />
-      </LeftIcons>
-      <RightIcons>
+      </styled.LeftIcons>
+      <styled.RightIcons>
         <BgmIcon />
         <LogoutIcon />
-      </RightIcons>
+      </styled.RightIcons>
       {isMyPageVisible && (
         <MyPageToggle
           isVisible={isMyPageVisible}
@@ -52,7 +47,7 @@ const Header = () => {
           onClose={() => setSearchVisible(false)}
         />
       )}
-    </HeaderWrapper>
+    </styled.HeaderWrapper>
   );
 };
 
