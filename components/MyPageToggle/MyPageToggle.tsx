@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import React, { useState, useEffect, useRef } from 'react';
-=======
-import React, { useState, useEffect } from 'react';
->>>>>>> a0c020d7d2f7815ac6d0cbfd2aabd026ef7eea80
 import * as styled from './MyPageToggle.styles';
 
 interface MyPageToggleProps {
@@ -38,7 +34,7 @@ const MyPageToggle: React.FC<MyPageToggleProps> = ({ isVisible, onClose }) => {
       try {
         const accessTokenCookie = document.cookie
           .split('; ')
-          .find((row) => row.startsWith('acessToken='));
+          .find((row) => row.startsWith('accessToken='));
 
         if (!accessTokenCookie) {
           // 쿠키에 액세스 토큰이 없는 경우
@@ -89,7 +85,7 @@ const MyPageToggle: React.FC<MyPageToggleProps> = ({ isVisible, onClose }) => {
 
       const accessTokenCookie = document.cookie
         .split('; ')
-        .find((row) => row.startsWith('acessToken='));
+        .find((row) => row.startsWith('accessToken='));
 
       if (!accessTokenCookie) {
         // 쿠키에 액세스 토큰이 없는 경우
