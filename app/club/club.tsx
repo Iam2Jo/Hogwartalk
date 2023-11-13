@@ -1,10 +1,11 @@
 'use client';
 import { Header } from '@components/Header';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as styled from './club.styles';
 import ChatItem from '@components/club/chatItem/chatItem';
 import axios from 'axios';
 import {
+  createModalState,
   chatListState,
   joinModalState,
   myChatListState,
@@ -12,6 +13,7 @@ import {
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import CandleImg from '@assets/img/Candles.svg';
 import JoinModal from '@components/club/joinModal/page';
+import CreateModal from '@components/club/createModal/page';
 
 type ResponseValue = Chat[];
 
@@ -59,7 +61,7 @@ const club = ({ id, name, users }: Chat) => {
           setChatList(response.data.chats);
         })
         .catch((error) => {
-          console.error('나의 채팅방 조회 실패!', error);
+          console.error('모든 채팅방 조회 실패!', error);
         });
     };
     getChatList();
@@ -74,11 +76,11 @@ const club = ({ id, name, users }: Chat) => {
       const MyChatList = await axios
         .get(FIND_MY_CHAT_URL, { headers })
         .then((response) => {
-          console.log('모든 채팅방 조회 성공', response.data);
+          console.log('나의 채팅방 조회 성공', response.data);
           setMyChatList(response.data.chats);
         })
         .catch((error) => {
-          console.error('모든 채팅방 조회 실패!', error);
+          console.error('나의 채팅방 조회 실패!', error);
         });
     };
     getMyChatList();
@@ -86,15 +88,24 @@ const club = ({ id, name, users }: Chat) => {
 
   const joinModalOpen = useRecoilValue(joinModalState);
 
+  const createModalOpen = useRecoilValue(createModalState);
+  const setCreateModalOpen = useSetRecoilState(createModalState);
+
+  const setAddModal = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setCreateModalOpen(true);
+  };
+
   return (
     <>
       {joinModalOpen && <JoinModal />}
+      {createModalOpen && <CreateModal />}
       <Header />
       <CandleImg width="100%" />
       <styled.Container>
         <styled.HeaderWrap>
           <styled.Title>CLUB</styled.Title>
-          <styled.AddChatBtn>+</styled.AddChatBtn>
+          <styled.AddChatBtn onClick={setAddModal}>+</styled.AddChatBtn>
         </styled.HeaderWrap>
         <styled.ChatList>
           {' '}

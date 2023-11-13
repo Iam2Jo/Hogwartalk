@@ -4,7 +4,7 @@ import CancelIcon from '@assets/icon/cancelIcon.svg';
 import { chatInfoState, joinModalState } from '@recoil/chatList';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import axios from 'axios';
-import { RequestBody as RequestBodyParticipate } from '@/@types/RESTAPI/participateChatting.types';
+import { RequestBody as RequestBodyParticipate } from '@hooks/RESTAPI/participateChatting.types';
 
 const joinModal = () => {
   const SERVER_KEY = '660d616b';
