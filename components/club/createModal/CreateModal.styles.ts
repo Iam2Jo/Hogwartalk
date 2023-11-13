@@ -1,15 +1,25 @@
 import styled from 'styled-components';
 
+export const Background = styled.div`
+  z-index: 1;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  opacity: 50%;
+`;
+
 export const Container = styled.div`
   width: 50.75rem;
   height: 33.125rem;
-
-  z-index: 999;
-  position: absolute;
+  z-index: 2;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  overflow: hidden;
 
+  border: 1px solid var(--color-gray);
   border-radius: 0.3125rem;
   background: rgba(3, 3, 3, 1);
   color: var(--color-white);
@@ -30,6 +40,7 @@ export const Title = styled.span`
 export const CancelIcon = styled.button`
   background-color: transparent;
   border: 0;
+  cursor: pointer;
 `;
 
 export const Content = styled.div`

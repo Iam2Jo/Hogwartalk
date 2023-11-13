@@ -11,7 +11,8 @@ import axios from 'axios';
 import { RequestBody as RequestBodyCreateChatting } from '@hooks/RESTAPI/createChatting.type';
 import { useRouter } from 'next/navigation';
 
-const addModal = () => {
+//헤르미온느 토큰
+const createModal = () => {
   const SERVER_KEY = '660d616b';
   const ACCESS_TOKEN =
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGQ2MTZiOmhlcm1pb25lIiwiaWF0IjoxNjk5NDIzOTI4LCJleHAiOjE3MDAwMjg3Mjh9.9FA24mkoipWSd4KlpxTX0L8mKmJj7LAVd_XEcW1Xt7w';
@@ -22,7 +23,7 @@ const addModal = () => {
   };
 
   const router = useRouter();
-  const setAddModalOpen = useSetRecoilState(createModalState);
+  const setCreateModalOpen = useSetRecoilState(createModalState);
   const [chatName, setChatName] = useState('');
   const onChangeChatName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setChatName(e.target.value);
@@ -60,52 +61,56 @@ const addModal = () => {
   };
 
   return (
-    <styled.Container>
-      <styled.Header>
-        <styled.Title>채팅방 만들기</styled.Title>
-        <styled.CancelIcon>
-          <CancelIcon
-            onClick={() => {
-              setAddModalOpen(false);
-            }}
-          />
-        </styled.CancelIcon>
-      </styled.Header>
-      <styled.Content>
-        <styled.SetWrap>
-          <styled.SetTitle>채팅방 제목</styled.SetTitle>
-          <styled.SetTitleInput onChange={onChangeChatName} />
-        </styled.SetWrap>
-        <styled.SetWrap>
-          <styled.SetTitle>채팅방 공개</styled.SetTitle>
-          <styled.InputWrap>
-            <label>
-              <styled.SetPrivateInput
-                type="radio"
-                name="private"
-                defaultChecked
-                onChange={() => {
-                  setIsPrivate(false);
-                }}
-              />
-              공개
-            </label>
-            <label>
-              <styled.SetPrivateInput
-                type="radio"
-                name="private"
-                onChange={() => {
-                  setIsPrivate(true);
-                }}
-              />
-              비공개
-            </label>
-          </styled.InputWrap>
-        </styled.SetWrap>
-        <styled.AddBtn onClick={setCreateChat}>채팅방 만들기</styled.AddBtn>
-      </styled.Content>
-    </styled.Container>
+    <>
+      <styled.Container>
+        <styled.Header>
+          <styled.Title>채팅방 만들기</styled.Title>
+          <styled.CancelIcon>
+            <CancelIcon
+              onClick={() => {
+                setCreateModalOpen(false);
+                document.body.style.overflowY = 'auto';
+              }}
+            />
+          </styled.CancelIcon>
+        </styled.Header>
+        <styled.Content>
+          <styled.SetWrap>
+            <styled.SetTitle>채팅방 제목</styled.SetTitle>
+            <styled.SetTitleInput onChange={onChangeChatName} />
+          </styled.SetWrap>
+          <styled.SetWrap>
+            <styled.SetTitle>채팅방 공개</styled.SetTitle>
+            <styled.InputWrap>
+              <label>
+                <styled.SetPrivateInput
+                  type="radio"
+                  name="private"
+                  defaultChecked
+                  onChange={() => {
+                    setIsPrivate(false);
+                  }}
+                />
+                공개
+              </label>
+              <label>
+                <styled.SetPrivateInput
+                  type="radio"
+                  name="private"
+                  onChange={() => {
+                    setIsPrivate(true);
+                  }}
+                />
+                비공개
+              </label>
+            </styled.InputWrap>
+          </styled.SetWrap>
+          <styled.AddBtn onClick={setCreateChat}>채팅방 만들기</styled.AddBtn>
+        </styled.Content>
+      </styled.Container>
+      <styled.Background />
+    </>
   );
 };
 
-export default addModal;
+export default createModal;

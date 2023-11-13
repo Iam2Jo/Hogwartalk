@@ -14,30 +14,12 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import CandleImg from '@assets/img/Candles.svg';
 import JoinModal from '@components/club/joinModal/page';
 import CreateModal from '@components/club/createModal/page';
+import Loading from '@components/club/loading/page';
 
-type ResponseValue = Chat[];
-
-interface Chat {
-  id: string;
-  name: string;
-  users: User[]; // 속한 유저 정보
-}
-
-interface User {
-  id: string;
-  name: string;
-  picture: string;
-}
-
-interface Message {
-  id: string;
-  text: string;
-  userId: string;
-  createAt: Date;
-}
-
-const club = ({ id, name, users }: Chat) => {
+const club = () => {
   const SERVER_KEY = '660d616b';
+
+  //헤르미온느 토큰
   const ACCESS_TOKEN =
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGQ2MTZiOmhlcm1pb25lIiwiaWF0IjoxNjk5NDIzOTI4LCJleHAiOjE3MDAwMjg3Mjh9.9FA24mkoipWSd4KlpxTX0L8mKmJj7LAVd_XEcW1Xt7w';
 
@@ -52,12 +34,15 @@ const club = ({ id, name, users }: Chat) => {
 
   const chatList = useRecoilValue(chatListState);
   const setChatList = useSetRecoilState(chatListState);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getChatList = async () => {
+      setLoading(true);
       const ChatList = await axios
         .get(FIND_ALL_CHAT_URL, { headers })
         .then((response) => {
+          setLoading(false);
           setChatList(response.data.chats);
         })
         .catch((error) => {
@@ -91,13 +76,15 @@ const club = ({ id, name, users }: Chat) => {
   const createModalOpen = useRecoilValue(createModalState);
   const setCreateModalOpen = useSetRecoilState(createModalState);
 
-  const setAddModal = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const setCreateModal = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setCreateModalOpen(true);
+    document.body.style.overflowY = 'hidden';
   };
 
   return (
     <>
+      {loading && <Loading />}
       {joinModalOpen && <JoinModal />}
       {createModalOpen && <CreateModal />}
       <Header />
@@ -105,7 +92,7 @@ const club = ({ id, name, users }: Chat) => {
       <styled.Container>
         <styled.HeaderWrap>
           <styled.Title>CLUB</styled.Title>
-          <styled.AddChatBtn onClick={setAddModal}>+</styled.AddChatBtn>
+          <styled.AddChatBtn onClick={setCreateModal}>+</styled.AddChatBtn>
         </styled.HeaderWrap>
         <styled.ChatList>
           {' '}
