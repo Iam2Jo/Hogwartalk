@@ -96,14 +96,22 @@ const club = () => {
         </styled.HeaderWrap>
         <styled.ChatList>
           {' '}
-          {chatList.map((chat) => (
-            <ChatItem
-              key={chat.id}
-              id={chat.id}
-              name={chat.name}
-              users={chat.users}
-            />
-          ))}
+          {chatList
+            .filter(
+              (chat) =>
+                chat.name !== 'hufflepuff' &&
+                chat.name !== 'slytherin' &&
+                chat.name !== 'gryffindor' &&
+                chat.name !== 'ravenclaw',
+            )
+            .map((chat) => (
+              <ChatItem
+                key={chat.id}
+                id={chat.id}
+                name={chat.name}
+                users={chat.users}
+              />
+            ))}
         </styled.ChatList>
       </styled.Container>
     </>
