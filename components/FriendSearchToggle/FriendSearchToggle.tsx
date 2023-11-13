@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
-import * as Styles from './FriendSearchToggle.styles';
+import * as styled from './FriendSearchToggle.styles';
 
 interface FriendSearchToggleProps {
   isVisible: boolean;
@@ -93,32 +93,32 @@ const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
   };
 
   return (
-    <Styles.Sidebar isVisible={isVisible}>
-      <Styles.CloseButton onClick={onClose}>
+    <styled.Sidebar isVisible={isVisible}>
+      <styled.CloseButton onClick={onClose}>
         <img src="/assets/icons/close.svg" alt="Close" />
-      </Styles.CloseButton>
-      <Styles.TotalStudents>
-        <Styles.TotalStudentsLabel>전체 학생 수</Styles.TotalStudentsLabel>
-        <Styles.TotalStudentsCount>{users.length}</Styles.TotalStudentsCount>
-      </Styles.TotalStudents>
+      </styled.CloseButton>
+      <styled.TotalStudents>
+        <styled.TotalStudentsLabel>전체 학생 수</styled.TotalStudentsLabel>
+        <styled.TotalStudentsCount>{users.length}</styled.TotalStudentsCount>
+      </styled.TotalStudents>
 
-      <Styles.UserList>
+      <styled.UserList>
         {users.map((user) => (
-          <Styles.UserItem key={user.id}>
-            <Styles.ProfileImage
+          <styled.UserItem key={user.id}>
+            <styled.ProfileImage
               src={user.picture}
               alt={`Profile of ${user.name}`}
             />
-            <Styles.UserInfo>
-              <Styles.Username>
+            <styled.UserInfo>
+              <styled.Username>
                 {user.name}{' '}
-                <Styles.Emoji>{user.isOnline ? '🟢' : '🔴'}</Styles.Emoji>
-              </Styles.Username>
-            </Styles.UserInfo>
-          </Styles.UserItem>
+                <styled.Emoji>{user.isOnline ? '🟢' : '🔴'}</styled.Emoji>
+              </styled.Username>
+            </styled.UserInfo>
+          </styled.UserItem>
         ))}
-      </Styles.UserList>
-    </Styles.Sidebar>
+      </styled.UserList>
+    </styled.Sidebar>
   );
 };
 
