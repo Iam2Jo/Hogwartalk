@@ -14,6 +14,10 @@ interface User {
   isOnline?: boolean;
 }
 
+interface ResponseData {
+  user: string[];
+}
+
 const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
   isVisible,
   onClose,
@@ -52,7 +56,8 @@ const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
         if (response.ok) {
           const data: User[] = await response.json();
 
-          // 친구 목록에서 자기 자신 제외
+          console.log('All Users:', data); // 모든 유저 목록 콘솔 출력
+
           const myUserId = await checkDuplicateUserId(accessToken);
           if (myUserId !== null) {
             const onlineUsers = data.map((user) => ({
@@ -60,6 +65,7 @@ const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
               isOnline: true,
               ...user,
             }));
+
             setUsers(onlineUsers.filter((user) => user.id !== myUserId));
           } else {
             console.error('Failed to fetch user information');
@@ -102,19 +108,24 @@ const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
       },
     });
 
-    socket.on('users-to-client', (data: { user: string[] }) => {
-      const onlineUsers = data.user.map((userId) => ({
-        id: userId,
-        isOnline: true,
-        ...users.find((u) => u.id === userId),
-      }));
-      setUsers(onlineUsers);
+    socket.on('users-to-client', (data: ResponseData) => {
+      console.log('Online Users:', data.user); // 접속 중인 유저 목록 콘솔 출력
+
+      setUsers((prevUsers) => {
+        const onlineUsers = prevUsers.map((user) => {
+          return {
+            ...user,
+            isOnline: data.user.includes(user.id),
+          };
+        });
+        return onlineUsers;
+      });
     });
 
     return () => {
       socket.disconnect();
     };
-  }, [users]);
+  }, [setUsers]);
 
   const checkDuplicateUserId = async (accessToken: string) => {
     try {

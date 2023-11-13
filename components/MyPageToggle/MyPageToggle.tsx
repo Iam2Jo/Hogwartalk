@@ -19,7 +19,7 @@ interface ResponseValue {
 
 interface RequestBody {
   name?: string;
-  picture?: string;
+  picture?: string | File;
 }
 
 const MyPageToggle: React.FC<MyPageToggleProps> = ({ isVisible, onClose }) => {
@@ -43,7 +43,7 @@ const MyPageToggle: React.FC<MyPageToggleProps> = ({ isVisible, onClose }) => {
 
         const accessToken = accessTokenCookie.split('=')[1];
 
-        const serverId = 'nREmPe9B';
+        const serverId = '660d616b';
 
         const response = await fetch('https://fastcampus-chat.net/auth/me', {
           method: 'GET',
@@ -83,6 +83,10 @@ const MyPageToggle: React.FC<MyPageToggleProps> = ({ isVisible, onClose }) => {
         picture: newPicture || tempNewPicture,
       };
 
+      // 만약 File(즉, base64)이면 수정할 필요 없음/ 그렇지 않으면 URL임
+      if (typeof requestBody.picture === 'string') {
+      }
+
       const accessTokenCookie = document.cookie
         .split('; ')
         .find((row) => row.startsWith('accessToken='));
@@ -94,7 +98,7 @@ const MyPageToggle: React.FC<MyPageToggleProps> = ({ isVisible, onClose }) => {
 
       const accessToken = accessTokenCookie.split('=')[1];
 
-      const serverId = 'nREmPe9B';
+      const serverId = '660d616b';
 
       const response = await fetch('https://fastcampus-chat.net/user', {
         method: 'PATCH',
@@ -113,7 +117,6 @@ const MyPageToggle: React.FC<MyPageToggleProps> = ({ isVisible, onClose }) => {
           name: updatedData.user?.name || userData.name,
           picture: updatedData.user?.picture || userData.picture,
         });
-        setNewPicture(tempNewPicture);
       } else {
         console.error('사용자 정보 업데이트 오류:', response.statusText);
       }
@@ -142,16 +145,6 @@ const MyPageToggle: React.FC<MyPageToggleProps> = ({ isVisible, onClose }) => {
 
   const fileInputRef = useRef(null);
 
-  const handleProfileImageChange = async () => {
-    try {
-      if (fileInputRef.current) {
-        fileInputRef.current.click();
-      }
-    } catch (error) {
-      console.error('프로필 사진 변경 오류:', error);
-    }
-  };
-
   const handleFileInputChange = async (
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
@@ -167,11 +160,11 @@ const MyPageToggle: React.FC<MyPageToggleProps> = ({ isVisible, onClose }) => {
 
         console.log(selectedFile);
 
-        const blobUrl = URL.createObjectURL(selectedFile);
-
-        console.log(blobUrl);
-
-        setTempNewPicture(blobUrl);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setTempNewPicture(reader.result as string);
+        };
+        reader.readAsDataURL(selectedFile);
       }
     } catch (error) {
       console.error('프로필 사진 변경 오류:', error);
@@ -183,6 +176,16 @@ const MyPageToggle: React.FC<MyPageToggleProps> = ({ isVisible, onClose }) => {
     <styled.ProfileImagePreview src={picture} alt="Preview" />
   );
 
+  const handleProfileImageChange = async () => {
+    try {
+      if (fileInputRef.current) {
+        fileInputRef.current.click();
+      }
+    } catch (error) {
+      console.error('프로필 사진 변경 오류:', error);
+    }
+  };
+
   return (
     <styled.Sidebar isVisible={isVisible}>
       <styled.CloseButton onClick={onClose}>
@@ -193,7 +196,7 @@ const MyPageToggle: React.FC<MyPageToggleProps> = ({ isVisible, onClose }) => {
         <styled.ProfileSection>
           {editMode ? (
             <>
-              <styled.ProfileImage src={userData.picture} alt="Profile" />
+              <styled.ProfileImage src={tempNewPicture} alt="Profile" />
               <styled.LabelsContainer>
                 <styled.NameLabel>이름</styled.NameLabel>
                 <styled.EditInput
