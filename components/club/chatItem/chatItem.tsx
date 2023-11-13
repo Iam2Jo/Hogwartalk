@@ -8,9 +8,7 @@ import {
   myChatListState,
 } from '@recoil/chatList';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-
 import UserIcon from '@assets/icon/UserIcon.svg';
-
 import { useRouter } from 'next/navigation';
 
 interface Chat {
@@ -57,6 +55,7 @@ const chatItem = ({ id, name, users }: Chat) => {
       }
     }
     setJoinModalOpen(true);
+    document.body.style.overflowY = 'hidden';
     const chatDetail = {
       name,
       id,
@@ -69,7 +68,7 @@ const chatItem = ({ id, name, users }: Chat) => {
       {chatList.length > 0 ? (
         <styled.Content>
           <styled.Title>
-            {name.length < 30 ? name : name.slice(0, 26) + '...'}
+            {name.length < 30 ? name : name.slice(0, 29) + '...'}
           </styled.Title>
           <styled.BottomWrap>
             <styled.UserInfoWrap>

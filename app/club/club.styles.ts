@@ -23,12 +23,18 @@ export const AddChatBtn = styled.button`
   font-style: normal;
   font-weight: 500;
   letter-spacing: -0.1125rem;
+  cursor: pointer;
+  transition: 1s;
+  &:hover {
+    color: rgba(242, 204, 0);
+    text-shadow: 0px 0px 20px 0px rgba(242, 204, 0, 0.49);
+  }
 `;
 
 export const ChatList = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.3rem;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(18.125rem, 1fr));
+  grid-gap: 1rem;
   justify-content: space-between;
+  place-items: center;
 `;
