@@ -1,7 +1,12 @@
-import React from 'react';
+import type { NextPage } from 'next';
+import Hufflepuff from './hufflepuff';
 
-const Hufflepuff = () => {
-  return <div>후플푸프</div>;
+const DormHufflepuff: NextPage = () => {
+  return (
+    <>
+      <Hufflepuff />
+    </>
+  );
 };
 
-export default Hufflepuff;
+export default DormHufflepuff;

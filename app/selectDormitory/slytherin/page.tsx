@@ -1,7 +1,12 @@
-import React from 'react';
+import type { NextPage } from 'next';
+import Slytherin from './slytherin';
 
-const Slytherin = () => {
-  return <div>슬리데린</div>;
+const DormSlytherin: NextPage = () => {
+  return (
+    <>
+      <Slytherin />
+    </>
+  );
 };
 
-export default Slytherin;
+export default DormSlytherin;
