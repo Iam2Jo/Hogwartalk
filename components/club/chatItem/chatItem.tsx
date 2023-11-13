@@ -7,8 +7,8 @@ import {
   joinModalState,
   myChatListState,
 } from '@recoil/chatList';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import axios from 'axios';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+
 import UserIcon from '@assets/icon/UserIcon.svg';
 
 import { useRouter } from 'next/navigation';
