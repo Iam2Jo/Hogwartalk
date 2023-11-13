@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from 'react';
 import * as styled from './selectDormitory.styles';
-import type { NextPage } from 'next';
 import { readChatting } from '@hooks/readChatting';
 import Link from 'next/link';
 import axios from 'axios';
@@ -12,7 +11,13 @@ import {
   ravenclawChatIdState,
   slytherinChatIdState,
 } from '@recoil/dormChatId';
+
+import * as dormChatInfo from '@/recoil/dormChatInfo';
 import { useSetRecoilState, useRecoilState } from 'recoil';
+import { doesDormitoryExist } from '@hooks/doesDormitoryExist';
+import createDormitoryIfNone from '@hooks/createDormitoryIfNone';
+import { RequestBody as RequestBodyCreate } from '@/@types/RESTAPI/createChatting.types';
+import { RequestBody as RequestBodyParticipate } from '@/@types/RESTAPI/participateChatting.types';
 
 interface RequestBody {
   name: string;
@@ -20,34 +25,21 @@ interface RequestBody {
   isPrivate?: boolean;
 }
 
+interface DormChatInfo {
+  name: string | null;
+  users: string[];
+  isPrivate: boolean | null;
+  updatedAt: string | null;
+  host: string | null;
+}
+
 type ResponseValue = any;
 // type ResponseValue = Chat[]
-
-interface Chat {
-  id: string;
-  name: string;
-  users: User[]; // 속한 유저 정보
-  isPrivate: boolean;
-  latestMessage: Message | null;
-  updatedAt: Date;
-}
-
-interface User {
-  id: string;
-  name: string;
-  picture: string;
-}
-
-interface Message {
-  id: string;
-  text: string;
-  userId: string;
-  createAt: Date;
-}
 
 const SelectDormitory = () => {
   const data: ResponseValue | null = readChatting();
   const [chatData, setChatData] = useState<ResponseValue | null>();
+  const [myName, setMyName] = useState('');
   const [hasGryffindor, setHasGryffindor] = useState(true);
   const [hasSlytherin, setHasSlytherin] = useState(true);
   const [hasHufflepuff, setHasHufflepuff] = useState(true);
@@ -56,16 +48,35 @@ const SelectDormitory = () => {
   const [gryffindorChatId, setGryffindorChatId] = useRecoilState(
     gryffindorChatIdState,
   );
-  const setHufflepuffChatId = useSetRecoilState(hufflepuffChatIdState);
-  const setRavenclawChatId = useSetRecoilState(ravenclawChatIdState);
-  const setSlytherinChatId = useSetRecoilState(slytherinChatIdState);
+  const [hufflepuffChatId, setHufflepuffChatId] = useRecoilState(
+    hufflepuffChatIdState,
+  );
+  const [ravenclawChatId, setRavenclawChatId] =
+    useRecoilState(ravenclawChatIdState);
+  const [slytherinChatId, setSlytherinChatId] =
+    useRecoilState(slytherinChatIdState);
+
+  const setGryffindorChatInfo = useSetRecoilState(
+    dormChatInfo.gryffindorChatInfoState,
+  );
+  const setSlytherinChatInfo = useSetRecoilState(
+    dormChatInfo.slytherinChatInfoState,
+  );
+  const setHufflepuffChatInfo = useSetRecoilState(
+    dormChatInfo.hufflepuffChatInfoState,
+  );
+  const setRavenclawChatInfo = useSetRecoilState(
+    dormChatInfo.ravenclawChatInfoState,
+  );
 
   const SERVER_KEY = '660d616b';
+  // 현재 헤르미온느 ACCESS_TOKEN임!
   const ACCESS_TOKEN =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGQ2MTZiOmhhcnJ5cG90dGVyIiwiaWF0IjoxNjk5MzQ1NDkzLCJleHAiOjE2OTk5NTAyOTN9.b5s4_9f-pVBj9ki17SXc6VvoiApMJZCJXfk5G2wskyo';
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGQ2MTZiOmhlcm1pb25lIiwiaWF0IjoxNjk5NDIzOTI4LCJleHAiOjE3MDAwMjg3Mjh9.9FA24mkoipWSd4KlpxTX0L8mKmJj7LAVd_XEcW1Xt7w';
   const CREATE_CHAT_URL = 'https://fastcampus-chat.net/chat';
   const FIND_ALL_USER_URL = 'https://fastcampus-chat.net/users';
   const FIND_MY_CHAT_URL = 'https://fastcampus-chat.net/chat';
+  const GET_MY_INFO_URL = 'https://fastcampus-chat.net/auth/me';
 
   const headers = {
     'Content-Type': 'application/json',
@@ -73,24 +84,39 @@ const SelectDormitory = () => {
     serverId: SERVER_KEY,
   };
 
-  const gryffindorRequestData: RequestBody = {
+  const gryffindorRequestData: RequestBodyCreate = {
     name: 'gryffindor',
     users: ['ron'],
   };
 
-  const hufflepuffRequestData: RequestBody = {
+  const hufflepuffRequestData: RequestBodyCreate = {
     name: 'hufflepuff',
     users: ['ron'],
   };
 
-  const ravenclawRequestData: RequestBody = {
+  const ravenclawRequestData: RequestBodyCreate = {
     name: 'ravenclaw',
     users: ['ron'],
   };
 
-  const slytherinRequestData: RequestBody = {
+  const slytherinRequestData: RequestBodyCreate = {
     name: 'slytherin',
     users: ['ron'],
+  };
+
+  const handleParticipate = (chatId: string) => {
+    const PARTICIPATE_CHAT_URL = 'https://fastcampus-chat.net/chat/participate';
+    const requestData: RequestBodyParticipate = {
+      chatId: chatId,
+    };
+    axios
+      .patch(PARTICIPATE_CHAT_URL, requestData, { headers })
+      .then((response) => {
+        console.log('채팅 참여 성공!', response.data);
+      })
+      .catch((error) => {
+        console.error('채팅 참여 실패!', error);
+      });
   };
 
   useEffect(() => {
@@ -98,10 +124,10 @@ const SelectDormitory = () => {
   }, [data]);
 
   useEffect(() => {
-    if (chatData) {
-      console.log('chatData.chats', chatData.chats);
-    }
-  }, [chatData]);
+    axios.get(GET_MY_INFO_URL, { headers }).then((res) => {
+      setMyName(res.data.user.name);
+    });
+  }, []);
 
   useEffect(() => {
     axios
@@ -114,188 +140,91 @@ const SelectDormitory = () => {
       });
   }, []);
 
-  useEffect(() => {
-    axios
-      .get(FIND_MY_CHAT_URL, { headers })
-      .then((response) => {
-        console.log('나의 채팅방 조회 성공!', response.data);
-      })
-      .catch((error) => {
-        console.error('나의 채팅방 조회 실패!', error);
-      });
-  }, []);
-
-  useEffect(() => {
-    if (chatData) {
-      let isThere = false;
-      for (let i = 0; i < chatData.chats.length; i++) {
-        if (chatData.chats[i].name === 'gryffindor') {
-          isThere = true;
-          console.log('gryffindor 기숙사가 이미 있습니다!');
-          break;
-        }
-      }
-      setHasGryffindor(true);
-
-      if (!isThere) {
-        console.log('gryffindor 기숙사가 없습니다!');
-        setHasGryffindor(false);
-      }
-    }
-  }, [chatData]);
-
-  useEffect(() => {
-    if (chatData) {
-      let isThere = false;
-      for (let i = 0; i < chatData.chats.length; i++) {
-        if (chatData.chats[i].name === 'slytherin') {
-          isThere = true;
-          console.log('slytherin 기숙사가 이미 있습니다!');
-          break;
-        }
-      }
-      setHasSlytherin(true);
-
-      if (!isThere) {
-        console.log('slytherin 기숙사가 없습니다!');
-        setHasSlytherin(false);
-      }
-    }
-  }, [chatData]);
-
-  useEffect(() => {
-    if (chatData) {
-      let isThere = false;
-      for (let i = 0; i < chatData.chats.length; i++) {
-        if (chatData.chats[i].name === 'hufflepuff') {
-          isThere = true;
-          console.log('hufflepuff 기숙사가 이미 있습니다!');
-          break;
-        }
-      }
-      setHasHufflepuff(true);
-      if (!isThere) {
-        console.log('hufflepuff 기숙사가 없습니다!');
-        setHasHufflepuff(false);
-      }
-    }
-  }, [chatData]);
-
-  useEffect(() => {
-    if (chatData) {
-      let isThere = false;
-      for (let i = 0; i < chatData.chats.length; i++) {
-        if (chatData.chats[i].name === 'ravenclaw') {
-          isThere = true;
-          console.log('ravenclaw 기숙사가 이미 있습니다!');
-          break;
-        }
-      }
-      setHasRavenclaw(true);
-
-      if (!isThere) {
-        console.log('ravenclaw 기숙사가 없습니다!');
-        setHasRavenclaw(false);
-      }
-    }
-  }, [chatData]);
-
-  useEffect(() => {
-    if (!hasGryffindor) {
-      axios
-        .post(CREATE_CHAT_URL, gryffindorRequestData, { headers })
-        .then((response) => {
-          console.log('Gryffindor 채팅방 생성 완료', response.data);
-          setGryffindorChatId(response.data.id);
-        })
-        .catch((error) => {
-          console.error('Error sending the request:', error);
-        });
-    } else {
-      if (chatData) {
-        console.log('chatData', chatData);
-        for (let i = chatData.chats.length - 1; i >= 0; i--) {
-          if (chatData.chats[i].name === 'gryffindor') {
-            setGryffindorChatId(chatData.chats[i].id);
-            break;
-          }
-        }
-      }
-    }
-  }, [hasGryffindor, chatData]);
-
-  useEffect(() => {
-    if (!hasHufflepuff) {
-      axios
-        .post(CREATE_CHAT_URL, hufflepuffRequestData, { headers })
-        .then((response) => {
-          console.log('Hufflepuff 채팅방 생성 완료', response.data);
-          setHufflepuffChatId(response.data.id);
-        })
-        .catch((error) => {
-          console.error('Error sending the request:', error);
-        });
-    } else {
-      if (chatData) {
-        for (let i = chatData.chats.length - 1; i >= 0; i--) {
-          if (chatData.chats[i].name === 'hufflepuff') {
-            setHufflepuffChatId(chatData.chats[i].id);
-            break;
-          }
-        }
-      }
-    }
-  }, [hasHufflepuff, chatData]);
-
-  useEffect(() => {
-    if (!hasRavenclaw) {
-      axios
-        .post(CREATE_CHAT_URL, ravenclawRequestData, { headers })
-        .then((response) => {
-          console.log('Ravenclaw 채팅방 생성 완료', response.data);
-          setRavenclawChatId(response.data.id);
-        })
-        .catch((error) => {
-          console.error('Error sending the request:', error);
-        });
-    } else {
-      if (chatData) {
-        for (let i = chatData.chats.length - 1; i >= 0; i--) {
-          if (chatData.chats[i].name === 'ravenclaw') {
-            setRavenclawChatId(chatData.chats[i].id);
-            break;
-          }
-        }
-      }
-    }
-  }, [hasRavenclaw, chatData]);
-
-  useEffect(() => {
-    if (!hasSlytherin) {
-      axios
-        .post(CREATE_CHAT_URL, slytherinRequestData, { headers })
-        .then((response) => {
-          console.log('Slytherin 채팅방 생성 완료', response.data);
-          setSlytherinChatId(response.data.id);
-        })
-        .catch((error) => {
-          console.error('Error sending the request:', error);
-        });
-    } else {
-      if (chatData) {
-        for (let i = chatData.chats.length - 1; i >= 0; i--) {
-          if (chatData.chats[i].name === 'slytherin') {
-            setSlytherinChatId(chatData.chats[i].id);
-            break;
-          }
-        }
-      }
-    }
-  }, [hasSlytherin, chatData]);
+  doesDormitoryExist('gryffindor', chatData, setHasGryffindor);
+  doesDormitoryExist('slytherin', chatData, setHasSlytherin);
+  doesDormitoryExist('hufflepuff', chatData, setHasHufflepuff);
+  doesDormitoryExist('ravenclaw', chatData, setHasRavenclaw);
 
   useEffect(() => {
     console.log('gryffindorChatId', gryffindorChatId);
   }, [gryffindorChatId]);
+  // 모듈화 필요
+  useEffect(() => {
+    axios.get(GET_MY_INFO_URL, { headers }).then((res) => {
+      setMyName(res.data.user.name);
+    });
+  }, []);
+
+  useEffect(() => {
+    createDormitoryIfNone(
+      hasGryffindor,
+      chatData,
+      setGryffindorChatId,
+      CREATE_CHAT_URL,
+      gryffindorRequestData,
+      headers,
+      myName,
+      setGryffindorChatInfo,
+    );
+  }, [hasGryffindor, chatData]);
+
+  useEffect(() => {
+    createDormitoryIfNone(
+      hasSlytherin,
+      chatData,
+      setSlytherinChatId,
+      CREATE_CHAT_URL,
+      slytherinRequestData,
+      headers,
+      myName,
+      setSlytherinChatInfo,
+    );
+  }, [hasSlytherin, chatData]);
+
+  useEffect(() => {
+    createDormitoryIfNone(
+      hasHufflepuff,
+      chatData,
+      setHufflepuffChatId,
+      CREATE_CHAT_URL,
+      hufflepuffRequestData,
+      headers,
+      myName,
+      setHufflepuffChatInfo,
+    );
+  }, [hasHufflepuff, chatData]);
+
+  useEffect(() => {
+    createDormitoryIfNone(
+      hasRavenclaw,
+      chatData,
+      setRavenclawChatId,
+      CREATE_CHAT_URL,
+      ravenclawRequestData,
+      headers,
+      myName,
+      setRavenclawChatInfo,
+    );
+  }, [hasRavenclaw, chatData]);
+
+  // useEffect(() => {
+  //   console.log('gryffindorChatId', gryffindorChatId);
+  // }, [gryffindorChatId]);
+  // useEffect(() => {
+  //   console.log('ravenclawChatId', ravenclawChatId);
+  // }, [ravenclawChatId]);
+  // useEffect(() => {
+  //   console.log('hufflepuffChatId', hufflepuffChatId);
+  // }, [hufflepuffChatId]);
+  // useEffect(() => {
+  //   console.log('slytherinChatId', slytherinChatId);
+  // }, [slytherinChatId]);
+
+  // useEffect(() => {
+  //   if (chatData) {
+  //     console.log('chatData.chats', chatData.chats);
+  //   }
+  // }, [chatData]);
 
   return (
     <styled.Wrapper>
@@ -304,13 +233,17 @@ const SelectDormitory = () => {
           href="/selectDormitory/gryffindor"
           style={{ width: '100%', height: '100%' }}
         >
-          <styled.GryffindorSVG />
+          <styled.GryffindorSVG
+            onClick={() => handleParticipate(gryffindorChatId)}
+          />
         </Link>
         <Link
           href="/selectDormitory/ravenclaw"
           style={{ width: '100%', height: '100%' }}
         >
-          <styled.RavenclawSVG />
+          <styled.RavenclawSVG
+            onClick={() => handleParticipate(ravenclawChatId)}
+          />
         </Link>
       </styled.LeftSection>
       <styled.CenterSection>
@@ -321,13 +254,17 @@ const SelectDormitory = () => {
           href="/selectDormitory/hufflepuff"
           style={{ width: '100%', height: '100%' }}
         >
-          <styled.HufflepuffSVG />
+          <styled.HufflepuffSVG
+            onClick={() => handleParticipate(hufflepuffChatId)}
+          />
         </Link>
         <Link
           href="/selectDormitory/slytherin"
           style={{ width: '100%', height: '100%' }}
         >
-          <styled.SlytherinSVG />
+          <styled.SlytherinSVG
+            onClick={() => handleParticipate(slytherinChatId)}
+          />
         </Link>
       </styled.RightSection>
     </styled.Wrapper>

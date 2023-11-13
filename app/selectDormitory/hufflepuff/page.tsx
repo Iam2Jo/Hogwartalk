@@ -1,7 +1,21 @@
-import React from 'react';
+import type { NextPage } from 'next';
+import Hufflepuff from './hufflepuff';
+import { MyChatting } from '@components/MyChatting';
 
-const Hufflepuff = () => {
-  return <div>후플푸프</div>;
+const DormHufflepuff: NextPage = () => {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        gap: '1rem',
+        padding: '1rem',
+        backgroundColor: '#1f1f1f',
+      }}
+    >
+      <MyChatting />
+      <Hufflepuff />
+    </div>
+  );
 };
 
-export default Hufflepuff;
+export default DormHufflepuff;

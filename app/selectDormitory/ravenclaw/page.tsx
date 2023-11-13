@@ -1,7 +1,21 @@
-import React from 'react';
+import type { NextPage } from 'next';
+import Ravenclaw from './ravenclaw';
+import { MyChatting } from '@components/MyChatting';
 
-const Ravenclaw = () => {
-  return <div>레번클로</div>;
+const DormRavenclaw: NextPage = () => {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        gap: '1rem',
+        padding: '1rem',
+        backgroundColor: '#1f1f1f',
+      }}
+    >
+      <MyChatting />
+      <Ravenclaw />
+    </div>
+  );
 };
 
-export default Ravenclaw;
+export default DormRavenclaw;
