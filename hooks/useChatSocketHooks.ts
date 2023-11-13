@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import isEqual from 'lodash/isEqual';
+import cutStringAfterColon from '@/utils/cutStringAfterColon';
 
 export const useFetchMessages = (chatSocket) => {
   useEffect(() => {
@@ -51,3 +52,55 @@ export const useScrollToBottom = (messageContainerRef, previousMessages) => {
     prevMessagesRef.current = previousMessages;
   }, [previousMessages]);
 };
+
+export const useFetchUsers = (chatSocket) => {
+  useEffect(() => {
+    try {
+      chatSocket.emit('users');
+      console.log('C->S 접속 상태 유저 목록 fetch 성공!');
+    } catch (error) {
+      console.error('C->S 접속 상태 유저 목록 fetch 실패!', error);
+    }
+  }, [chatSocket]);
+};
+
+export const usePullUsers = (chatSocket, setIsConnected) => {
+    useEffect(() => {
+    try {
+      chatSocket.on('users-to-client', (response) => {
+        console.log('접속 상태 유저 목록: ', response.users);
+        console.log('S->C 접속 상태 유저 목록 pull 성공!');
+        setIsConnected(response.users);
+      });
+    } catch (error) {
+      console.error('S->C 접속 상태 유저 목록 pull 실패!', error);
+    }
+  }, [chatSocket]);
+};
+
+export const useJoinUsers = (chatSocket, setIsConnected) => {
+  try {
+    chatSocket.on('join', (response) => {
+      console.log(
+        cutStringAfterColon(response.joiners[0].id),
+        '님이 입장하셨습니다.',
+      );
+      setIsConnected(response.users);
+      console.log('S->C 유저 입장 정보 불러오기 성공!');
+    });
+  } catch (error) {
+    console.error('S->C 유저 입장 정보 불러오기 실패!', error);
+  }
+}
+
+export const useLeaveUsers = (chatSocket, setIsConnected) => {
+  try {
+    chatSocket.on('leave', (response) => {
+      console.log(response.leaver, '님이 퇴장하셨습니다.');
+      setIsConnected(response.users);
+      console.log('S->C 유저 퇴장 정보 불러오기 성공!');
+    });
+  } catch (error) {
+    console.error('S->C 유저 퇴장 정보 불러오기 실패!', error);
+  }
+}
