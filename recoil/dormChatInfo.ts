@@ -1,15 +1,17 @@
 import { atom } from 'recoil';
 
 export const gryffindorChatInfoState = atom({
-  key: 'gryffindorChatInfo',
+  key: 'gryffindorChatInfoState',
   // default: {
-  //   name: '',
-  //   users: [],
-  //   isPrivate: false,
-  //   updatedAt: '',
-  //   host: '',
+    // id: '',
+    // name: '',
+    // users: [],
+    // isPrivate: false,
+    // updatedAt: '',
+    // host: '',
   // },
   default: {
+    id: '',
     name: 'gryffindor',
     users: ['harry', 'ron'],
     isPrivate: false,
@@ -19,31 +21,37 @@ export const gryffindorChatInfoState = atom({
 });
 
 export const hufflepuffChatInfoState = atom({
-  key: 'hufflepuffChatInfo',
+  key: 'hufflepuffChatInfoState',
   default: {
-    name: null,
+    id: '',
+    name: '',
     users: [],
-    isPrivate: null,
-    updatedAt: null,
+    isPrivate: false,
+    updatedAt: '',
+    host: '',
   },
 });
 
 export const ravenclawChatInfoState = atom({
-  key: 'ravenclawChatInfo',
+  key: 'ravenclawChatInfoState',
   default: {
-    name: null,
+    id: '',
+    name: '',
     users: [],
-    isPrivate: null,
-    updatedAt: null,
+    isPrivate: false,
+    updatedAt: '',
+    host: '',
   },
 });
 
 export const slytherinChatInfoState = atom({
-  key: 'slytherinChatInfo',
+  key: 'slytherinChatInfoState',
   default: {
-    name: null,
+    id: '',
+    name: '',
     users: [],
-    isPrivate: null,
-    updatedAt: null,
+    isPrivate: false,
+    updatedAt: '',
+    host: '',
   },
 });

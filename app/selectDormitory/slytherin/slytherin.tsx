@@ -1,12 +1,12 @@
 'use client';
 import { useRecoilValue } from 'recoil';
-import { slytherinChatIdState } from '@recoil/dormChatId';
+import { gryffindorChatInfoState } from '@recoil/dormChatInfo';
 import { Dormitory } from '@components/Dormitory';
 
 const Slytherin = () => {
-  const slytherinChatId = useRecoilValue(slytherinChatIdState);
+  const { id } = useRecoilValue(gryffindorChatInfoState);
 
-  return <Dormitory chatId={slytherinChatId} />;
+  return <Dormitory chatId={id} />;
 };
 
 export default Slytherin;

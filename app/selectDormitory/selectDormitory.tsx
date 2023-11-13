@@ -6,13 +6,12 @@ import { readChatting } from '@hooks/readChatting';
 import Link from 'next/link';
 import axios from 'axios';
 import {
-  gryffindorChatIdState,
-  hufflepuffChatIdState,
-  ravenclawChatIdState,
-  slytherinChatIdState,
-} from '@recoil/dormChatId';
+  gryffindorChatInfoState,
+  hufflepuffChatInfoState,
+  ravenclawChatInfoState,
+  slytherinChatInfoState,
+} from '@recoil/dormChatInfo';
 
-import * as dormChatInfo from '@/recoil/dormChatInfo';
 import { useSetRecoilState, useRecoilState } from 'recoil';
 import { doesDormitoryExist } from '@hooks/doesDormitoryExist';
 import createDormitoryIfNone from '@hooks/createDormitoryIfNone';
@@ -45,28 +44,18 @@ const SelectDormitory = () => {
   const [hasHufflepuff, setHasHufflepuff] = useState(true);
   const [hasRavenclaw, setHasRavenclaw] = useState(true);
 
-  const [gryffindorChatId, setGryffindorChatId] = useRecoilState(
-    gryffindorChatIdState,
+  const [gryffindorChatInfo, setGryffindorChatInfo] = useRecoilState(
+    gryffindorChatInfoState,
   );
-  const [hufflepuffChatId, setHufflepuffChatId] = useRecoilState(
-    hufflepuffChatIdState,
+  const [hufflepuffChatInfo, setHufflepuffChatInfo] = useRecoilState(
+    hufflepuffChatInfoState,
   );
-  const [ravenclawChatId, setRavenclawChatId] =
-    useRecoilState(ravenclawChatIdState);
-  const [slytherinChatId, setSlytherinChatId] =
-    useRecoilState(slytherinChatIdState);
+  const [ravenclawChatInfo, setRavenclawChatInfo] = useRecoilState(
+    ravenclawChatInfoState,
+  );
 
-  const setGryffindorChatInfo = useSetRecoilState(
-    dormChatInfo.gryffindorChatInfoState,
-  );
-  const setSlytherinChatInfo = useSetRecoilState(
-    dormChatInfo.slytherinChatInfoState,
-  );
-  const setHufflepuffChatInfo = useSetRecoilState(
-    dormChatInfo.hufflepuffChatInfoState,
-  );
-  const setRavenclawChatInfo = useSetRecoilState(
-    dormChatInfo.ravenclawChatInfoState,
+  const [slytherinChatInfo, setSlytherinChatInfo] = useRecoilState(
+    slytherinChatInfoState,
   );
 
   const SERVER_KEY = '660d616b';
@@ -146,8 +135,9 @@ const SelectDormitory = () => {
   doesDormitoryExist('ravenclaw', chatData, setHasRavenclaw);
 
   useEffect(() => {
-    console.log('gryffindorChatId', gryffindorChatId);
-  }, [gryffindorChatId]);
+    console.log('gryffindorChatId', gryffindorChatInfo.id);
+  }, [gryffindorChatInfo]);
+
   // 모듈화 필요
   useEffect(() => {
     axios.get(GET_MY_INFO_URL, { headers }).then((res) => {
@@ -159,7 +149,6 @@ const SelectDormitory = () => {
     createDormitoryIfNone(
       hasGryffindor,
       chatData,
-      setGryffindorChatId,
       CREATE_CHAT_URL,
       gryffindorRequestData,
       headers,
@@ -172,7 +161,6 @@ const SelectDormitory = () => {
     createDormitoryIfNone(
       hasSlytherin,
       chatData,
-      setSlytherinChatId,
       CREATE_CHAT_URL,
       slytherinRequestData,
       headers,
@@ -185,7 +173,6 @@ const SelectDormitory = () => {
     createDormitoryIfNone(
       hasHufflepuff,
       chatData,
-      setHufflepuffChatId,
       CREATE_CHAT_URL,
       hufflepuffRequestData,
       headers,
@@ -198,7 +185,6 @@ const SelectDormitory = () => {
     createDormitoryIfNone(
       hasRavenclaw,
       chatData,
-      setRavenclawChatId,
       CREATE_CHAT_URL,
       ravenclawRequestData,
       headers,
@@ -234,7 +220,7 @@ const SelectDormitory = () => {
           style={{ width: '100%', height: '100%' }}
         >
           <styled.GryffindorSVG
-            onClick={() => handleParticipate(gryffindorChatId)}
+            onClick={() => handleParticipate(gryffindorChatInfo.id)}
           />
         </Link>
         <Link
@@ -242,7 +228,7 @@ const SelectDormitory = () => {
           style={{ width: '100%', height: '100%' }}
         >
           <styled.RavenclawSVG
-            onClick={() => handleParticipate(ravenclawChatId)}
+            onClick={() => handleParticipate(ravenclawChatInfo.id)}
           />
         </Link>
       </styled.LeftSection>
@@ -255,7 +241,7 @@ const SelectDormitory = () => {
           style={{ width: '100%', height: '100%' }}
         >
           <styled.HufflepuffSVG
-            onClick={() => handleParticipate(hufflepuffChatId)}
+            onClick={() => handleParticipate(hufflepuffChatInfo.id)}
           />
         </Link>
         <Link
@@ -263,7 +249,7 @@ const SelectDormitory = () => {
           style={{ width: '100%', height: '100%' }}
         >
           <styled.SlytherinSVG
-            onClick={() => handleParticipate(slytherinChatId)}
+            onClick={() => handleParticipate(slytherinChatInfo.id)}
           />
         </Link>
       </styled.RightSection>

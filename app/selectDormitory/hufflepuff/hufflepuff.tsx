@@ -1,12 +1,12 @@
 'use client';
 import { useRecoilValue } from 'recoil';
-import { hufflepuffChatIdState } from '@recoil/dormChatId';
+import { hufflepuffChatInfoState } from '@recoil/dormChatInfo';
 import { Dormitory } from '@components/Dormitory';
 
 const Hufflepuff = () => {
-  const hufflepuffChatId = useRecoilValue(hufflepuffChatIdState);
+  const { id } = useRecoilValue(hufflepuffChatInfoState);
 
-  return <Dormitory chatId={hufflepuffChatId} />;
+  return <Dormitory chatId={id} />;
 };
 
 export default Hufflepuff;

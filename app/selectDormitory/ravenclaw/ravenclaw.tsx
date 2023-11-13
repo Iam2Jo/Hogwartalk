@@ -1,12 +1,12 @@
 'use client';
 import { useRecoilValue } from 'recoil';
-import { ravenclawChatIdState } from '@recoil/dormChatId';
+import { ravenclawChatInfoState } from '@recoil/dormChatInfo';
 import { Dormitory } from '@components/Dormitory';
 
 const Ravenclaw = () => {
-  const ravenclawChatId = useRecoilValue(ravenclawChatIdState);
+  const { id } = useRecoilValue(ravenclawChatInfoState);
 
-  return <Dormitory chatId={ravenclawChatId} />;
+  return <Dormitory chatId={id} />;
 };
 
 export default Ravenclaw;
