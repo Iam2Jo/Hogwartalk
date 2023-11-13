@@ -23,6 +23,57 @@ const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
   const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        setLoading(true);
+
+        const accessTokenCookie = document.cookie
+          .split('; ')
+          .find((row) => row.startsWith('accessToken='));
+
+        if (!accessTokenCookie) {
+          console.error('Access token not found in cookies');
+          return;
+        }
+
+        const accessToken = accessTokenCookie.split('=')[1];
+
+        const serverId = '660d616b';
+
+        const response = await fetch('https://fastcampus-chat.net/users', {
+          method: 'GET',
+          headers: {
+            'content-type': 'application/json',
+            serverId: serverId,
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (response.ok) {
+          const data: User[] = await response.json();
+
+          // 친구 목록에서 자기 자신 제외
+          const myUserId = await checkDuplicateUserId(accessToken);
+          if (myUserId !== null) {
+            const onlineUsers = data.map((user) => ({
+              id: user.id,
+              isOnline: true,
+              ...user,
+            }));
+            setUsers(onlineUsers.filter((user) => user.id !== myUserId));
+          } else {
+            console.error('Failed to fetch user information');
+          }
+        } else {
+          console.error('Failed to fetch users');
+        }
+      } catch (error) {
+        console.error('Error fetching users', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     if (isVisible && !initialized) {
       fetchUsers();
       setInitialized(true);
@@ -65,42 +116,37 @@ const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
     };
   }, [users]);
 
-  const fetchUsers = async () => {
+  const checkDuplicateUserId = async (accessToken: string) => {
     try {
-      setLoading(true);
-
-      const accessTokenCookie = document.cookie
-        .split('; ')
-        .find((row) => row.startsWith('accessToken='));
-
-      if (!accessTokenCookie) {
-        console.error('Access token not found in cookies');
-        return;
-      }
-
-      const accessToken = accessTokenCookie.split('=')[1];
-
       const serverId = '660d616b';
 
-      const response = await fetch('https://fastcampus-chat.net/users', {
+      const response = await fetch('https://fastcampus-chat.net/auth/me', {
         method: 'GET',
         headers: {
-          'content-type': 'application/json',
+          'Content-Type': 'application/json',
           serverId: serverId,
           Authorization: `Bearer ${accessToken}`,
         },
       });
 
       if (response.ok) {
-        const data: User[] = await response.json();
-        setUsers(data);
+        const data = await response.json();
+
+        if (data.auth && data.user) {
+          return data.user.id;
+        } else {
+          console.error(
+            'Authentication failed or user information not available.',
+          );
+          return null;
+        }
       } else {
-        console.error('Failed to fetch users');
+        console.error('Failed to fetch user information:', response.statusText);
+        return null;
       }
     } catch (error) {
-      console.error('Error fetching users', error);
-    } finally {
-      setLoading(false);
+      console.error('Error fetching user information:', error);
+      return null;
     }
   };
 
