@@ -19,9 +19,17 @@ const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
   onClose,
 }) => {
   const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
-    fetchUsers();
+    if (isVisible && !initialized) {
+      fetchUsers();
+      setInitialized(true);
+    }
+  }, [isVisible, initialized]);
+
+  useEffect(() => {
     const accessTokenCookie = document.cookie
       .split('; ')
       .find((row) => row.startsWith('accessToken='));
@@ -59,6 +67,8 @@ const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
 
   const fetchUsers = async () => {
     try {
+      setLoading(true);
+
       const accessTokenCookie = document.cookie
         .split('; ')
         .find((row) => row.startsWith('accessToken='));
@@ -89,6 +99,8 @@ const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
       }
     } catch (error) {
       console.error('Error fetching users', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -101,8 +113,8 @@ const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
         <styled.TotalStudentsLabel>전체 학생 수</styled.TotalStudentsLabel>
         <styled.TotalStudentsCount>{users.length}</styled.TotalStudentsCount>
       </styled.TotalStudents>
-
       <styled.UserList>
+        {loading && <p>유저 목록 가져오는 중...</p>}
         {users.map((user) => (
           <styled.UserItem key={user.id}>
             <styled.ProfileImage
