@@ -22,6 +22,7 @@ type ResponseValue = any;
 const SelectDormitory = () => {
   const data: ResponseValue | null = readChatting();
   const [chatData, setChatData] = useState<ResponseValue | null>();
+  const [myName, setMyName] = useState('');
   const [hasGryffindor, setHasGryffindor] = useState(true);
   const [hasSlytherin, setHasSlytherin] = useState(true);
   const [hasHufflepuff, setHasHufflepuff] = useState(true);
@@ -44,6 +45,7 @@ const SelectDormitory = () => {
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGQ2MTZiOmhlcm1pb25lIiwiaWF0IjoxNjk5NDIzOTI4LCJleHAiOjE3MDAwMjg3Mjh9.9FA24mkoipWSd4KlpxTX0L8mKmJj7LAVd_XEcW1Xt7w';
   const CREATE_CHAT_URL = 'https://fastcampus-chat.net/chat';
   const FIND_ALL_USER_URL = 'https://fastcampus-chat.net/users';
+  const GET_MY_INFO_URL = 'https://fastcampus-chat.net/auth/me';
 
   const headers = {
     'Content-Type': 'application/json',
@@ -91,6 +93,12 @@ const SelectDormitory = () => {
   }, [data]);
 
   useEffect(() => {
+    axios.get(GET_MY_INFO_URL, { headers }).then((res) => {
+      setMyName(res.data.user.name);
+    });
+  }, []);
+
+  useEffect(() => {
     axios
       .get(FIND_ALL_USER_URL, { headers })
       .then((response) => {
@@ -118,6 +126,7 @@ const SelectDormitory = () => {
       CREATE_CHAT_URL,
       gryffindorRequestData,
       headers,
+      myName,
     );
   }, [hasGryffindor, chatData]);
 
@@ -129,6 +138,7 @@ const SelectDormitory = () => {
       CREATE_CHAT_URL,
       slytherinRequestData,
       headers,
+      myName,
     );
   }, [hasSlytherin, chatData]);
 
@@ -140,6 +150,7 @@ const SelectDormitory = () => {
       CREATE_CHAT_URL,
       hufflepuffRequestData,
       headers,
+      myName,
     );
   }, [hasHufflepuff, chatData]);
 
@@ -151,6 +162,7 @@ const SelectDormitory = () => {
       CREATE_CHAT_URL,
       ravenclawRequestData,
       headers,
+      myName,
     );
   }, [hasRavenclaw, chatData]);
 
