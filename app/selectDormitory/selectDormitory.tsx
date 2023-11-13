@@ -40,6 +40,7 @@ type ResponseValue = any;
 const SelectDormitory = () => {
   const data: ResponseValue | null = readChatting();
   const [chatData, setChatData] = useState<ResponseValue | null>();
+  const [myName, setMyName] = useState('');
   const [hasGryffindor, setHasGryffindor] = useState(true);
   const [hasSlytherin, setHasSlytherin] = useState(true);
   const [hasHufflepuff, setHasHufflepuff] = useState(true);
@@ -116,6 +117,12 @@ const SelectDormitory = () => {
   }, [data]);
 
   useEffect(() => {
+    axios.get(GET_MY_INFO_URL, { headers }).then((res) => {
+      setMyName(res.data.user.name);
+    });
+  }, []);
+
+  useEffect(() => {
     axios
       .get(FIND_ALL_USER_URL, { headers })
       .then((response) => {
@@ -126,21 +133,14 @@ const SelectDormitory = () => {
       });
   }, []);
 
-  useEffect(() => {
-    axios
-      .get(FIND_MY_CHAT_URL, { headers })
-      .then((response) => {
-        console.log('나의 채팅방 조회 성공!', response.data);
-      })
-      .catch((error) => {
-        console.error('나의 채팅방 조회 실패!', error);
-      });
-  }, []);
-
   doesDormitoryExist('gryffindor', chatData, setHasGryffindor);
   doesDormitoryExist('slytherin', chatData, setHasSlytherin);
   doesDormitoryExist('hufflepuff', chatData, setHasHufflepuff);
   doesDormitoryExist('ravenclaw', chatData, setHasRavenclaw);
+
+  useEffect(() => {
+    console.log('gryffindorChatId', gryffindorChatId);
+  }, [gryffindorChatId]);
 
   useEffect(() => {
     createDormitoryIfNone(
@@ -150,6 +150,7 @@ const SelectDormitory = () => {
       CREATE_CHAT_URL,
       gryffindorRequestData,
       headers,
+      myName,
     );
   }, [hasGryffindor, chatData]);
 
@@ -169,6 +170,7 @@ const SelectDormitory = () => {
       CREATE_CHAT_URL,
       slytherinRequestData,
       headers,
+      myName,
     );
   }, [hasSlytherin, chatData]);
 
@@ -180,6 +182,7 @@ const SelectDormitory = () => {
       CREATE_CHAT_URL,
       hufflepuffRequestData,
       headers,
+      myName,
     );
   }, [hasHufflepuff, chatData]);
 
@@ -191,6 +194,7 @@ const SelectDormitory = () => {
       CREATE_CHAT_URL,
       ravenclawRequestData,
       headers,
+      myName,
     );
   }, [hasRavenclaw, chatData]);
 
