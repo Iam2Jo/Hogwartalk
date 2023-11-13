@@ -162,18 +162,7 @@ export const ProfileImageEditButton = styled.button`
   cursor: pointer;
 `;
 
-export const ProfileImageInput = styled.img`
-  width: 13rem;
-  height: 13rem;
-  border-radius: 50%;
-  border: 3px solid #d32b2b;
-  margin: 3.125rem 0;
-  object-fit: cover;
-`;
-
 export const ProfileImagePreview = styled.img`
-  font-size: 10px;
-
   width: 3rem;
   height: 3rem;
   margin-left: 4rem;
