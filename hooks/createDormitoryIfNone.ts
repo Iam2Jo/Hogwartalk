@@ -1,7 +1,5 @@
 import axios from 'axios';
 import { RequestBody as RequestBodyCreate } from '@/@types/RESTAPI/createChatting.types';
-import * as dormChatInfo from '@/recoil/dormChatInfo';
-import { useSetRecoilState } from 'recoil';
 
 type ResponseValue = any;
 
@@ -21,10 +19,8 @@ const createDormitoryIfNone = (
   requestData: RequestBodyCreate,
   headers: { [key: string]: string },
   myName: string,
+  setGryffindorChatInfo: React.Dispatch<React.SetStateAction<DormChatInfo>>,
 ) => {
-  const setGryffindorChatInfo = useSetRecoilState(
-    dormChatInfo.gryffindorChatInfoState,
-  );
   if (!hasDormitory) {
     axios
       .post(createChatUrl, requestData, { headers })

@@ -33,7 +33,6 @@ interface DormChatInfo {
   host: string | null;
 }
 
-
 type ResponseValue = any;
 // type ResponseValue = Chat[]
 
@@ -45,7 +44,6 @@ const SelectDormitory = () => {
   const [hasSlytherin, setHasSlytherin] = useState(true);
   const [hasHufflepuff, setHasHufflepuff] = useState(true);
   const [hasRavenclaw, setHasRavenclaw] = useState(true);
-  const [myName, setMyName] = useState('');
 
   const [gryffindorChatId, setGryffindorChatId] = useRecoilState(
     gryffindorChatIdState,
@@ -60,6 +58,15 @@ const SelectDormitory = () => {
 
   const setGryffindorChatInfo = useSetRecoilState(
     dormChatInfo.gryffindorChatInfoState,
+  );
+  const setSlytherinChatInfo = useSetRecoilState(
+    dormChatInfo.slytherinChatInfoState,
+  );
+  const setHufflepuffChatInfo = useSetRecoilState(
+    dormChatInfo.hufflepuffChatInfoState,
+  );
+  const setRavenclawChatInfo = useSetRecoilState(
+    dormChatInfo.ravenclawChatInfoState,
   );
 
   const SERVER_KEY = '660d616b';
@@ -141,6 +148,12 @@ const SelectDormitory = () => {
   useEffect(() => {
     console.log('gryffindorChatId', gryffindorChatId);
   }, [gryffindorChatId]);
+  // 모듈화 필요
+  useEffect(() => {
+    axios.get(GET_MY_INFO_URL, { headers }).then((res) => {
+      setMyName(res.data.user.name);
+    });
+  }, []);
 
   useEffect(() => {
     createDormitoryIfNone(
@@ -151,19 +164,12 @@ const SelectDormitory = () => {
       gryffindorRequestData,
       headers,
       myName,
+      setGryffindorChatInfo,
     );
   }, [hasGryffindor, chatData]);
 
-  // 모듈화 필요
   useEffect(() => {
-    axios.get(GET_MY_INFO_URL, { headers }).then((res) => {
-      setMyName(res.data.user.name);
-    });
-  }, []);
-
-  useEffect(() => {
-
- createDormitoryIfNone(
+    createDormitoryIfNone(
       hasSlytherin,
       chatData,
       setSlytherinChatId,
@@ -171,6 +177,7 @@ const SelectDormitory = () => {
       slytherinRequestData,
       headers,
       myName,
+      setSlytherinChatInfo,
     );
   }, [hasSlytherin, chatData]);
 
@@ -183,6 +190,7 @@ const SelectDormitory = () => {
       hufflepuffRequestData,
       headers,
       myName,
+      setHufflepuffChatInfo,
     );
   }, [hasHufflepuff, chatData]);
 
@@ -195,6 +203,7 @@ const SelectDormitory = () => {
       ravenclawRequestData,
       headers,
       myName,
+      setRavenclawChatInfo,
     );
   }, [hasRavenclaw, chatData]);
 
@@ -218,7 +227,6 @@ const SelectDormitory = () => {
   // }, [chatData]);
 
   return (
-
     <styled.Wrapper>
       <styled.LeftSection>
         <Link
@@ -260,7 +268,6 @@ const SelectDormitory = () => {
         </Link>
       </styled.RightSection>
     </styled.Wrapper>
-
   );
 };
 
