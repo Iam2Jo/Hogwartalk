@@ -86,6 +86,7 @@ const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
     }
   }, [isVisible, initialized]);
 
+  // 접속 유무
   useEffect(() => {
     const accessTokenCookie = document.cookie
       .split('; ')
@@ -115,7 +116,7 @@ const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
         const onlineUsers = prevUsers.map((user) => {
           return {
             ...user,
-            isOnline: data.user.includes(user.id),
+            isOnline: data.user.includes(user.id.toString()),
           };
         });
         return onlineUsers;
