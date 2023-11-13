@@ -7,12 +7,14 @@ export const Container = styled.div`
   border-radius: 0.9375rem;
   border: 1px solid #4e4e4e;
   background: #191919;
+  cursor: pointer;
 
   &:hover {
     border-radius: 0.9375rem;
     border: 1px solid #f2cc00;
     background: #191919;
     color: var(--color-main-yellow);
+    box-shadow: 0px 0px 20px 0px rgba(242, 204, 0, 0.49);
   }
 `;
 
@@ -22,13 +24,15 @@ export const Content = styled.div`
 `;
 
 export const Title = styled.p`
-  margin: 1.44rem 1.75rem 1.44rem 1.75rem;
+  margin: 1.44rem 1.75rem 0 1.75rem;
+  height: 3.1rem;
   font-weight: 500;
 `;
 
 export const BottomWrap = styled.div`
   display: flex;
   margin: 1.44rem 1.75rem 1.44rem 1.75rem;
+  flex-direction: row-reverse;
   justify-content: space-between;
 `;
 
@@ -39,11 +43,14 @@ export const Badge = styled.div`
   height: 1.8125rem;
   color: #000;
   text-align: center;
-  font-weight: 500;
 `;
 export const UserInfoWrap = styled.div``;
-export const UserIcon = styled.div``;
+
 export const UserCount = styled.span`
+  margin-left: 0.5rem;
   font-weight: 500;
+  font-size: 1.125rem;
 `;
 export const UserMaximum = styled.span``;
+
+export const UserIcon = styled.div``;

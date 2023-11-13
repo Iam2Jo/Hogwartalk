@@ -37,7 +37,8 @@ interface Message {
 const club = ({ id, name, users }: Chat) => {
   const SERVER_KEY = '660d616b';
   const ACCESS_TOKEN =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGQ2MTZiOmhhcnJ5cG90dGVyIiwiaWF0IjoxNjk5MzQ1NDkzLCJleHAiOjE2OTk5NTAyOTN9.b5s4_9f-pVBj9ki17SXc6VvoiApMJZCJXfk5G2wskyo';
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGQ2MTZiOmhlcm1pb25lIiwiaWF0IjoxNjk5NDIzOTI4LCJleHAiOjE3MDAwMjg3Mjh9.9FA24mkoipWSd4KlpxTX0L8mKmJj7LAVd_XEcW1Xt7w';
+
   const FIND_ALL_CHAT_URL = 'https://fastcampus-chat.net/chat/all';
   const FIND_MY_CHAT_URL = 'https://fastcampus-chat.net/chat';
 
@@ -98,7 +99,12 @@ const club = ({ id, name, users }: Chat) => {
         <styled.ChatList>
           {' '}
           {chatList.map((chat) => (
-            <ChatItem key={chat.id} name={chat.name} users={chat.users} />
+            <ChatItem
+              key={chat.id}
+              id={chat.id}
+              name={chat.name}
+              users={chat.users}
+            />
           ))}
         </styled.ChatList>
       </styled.Container>

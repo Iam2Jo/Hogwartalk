@@ -21,7 +21,10 @@ export const joinModalState = atom({
   default: false,
 });
 
-export const chatTitleState = atom({
-  key: 'chatTitleState',
-  default: '',
+export const chatInfoState = atom({
+  key: 'chatInfoState',
+  default: {
+    name:'',
+    id:''
+  },
 });

@@ -28,6 +28,7 @@ export const AddChatBtn = styled.button`
 export const ChatList = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 1.63rem;
+  gap: 1.3rem;
+  flex-direction: row;
   justify-content: space-between;
 `;

@@ -41,7 +41,7 @@ export const Desc = styled.span`
   font-size: 1.5rem;
 `;
 
-export const JoinBtn = styled.div`
+export const JoinBtn = styled.button`
   margin-top: 2.5rem;
   width: 15.875rem;
   height: 3rem;
@@ -50,7 +50,6 @@ export const JoinBtn = styled.div`
   border: 1px solid var(--color-main-yellow);
   cursor: pointer;
   text-align: center;
-  padding-top: 0.5rem;
 
   &:hover {
     background-color: var(--color-main-yellow);

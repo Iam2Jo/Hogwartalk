@@ -2,14 +2,19 @@
 import React, { useEffect, useState } from 'react';
 import * as styled from './chatItem.styles';
 import {
+  chatInfoState,
   chatListState,
-  chatTitleState,
   joinModalState,
   myChatListState,
 } from '@recoil/chatList';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import axios from 'axios';
+import UserIcon from '@assets/icon/UserIcon.svg';
+
+import { useRouter } from 'next/navigation';
 
 interface Chat {
+  id: string;
   name: string;
   users: User[]; // 속한 유저 정보
 }
@@ -28,6 +33,7 @@ interface Message {
 }
 
 const chatItem = ({ id, name, users }: Chat) => {
+  const router = useRouter();
   const chatList = useRecoilValue(chatListState);
   const myChatList = useRecoilValue(myChatListState);
 
@@ -35,36 +41,42 @@ const chatItem = ({ id, name, users }: Chat) => {
 
   useEffect(() => {
     for (let i = 0; i < myChatList.length; i++) {
-      if (name === myChatList[i].name) {
+      if (id === myChatList[i].id) {
         setIsMyChat(true);
       }
     }
   }, [myChatList]);
 
   const setJoinModalOpen = useSetRecoilState(joinModalState);
-  const setChatTitle = useSetRecoilState(chatTitleState);
+  const setChatInfo = useSetRecoilState(chatInfoState);
 
   const handleJoin = () => {
     for (let i = 0; i < myChatList.length; i++) {
-      if (name === myChatList[i].name) {
-        setJoinModalOpen(true);
-        setChatTitle(name);
+      if (id == myChatList[i].id) {
+        return router.push('/club/' + id);
       }
     }
+    setJoinModalOpen(true);
+    const chatDetail = {
+      name,
+      id,
+    };
+    setChatInfo(chatDetail);
   };
 
   return (
     <styled.Container onClick={handleJoin}>
       {chatList.length > 0 ? (
         <styled.Content>
-          <styled.Title>{name}</styled.Title>
+          <styled.Title>
+            {name.length < 30 ? name : name.slice(0, 26) + '...'}
+          </styled.Title>
           <styled.BottomWrap>
-            {isMyChat && <styled.Badge>참여중</styled.Badge>}
             <styled.UserInfoWrap>
-              <styled.UserCount>{users.length}</styled.UserCount>
-              <span>/</span>
-              <styled.UserMaximum>N</styled.UserMaximum>
+              <UserIcon />
+              <styled.UserCount> {users.length}</styled.UserCount>
             </styled.UserInfoWrap>
+            {isMyChat && <styled.Badge>참여중</styled.Badge>}
           </styled.BottomWrap>
         </styled.Content>
       ) : (
