@@ -11,11 +11,29 @@ import {
   ravenclawChatIdState,
   slytherinChatIdState,
 } from '@recoil/dormChatId';
-import { useRecoilState } from 'recoil';
+
+import * as dormChatInfo from '@/recoil/dormChatInfo';
+import { useSetRecoilState, useRecoilState } from 'recoil';
 import { doesDormitoryExist } from '@hooks/doesDormitoryExist';
 import createDormitoryIfNone from '@hooks/createDormitoryIfNone';
 import { RequestBody as RequestBodyCreate } from '@/@types/RESTAPI/createChatting.types';
 import { RequestBody as RequestBodyParticipate } from '@/@types/RESTAPI/participateChatting.types';
+
+interface RequestBody {
+  name: string;
+  users: string[];
+  isPrivate?: boolean;
+}
+
+interface DormChatInfo {
+  name: string | null;
+  users: string[];
+  isPrivate: boolean | null;
+  updatedAt: string | null;
+  host: string | null;
+}
+
+
 type ResponseValue = any;
 // type ResponseValue = Chat[]
 
@@ -27,6 +45,7 @@ const SelectDormitory = () => {
   const [hasSlytherin, setHasSlytherin] = useState(true);
   const [hasHufflepuff, setHasHufflepuff] = useState(true);
   const [hasRavenclaw, setHasRavenclaw] = useState(true);
+  const [myName, setMyName] = useState('');
 
   const [gryffindorChatId, setGryffindorChatId] = useRecoilState(
     gryffindorChatIdState,
@@ -39,12 +58,17 @@ const SelectDormitory = () => {
   const [slytherinChatId, setSlytherinChatId] =
     useRecoilState(slytherinChatIdState);
 
+  const setGryffindorChatInfo = useSetRecoilState(
+    dormChatInfo.gryffindorChatInfoState,
+  );
+
   const SERVER_KEY = '660d616b';
   // 현재 헤르미온느 ACCESS_TOKEN임!
   const ACCESS_TOKEN =
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGQ2MTZiOmhlcm1pb25lIiwiaWF0IjoxNjk5NDIzOTI4LCJleHAiOjE3MDAwMjg3Mjh9.9FA24mkoipWSd4KlpxTX0L8mKmJj7LAVd_XEcW1Xt7w';
   const CREATE_CHAT_URL = 'https://fastcampus-chat.net/chat';
   const FIND_ALL_USER_URL = 'https://fastcampus-chat.net/users';
+  const FIND_MY_CHAT_URL = 'https://fastcampus-chat.net/chat';
   const GET_MY_INFO_URL = 'https://fastcampus-chat.net/auth/me';
 
   const headers = {
@@ -130,8 +154,16 @@ const SelectDormitory = () => {
     );
   }, [hasGryffindor, chatData]);
 
+  // 모듈화 필요
   useEffect(() => {
-    createDormitoryIfNone(
+    axios.get(GET_MY_INFO_URL, { headers }).then((res) => {
+      setMyName(res.data.user.name);
+    });
+  }, []);
+
+  useEffect(() => {
+
+ createDormitoryIfNone(
       hasSlytherin,
       chatData,
       setSlytherinChatId,
@@ -186,6 +218,7 @@ const SelectDormitory = () => {
   // }, [chatData]);
 
   return (
+
     <styled.Wrapper>
       <styled.LeftSection>
         <Link
@@ -227,6 +260,7 @@ const SelectDormitory = () => {
         </Link>
       </styled.RightSection>
     </styled.Wrapper>
+
   );
 };
 
