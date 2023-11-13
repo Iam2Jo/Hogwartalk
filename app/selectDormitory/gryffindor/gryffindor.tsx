@@ -4,9 +4,9 @@ import { gryffindorChatInfoState } from '@recoil/dormChatInfo';
 import { Dormitory } from '@components/Dormitory';
 
 const Gryffindor = () => {
-  const { id } = useRecoilValue(gryffindorChatInfoState);
+  const { id, name } = useRecoilValue(gryffindorChatInfoState);
 
-  return <Dormitory chatId={id} />;
+  return <Dormitory chatId={id} dormName={name} />;
 };
 
 export default Gryffindor;
