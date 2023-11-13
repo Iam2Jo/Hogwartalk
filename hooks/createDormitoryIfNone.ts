@@ -4,6 +4,7 @@ import { RequestBody as RequestBodyCreate } from '@/@types/RESTAPI/createChattin
 type ResponseValue = any;
 
 interface DormChatInfo {
+  id: string | null;
   name: string | null;
   users: string[];
   isPrivate: boolean | null;
@@ -14,7 +15,7 @@ interface DormChatInfo {
 const createDormitoryIfNone = (
   hasDormitory: boolean,
   chatData: ResponseValue | null,
-  setChatId: React.Dispatch<React.SetStateAction<string>>,
+  // setChatId: React.Dispatch<React.SetStateAction<string>>,
   createChatUrl: string,
   requestData: RequestBodyCreate,
   headers: { [key: string]: string },
@@ -26,21 +27,28 @@ const createDormitoryIfNone = (
       .post(createChatUrl, requestData, { headers })
       .then((response) => {
         console.log(`${requestData.name} 채팅방 생성 완료`, response.data);
-        setChatId(response.data.id);
+        setGryffindorChatInfo((prevChatInfo) => ({
+          ...prevChatInfo,
+          id: response.data.id,
+        }));
 
         let host = '';
         if (response.data.users.includes(myName)) {
           host = myName;
         }
 
-        const dormChatInfo: DormChatInfo = {
+        const newDormChatInfo = {
           name: response.data.name,
           users: response.data.users,
           isPrivate: response.data.isPrivate,
           updatedAt: response.data.updatedAt,
           host,
         };
-        setGryffindorChatInfo(dormChatInfo);
+        
+        setGryffindorChatInfo((prevChatInfo) => ({
+          ...prevChatInfo,
+          ...newDormChatInfo,
+        }));
       })
       .catch((error) => {
         console.error('Error sending the request:', error);
@@ -49,7 +57,10 @@ const createDormitoryIfNone = (
     if (chatData) {
       for (let i = chatData.chats.length - 1; i >= 0; i--) {
         if (chatData.chats[i].name === requestData.name) {
-          setChatId(chatData.chats[i].id);
+          setGryffindorChatInfo((prevChatInfo) => ({
+            ...prevChatInfo,
+            id: chatData.chats[i].id,
+          }));
           break;
         }
       }
