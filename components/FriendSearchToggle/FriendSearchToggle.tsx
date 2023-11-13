@@ -1,3 +1,5 @@
+import React, { useState, useEffect } from 'react';
+import io from 'socket.io-client';
 import * as styled from './FriendSearchToggle.styles';
 
 interface FriendSearchToggleProps {
@@ -9,12 +11,99 @@ interface User {
   id: string;
   name: string;
   picture: string;
+  isOnline?: boolean;
 }
 
 const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
   isVisible,
   onClose,
 }) => {
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [initialized, setInitialized] = useState(false);
+
+  useEffect(() => {
+    if (isVisible && !initialized) {
+      fetchUsers();
+      setInitialized(true);
+    }
+  }, [isVisible, initialized]);
+
+  useEffect(() => {
+    const accessTokenCookie = document.cookie
+      .split('; ')
+      .find((row) => row.startsWith('accessToken='));
+
+    if (!accessTokenCookie) {
+      console.error('Access token not found in cookies');
+      return;
+    }
+
+    const accessToken = accessTokenCookie.split('=')[1];
+
+    const serverId = '660d616b';
+
+    const socket = io('https://fastcampus-chat.net', {
+      extraHeaders: {
+        'content-type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+        serverId: serverId,
+      },
+    });
+
+    socket.on('users-to-client', (data: { user: string[] }) => {
+      const onlineUsers = data.user.map((userId) => ({
+        id: userId,
+        isOnline: true,
+        ...users.find((u) => u.id === userId),
+      }));
+      setUsers(onlineUsers);
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [users]);
+
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+
+      const accessTokenCookie = document.cookie
+        .split('; ')
+        .find((row) => row.startsWith('accessToken='));
+
+      if (!accessTokenCookie) {
+        console.error('Access token not found in cookies');
+        return;
+      }
+
+      const accessToken = accessTokenCookie.split('=')[1];
+
+      const serverId = '660d616b';
+
+      const response = await fetch('https://fastcampus-chat.net/users', {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+          serverId: serverId,
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      if (response.ok) {
+        const data: User[] = await response.json();
+        setUsers(data);
+      } else {
+        console.error('Failed to fetch users');
+      }
+    } catch (error) {
+      console.error('Error fetching users', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <styled.Sidebar isVisible={isVisible}>
       <styled.CloseButton onClick={onClose}>
@@ -22,118 +111,24 @@ const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
       </styled.CloseButton>
       <styled.TotalStudents>
         <styled.TotalStudentsLabel>전체 학생 수</styled.TotalStudentsLabel>
-        <styled.TotalStudentsCount>30</styled.TotalStudentsCount>
+        <styled.TotalStudentsCount>{users.length}</styled.TotalStudentsCount>
       </styled.TotalStudents>
-
       <styled.UserList>
-        <styled.UserItem>
-          <styled.ProfileImage
-            src="/assets/img/HarryPotter.png"
-            alt="Profile"
-          />
-          <styled.UserInfo>
-            <styled.Username>
-              해리포터 <styled.Emoji>🟢</styled.Emoji>
-            </styled.Username>
-            <styled.UserDormitory>그리핀도르</styled.UserDormitory>
-          </styled.UserInfo>
-        </styled.UserItem>
-        <styled.UserItem>
-          <styled.ProfileImage
-            src="/assets/img/HarryPotter.png"
-            alt="Profile"
-          />
-          <styled.UserInfo>
-            <styled.Username>
-              해리포터 <styled.Emoji>🔴</styled.Emoji>
-            </styled.Username>
-            <styled.UserDormitory>그리핀도르</styled.UserDormitory>
-          </styled.UserInfo>
-        </styled.UserItem>
-        <styled.UserItem>
-          <styled.ProfileImage
-            src="/assets/img/HarryPotter.png"
-            alt="Profile"
-          />
-          <styled.UserInfo>
-            <styled.Username>
-              해리포터 <styled.Emoji>🔴</styled.Emoji>
-            </styled.Username>
-            <styled.UserDormitory>그리핀도르</styled.UserDormitory>
-          </styled.UserInfo>
-        </styled.UserItem>
-        <styled.UserItem>
-          <styled.ProfileImage
-            src="/assets/img/HarryPotter.png"
-            alt="Profile"
-          />
-          <styled.UserInfo>
-            <styled.Username>
-              해리포터 <styled.Emoji>🟢</styled.Emoji>
-            </styled.Username>
-            <styled.UserDormitory>그리핀도르</styled.UserDormitory>
-          </styled.UserInfo>
-        </styled.UserItem>
-        <styled.UserItem>
-          <styled.ProfileImage
-            src="/assets/img/HarryPotter.png"
-            alt="Profile"
-          />
-          <styled.UserInfo>
-            <styled.Username>
-              해리포터 <styled.Emoji>🟢</styled.Emoji>
-            </styled.Username>
-            <styled.UserDormitory>그리핀도르</styled.UserDormitory>
-          </styled.UserInfo>
-        </styled.UserItem>
-        <styled.UserItem>
-          <styled.ProfileImage
-            src="/assets/img/HarryPotter.png"
-            alt="Profile"
-          />
-          <styled.UserInfo>
-            <styled.Username>
-              해리포터 <styled.Emoji>🟢</styled.Emoji>
-            </styled.Username>
-            <styled.UserDormitory>그리핀도르</styled.UserDormitory>
-          </styled.UserInfo>
-        </styled.UserItem>
-        <styled.UserItem>
-          <styled.ProfileImage
-            src="/assets/img/HarryPotter.png"
-            alt="Profile"
-          />
-          <styled.UserInfo>
-            <styled.Username>
-              해리포터 <styled.Emoji>🔴</styled.Emoji>
-            </styled.Username>
-            <styled.UserDormitory>그리핀도르</styled.UserDormitory>
-          </styled.UserInfo>
-        </styled.UserItem>
-        <styled.UserItem>
-          <styled.ProfileImage
-            src="/assets/img/HarryPotter.png"
-            alt="Profile"
-          />
-          <styled.UserInfo>
-            <styled.Username>
-              해리포터 <styled.Emoji>🟢</styled.Emoji>
-            </styled.Username>
-            <styled.UserDormitory>그리핀도르</styled.UserDormitory>
-          </styled.UserInfo>
-        </styled.UserItem>
-        <styled.UserItem>
-          <styled.ProfileImage
-            src="/assets/img/HarryPotter.png"
-            alt="Profile"
-          />
-          <styled.UserInfo>
-            <styled.Username>
-              해리포터 <styled.Emoji>🟢</styled.Emoji>
-            </styled.Username>
-            <styled.UserDormitory>그리핀도르</styled.UserDormitory>
-          </styled.UserInfo>
-        </styled.UserItem>
+        {loading && <p>유저 목록 가져오는 중...</p>}
+        {users.map((user) => (
+          <styled.UserItem key={user.id}>
+            <styled.ProfileImage
+              src={user.picture}
+              alt={`Profile of ${user.name}`}
+            />
+            <styled.UserInfo>
+              <styled.Username>
+                {user.name}{' '}
+                <styled.Emoji>{user.isOnline ? '🟢' : '🔴'}</styled.Emoji>
+              </styled.Username>
+            </styled.UserInfo>
+          </styled.UserItem>
+        ))}
       </styled.UserList>
     </styled.Sidebar>
   );

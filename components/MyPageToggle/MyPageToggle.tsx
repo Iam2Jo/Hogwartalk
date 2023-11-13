@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import React, { useState, useEffect, useRef } from 'react';
+=======
+import React, { useState, useEffect } from 'react';
+>>>>>>> a0c020d7d2f7815ac6d0cbfd2aabd026ef7eea80
 import * as styled from './MyPageToggle.styles';
 
 interface MyPageToggleProps {
