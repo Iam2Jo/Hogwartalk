@@ -4,6 +4,7 @@ import { useFireFetch } from './useFireFetch';
 
 type ResponseValue = any;
 
+// 삭제 필요
 interface DormChatInfo {
   id: string | null;
   name: string | null;
@@ -21,6 +22,7 @@ const createDormitoryIfNone = (
   requestData: RequestBodyCreate,
   headers: { [key: string]: string },
   myName: string,
+  // 삭제 필요
   setGryffindorChatInfo: React.Dispatch<React.SetStateAction<DormChatInfo>>,
 ) => {
   const firefetch = useFireFetch();
@@ -41,26 +43,14 @@ const createDormitoryIfNone = (
         };
 
         await firefetch.add('chatInfo', newDormChatInfo);
-        setGryffindorChatInfo((prevChatInfo) => ({
-          ...prevChatInfo,
-          ...newDormChatInfo,
-        }));
+        // setGryffindorChatInfo((prevChatInfo) => ({
+        //   ...prevChatInfo,
+        //   ...newDormChatInfo,
+        // }));
       })
       .catch((error) => {
         console.error('Error sending the request:', error);
       });
-  } else {
-    if (chatData) {
-      for (let i = chatData.chats.length - 1; i >= 0; i--) {
-        if (chatData.chats[i].name === requestData.name) {
-          setGryffindorChatInfo((prevChatInfo) => ({
-            ...prevChatInfo,
-            id: chatData.chats[i].id,
-          }));
-          break;
-        }
-      }
-    }
   }
 };
 
