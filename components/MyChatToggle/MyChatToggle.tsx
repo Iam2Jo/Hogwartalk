@@ -2,13 +2,18 @@
 
 import axios from 'axios';
 import React, { useState, useRef, useEffect } from 'react';
-import * as styled from './MyChatting.styles';
+import * as styled from './MyChatToggle.styles';
 import Link from 'next/link';
 import { getToken } from '@utils/service';
-// import { ResponseValue } from '@/@types/RESTAPI/findMyChatting.types';
+
 type ResponseValue = any;
 
-const MyChatting = () => {
+interface MyChatToggleProps {
+  isVisible: boolean;
+  onClose: () => void;
+}
+
+const MyChatToggle: React.FC<MyChatToggleProps> = ({ isVisible, onClose }) => {
   const SERVER_KEY = '660d616b';
   const FIND_MY_CHAT_URL = 'https://fastcampus-chat.net/chat';
   const [accessToken, setAccessToken] = useState('');
@@ -43,24 +48,27 @@ const MyChatting = () => {
   }, []);
 
   useEffect(() => {
-    // 초기 데이터 불러오기
-    fetchData();
-
-    // 주기적으로 데이터 업데이트
-    const intervalId = setInterval(() => {
+    if (isVisible) {
+      // 초기 데이터 불러오기
       fetchData();
-    }, 1000); // 5초마다 업데이트, 필요에 따라 조절 가능
-
-    // 컴포넌트가 언마운트될 때 clearInterval로 인터벌 정리
-    return () => clearInterval(intervalId);
-  }, []); // 빈 배열을 전달하여 최초 한 번만 실행되도록 함
+      // 주기적으로 데이터 업데이트
+      const intervalId = setInterval(() => {
+        fetchData();
+      }, 1000); // 5초마다 업데이트, 필요에 따라 조절 가능
+      // 컴포넌트가 언마운트될 때 clearInterval로 인터벌 정리
+      return () => clearInterval(intervalId);
+    }
+  }, [isVisible]); // 빈 배열을 전달하여 최초 한 번만 실행되도록 함
 
   useEffect(() => {
     console.log('currentDormitory', currentDormitory);
   }, [currentDormitory]);
 
   return (
-    <styled.MyChattingContainer>
+    <styled.MyChattingContainer isVisible={isVisible}>
+      <styled.CloseButton onClick={onClose}>
+        <img src="/assets/icons/close.svg" alt="Close" />
+      </styled.CloseButton>
       <styled.Label>
         <styled.Title>참여중인 대화방</styled.Title>
         <styled.Length>{data?.chats?.length}</styled.Length>
@@ -130,4 +138,4 @@ const MyChatting = () => {
   );
 };
 
-export default MyChatting;
+export default MyChatToggle;
