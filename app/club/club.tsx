@@ -15,26 +15,28 @@ import CandleImg from '@assets/img/Candles.svg';
 import JoinModal from '@components/club/joinModal/page';
 import CreateModal from '@components/club/createModal/page';
 import Loading from '@components/club/loading/page';
+import { getToken } from '@utils/service';
 
 const club = () => {
   const SERVER_KEY = '660d616b';
-
-  //헤르미온느 토큰
-  const ACCESS_TOKEN =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGQ2MTZiOmhlcm1pb25lIiwiaWF0IjoxNjk5NDIzOTI4LCJleHAiOjE3MDAwMjg3Mjh9.9FA24mkoipWSd4KlpxTX0L8mKmJj7LAVd_XEcW1Xt7w';
-
+  const [accessToken, setAccessToken] = useState('');
   const FIND_ALL_CHAT_URL = 'https://fastcampus-chat.net/chat/all';
   const FIND_MY_CHAT_URL = 'https://fastcampus-chat.net/chat';
 
   const headers = {
     'Content-Type': 'application/json',
-    Authorization: `Bearer ${ACCESS_TOKEN}`,
+    ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
     serverId: SERVER_KEY,
   };
 
   const chatList = useRecoilValue(chatListState);
   const setChatList = useSetRecoilState(chatListState);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const token = getToken();
+    setAccessToken(token);
+  }, []);
 
   useEffect(() => {
     const getChatList = async () => {

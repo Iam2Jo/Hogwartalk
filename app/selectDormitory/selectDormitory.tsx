@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import * as styled from './selectDormitory.styles';
-import { readChatting } from '@hooks/readChatting';
+import { readChatting } from '@hooks/RESTAPI/readChatting';
 import Link from 'next/link';
 import axios from 'axios';
 import {
@@ -17,6 +17,7 @@ import { doesDormitoryExist } from '@hooks/doesDormitoryExist';
 import createDormitoryIfNone from '@hooks/createDormitoryIfNone';
 import { RequestBody as RequestBodyCreate } from '@/@types/RESTAPI/createChatting.types';
 import { RequestBody as RequestBodyParticipate } from '@/@types/RESTAPI/participateChatting.types';
+import { getToken } from '@utils/service';
 
 interface RequestBody {
   name: string;
@@ -59,9 +60,7 @@ const SelectDormitory = () => {
   );
 
   const SERVER_KEY = '660d616b';
-  // 현재 헤르미온느 ACCESS_TOKEN임!
-  const ACCESS_TOKEN =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGQ2MTZiOmhlcm1pb25lIiwiaWF0IjoxNjk5NDIzOTI4LCJleHAiOjE3MDAwMjg3Mjh9.9FA24mkoipWSd4KlpxTX0L8mKmJj7LAVd_XEcW1Xt7w';
+  const [accessToken, setAccessToken] = useState('');
   const CREATE_CHAT_URL = 'https://fastcampus-chat.net/chat';
   const FIND_ALL_USER_URL = 'https://fastcampus-chat.net/users';
   const FIND_MY_CHAT_URL = 'https://fastcampus-chat.net/chat';
@@ -69,7 +68,7 @@ const SelectDormitory = () => {
 
   const headers = {
     'Content-Type': 'application/json',
-    Authorization: `Bearer ${ACCESS_TOKEN}`,
+    ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
     serverId: SERVER_KEY,
   };
 
@@ -107,6 +106,11 @@ const SelectDormitory = () => {
         console.error('채팅 참여 실패!', error);
       });
   };
+
+  useEffect(() => {
+    const token = getToken();
+    setAccessToken(token);
+  }, []);
 
   useEffect(() => {
     setChatData(data);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as styled from './CreateModal.styles';
 import CancelIcon from '@assets/icon/cancelIcon.svg';
 import {
@@ -10,15 +10,14 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import axios from 'axios';
 import { RequestBody as RequestBodyCreateChatting } from '@hooks/RESTAPI/createChatting.type';
 import { useRouter } from 'next/navigation';
+import { getToken } from '@utils/service';
 
-//헤르미온느 토큰
 const createModal = () => {
   const SERVER_KEY = '660d616b';
-  const ACCESS_TOKEN =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGQ2MTZiOmhlcm1pb25lIiwiaWF0IjoxNjk5NDIzOTI4LCJleHAiOjE3MDAwMjg3Mjh9.9FA24mkoipWSd4KlpxTX0L8mKmJj7LAVd_XEcW1Xt7w';
+  const [accessToken, setAccessToken] = useState('');
   const headers = {
     'Content-Type': 'application/json',
-    Authorization: `Bearer ${ACCESS_TOKEN}`,
+    ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
     serverId: SERVER_KEY,
   };
 
@@ -59,6 +58,11 @@ const createModal = () => {
       return alert('채팅방 제목을 입력하세요.');
     } else handleCreateChat(chatName, [], isPrivate);
   };
+
+  useEffect(() => {
+    const token = getToken();
+    setAccessToken(token);
+  }, []);
 
   return (
     <>

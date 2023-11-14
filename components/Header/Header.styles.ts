@@ -6,6 +6,10 @@ const flexCenter = `
 `;
 
 export const HeaderWrapper = styled.header`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
   background-color: #222;
   height: 50px;
   padding: 0 20px;
