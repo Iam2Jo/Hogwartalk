@@ -4,12 +4,21 @@ interface MyChattingProps {
   $isCurrentChat: boolean;
 }
 
-export const MyChattingContainer = styled.div`
-  background-color: #030303;
-  border-radius: 0.5rem;
-  width: 25.6vw;
-  height: calc(100vh - 2rem); // 패딩 1rem 해줬어서
-  padding: 1.5rem 1rem 1.5rem 1.5rem;
+export const MyChattingContainer = styled.div<{ isVisible: boolean }>`
+  position: fixed;
+  top: 50px;
+  left: ${(props) => (props.isVisible ? '0' : '-300px')};
+  width: 20rem;
+  height: 100vh;
+  background-color: rgba(3, 3, 3, 0.84);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  transition: left 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+
   overflow-y: hidden;
 
   ::-webkit-scrollbar {
@@ -62,6 +71,7 @@ export const MyChatting = styled.div<MyChattingProps>`
 `;
 
 export const ChattingInfo = styled.div`
+  gap: 1rem;
   display: flex;
   justify-content: space-between;
 `;
@@ -71,7 +81,7 @@ export const ChatName = styled.div<MyChattingProps>`
   text-overflow: ellipsis;
   white-space: nowrap;
   display: inline-block;
-  max-width: 80%;
+  max-width: 100%;
   color: ${(props) => (props.$isCurrentChat ? '#f2cc00' : '#d1d1d1')};
 `;
 
@@ -84,6 +94,7 @@ export const IconWrapper = styled.div`
 
 export const ChatUsersLength = styled.div`
   color: white;
+  margin-left: 0.2rem;
 `;
 
 export const ChatTime = styled.span<MyChattingProps>`
@@ -98,4 +109,18 @@ export const LatestMessage = styled.span<MyChattingProps>`
   display: inline-block;
   max-width: 100%;
   color: ${(props) => (props.$isCurrentChat ? '#f2cc00' : '#d1d1d1')};
+`;
+
+export const CloseButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 13px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+
+  img {
+    width: 15px;
+    height: 15px;
+  }
 `;

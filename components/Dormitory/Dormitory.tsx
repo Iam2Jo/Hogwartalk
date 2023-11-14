@@ -28,6 +28,7 @@ import {
 } from '@/recoil/dormChatInfo';
 import ChatRoomInfoModal from '@/components/ChatRoomInfoModal/ChatRoomInfoModal';
 import InviteToChatRoomModal from '@components/InviteToChatRoomModal/InviteToChatRoomModal';
+import { getToken } from '@utils/service';
 
 const Dormitory = ({ chatId, dormName }) => {
   const [text, setText] = useState<RequestData>('');
@@ -62,15 +63,12 @@ const Dormitory = ({ chatId, dormName }) => {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const messageContainerRef = useRef<HTMLDivElement | null>(null);
   const SERVER_KEY = '660d616b';
-  const ACCESS_TOKEN_HARRY =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGQ2MTZiOmhhcnJ5cG90dGVyIiwiaWF0IjoxNjk5MzQ1NDkzLCJleHAiOjE2OTk5NTAyOTN9.b5s4_9f-pVBj9ki17SXc6VvoiApMJZCJXfk5G2wskyo';
-  const ACCESS_TOKEN_HERMIONE =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGQ2MTZiOmhlcm1pb25lIiwiaWF0IjoxNjk5NDIzOTI4LCJleHAiOjE3MDAwMjg3Mjh9.9FA24mkoipWSd4KlpxTX0L8mKmJj7LAVd_XEcW1Xt7w';
-  const CHATROOM_LEAVE_URL = 'https://fastcampus-chat.net/chat/leave';
+  const [accessToken, setAccessToken] = useState('');
 
-  const myId = findMyId(ACCESS_TOKEN_HERMIONE);
+  const CHATROOM_LEAVE_URL = 'https://fastcampus-chat.net/chat/leave';
+  const myId = findMyId(accessToken);
   const headers = {
-    Authorization: `Bearer ${ACCESS_TOKEN_HERMIONE}`,
+    ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
     serverId: SERVER_KEY,
   };
   const chatSocket = io(`https://fastcampus-chat.net/chat?chatId=${chatId}`, {
@@ -97,6 +95,11 @@ const Dormitory = ({ chatId, dormName }) => {
   // usePullUsers(chatSocket, setIsConnected);
   useJoinUsers(chatSocket, setIsConnected);
   useLeaveUsers(chatSocket, setIsConnected);
+
+  useEffect(() => {
+    const token = getToken();
+    setAccessToken(token);
+  }, []);
 
   useEffect(() => {
     switch (dormName) {
