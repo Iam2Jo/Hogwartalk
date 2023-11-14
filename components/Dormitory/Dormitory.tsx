@@ -19,15 +19,16 @@ import { RequestData } from '@/@types/Socket/emit/messageToServer.types';
 import { Message } from '@/@types/Socket/on/messagesToClient.types';
 import axios from 'axios';
 import extractDateFromString from '@/utils/extractDateFromString';
-import { useRecoilValue } from 'recoil';
-import {
-  gryffindorChatInfoState,
-  hufflepuffChatInfoState,
-  ravenclawChatInfoState,
-  slytherinChatInfoState,
-} from '@/recoil/dormChatInfo';
+// import { useRecoilValue } from 'recoil';
+// import {
+//   gryffindorChatInfoState,
+//   hufflepuffChatInfoState,
+//   ravenclawChatInfoState,
+//   slytherinChatInfoState,
+// } from '@/recoil/dormChatInfo';
 import ChatRoomInfoModal from '@/components/ChatRoomInfoModal/ChatRoomInfoModal';
 import InviteToChatRoomModal from '@components/InviteToChatRoomModal/InviteToChatRoomModal';
+import { useFireFetch } from '@hooks/useFireFetch';
 
 const Dormitory = ({ chatId, dormName }) => {
   const [text, setText] = useState<RequestData>('');
@@ -44,11 +45,20 @@ const Dormitory = ({ chatId, dormName }) => {
   });
   const [isOpen, setIsOpen] = useState(false);
   const [isConnected, setIsConnected] = useState([]);
+  const fireFetch = useFireFetch();
 
-  const gryffindorChatInfo = useRecoilValue(gryffindorChatInfoState);
-  const hufflepuffChatInfo = useRecoilValue(hufflepuffChatInfoState);
-  const ravenclawChatInfo = useRecoilValue(ravenclawChatInfoState);
-  const slytherinChatInfo = useRecoilValue(slytherinChatInfoState);
+  // const gryffindorChatInfo = useRecoilValue(gryffindorChatInfoState);
+  // const hufflepuffChatInfo = useRecoilValue(hufflepuffChatInfoState);
+  // const ravenclawChatInfo = useRecoilValue(ravenclawChatInfoState);
+  // const slytherinChatInfo = useRecoilValue(slytherinChatInfoState);
+
+  useEffect(() => {
+    fireFetch.get('chatInfo', 'name', dormName).then((res) => {
+      console.log('res: ', res);
+      setCurrentDormChatInfo(res[0]);
+    });
+  }, []);
+
   const { name, users, updatedAt, host } = currentDormChatInfo;
   const modalData = {
     title: name,
@@ -97,19 +107,6 @@ const Dormitory = ({ chatId, dormName }) => {
   // usePullUsers(chatSocket, setIsConnected);
   useJoinUsers(chatSocket, setIsConnected);
   useLeaveUsers(chatSocket, setIsConnected);
-
-  useEffect(() => {
-    switch (dormName) {
-      case 'gryffindor':
-        setCurrentDormChatInfo({ ...gryffindorChatInfo });
-      case 'hufflepuff':
-        setCurrentDormChatInfo({ ...hufflepuffChatInfo });
-      case 'ravenclaw':
-        setCurrentDormChatInfo({ ...ravenclawChatInfo });
-      case 'slytherin':
-        setCurrentDormChatInfo({ ...slytherinChatInfo });
-    }
-  }, []);
 
   useEffect(() => {
     console.log('currentDormChatInfo: ', currentDormChatInfo);
@@ -169,6 +166,7 @@ const Dormitory = ({ chatId, dormName }) => {
         isOpen={isInfoModalOpen}
         onClose={closeInfoModal}
         isConnected={isConnected}
+        dormName={dormName}
       />
       <InviteToChatRoomModal
         isOpen={isInviteModalOpen}
