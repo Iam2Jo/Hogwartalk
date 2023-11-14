@@ -19,13 +19,6 @@ import { RequestData } from '@/@types/Socket/emit/messageToServer.types';
 import { Message } from '@/@types/Socket/on/messagesToClient.types';
 import axios from 'axios';
 import extractDateFromString from '@/utils/extractDateFromString';
-import { useRecoilValue } from 'recoil';
-import {
-  gryffindorChatInfoState,
-  hufflepuffChatInfoState,
-  ravenclawChatInfoState,
-  slytherinChatInfoState,
-} from '@/recoil/dormChatInfo';
 import ChatRoomInfoModal from '@/components/ChatRoomInfoModal/ChatRoomInfoModal';
 import InviteToChatRoomModal from '@components/InviteToChatRoomModal/InviteToChatRoomModal';
 import { getToken } from '@utils/service';
@@ -46,10 +39,6 @@ const Dormitory = ({ chatId, dormName }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isConnected, setIsConnected] = useState([]);
 
-  const gryffindorChatInfo = useRecoilValue(gryffindorChatInfoState);
-  const hufflepuffChatInfo = useRecoilValue(hufflepuffChatInfoState);
-  const ravenclawChatInfo = useRecoilValue(ravenclawChatInfoState);
-  const slytherinChatInfo = useRecoilValue(slytherinChatInfoState);
   const { name, users, updatedAt, host } = currentDormChatInfo;
   const modalData = {
     title: name,
@@ -100,23 +89,6 @@ const Dormitory = ({ chatId, dormName }) => {
     const token = getToken();
     setAccessToken(token);
   }, []);
-
-  useEffect(() => {
-    switch (dormName) {
-      case 'gryffindor':
-        setCurrentDormChatInfo({ ...gryffindorChatInfo });
-      case 'hufflepuff':
-        setCurrentDormChatInfo({ ...hufflepuffChatInfo });
-      case 'ravenclaw':
-        setCurrentDormChatInfo({ ...ravenclawChatInfo });
-      case 'slytherin':
-        setCurrentDormChatInfo({ ...slytherinChatInfo });
-    }
-  }, []);
-
-  useEffect(() => {
-    console.log('currentDormChatInfo: ', currentDormChatInfo);
-  }, [currentDormChatInfo]);
 
   useEffect(() => {
     if (isAtBottom) {

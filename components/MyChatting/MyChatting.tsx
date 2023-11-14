@@ -45,17 +45,12 @@ const MyChatting = () => {
   }, []);
 
   useEffect(() => {
-    // 초기 데이터 불러오기
     fetchData();
-
-    // 주기적으로 데이터 업데이트
     const intervalId = setInterval(() => {
       fetchData();
-    }, 1000); // 5초마다 업데이트, 필요에 따라 조절 가능
-
-    // 컴포넌트가 언마운트될 때 clearInterval로 인터벌 정리
+    }, 5000);
     return () => clearInterval(intervalId);
-  }, []); // 빈 배열을 전달하여 최초 한 번만 실행되도록 함
+  }, []);
 
   useEffect(() => {
     console.log('currentDormitory', currentDormitory);
