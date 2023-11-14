@@ -110,3 +110,7 @@ export const RefreshButton = styled.button`
   border: none;
   cursor: pointer;
 `;
+
+export const UserClass = styled.div`
+  font-size: 6px;
+`;

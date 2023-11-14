@@ -65,7 +65,7 @@ export const useFetchUsers = (chatSocket) => {
 };
 
 export const usePullUsers = (chatSocket, setIsConnected) => {
-    useEffect(() => {
+  useEffect(() => {
     try {
       chatSocket.on('users-to-client', (response) => {
         console.log('접속 상태 유저 목록: ', response.users);
@@ -91,7 +91,7 @@ export const useJoinUsers = (chatSocket, setIsConnected) => {
   } catch (error) {
     console.error('S->C 유저 입장 정보 불러오기 실패!', error);
   }
-}
+};
 
 export const useLeaveUsers = (chatSocket, setIsConnected) => {
   try {
@@ -103,4 +103,4 @@ export const useLeaveUsers = (chatSocket, setIsConnected) => {
   } catch (error) {
     console.error('S->C 유저 퇴장 정보 불러오기 실패!', error);
   }
-}
+};
