@@ -4,7 +4,7 @@ import * as style from './page.styles';
 import Content from './components/content/Content';
 import { useRecoilValue } from 'recoil';
 import { modalState } from '@recoil/quizTeam';
-import Modal from './components/content/modal/Modal';
+import Modal from '@components/quiz/modal/Modal';
 
 const quiz: NextPage = () => {
   const modalOpen = useRecoilValue(modalState);
