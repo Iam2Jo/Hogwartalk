@@ -10,8 +10,8 @@ export const Background = styled.div`
 `;
 
 export const Container = styled.div`
-  width: 50.75rem;
-  height: 33.125rem;
+  width: 35.75rem;
+  height: 20.125rem;
 
   z-index: 999;
   position: fixed;
@@ -27,7 +27,7 @@ export const Container = styled.div`
 export const CancelIcon = styled.button`
   background-color: transparent;
   border: 0;
-  margin: 2.81rem 3.69rem 0 45.72rem;
+  margin: 2.81rem 3.69rem 0 30.72rem;
   cursor: pointer;
 `;
 
