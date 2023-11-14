@@ -16,9 +16,9 @@ const firebaseConfig = {
   messagingSenderId: '1036173696574',
   appId: '1:1036173696574:web:cb872c1d1535741d0e3b6f',
 };
-const app = initializeApp(firebaseConfig);
-const storage = getStorage(app);
-const db = getFirestore(app);
+export const app = initializeApp(firebaseConfig);
+export const storage = getStorage(app);
+export const db = getFirestore(app);
 
 export async function getStorageURL(fileName) {
   const storageRef = ref(
@@ -47,10 +47,10 @@ export async function setStorageImage(file, fileName) {
 }
 
 export async function setUsersClass(userId, userClass) {
-    const data  = {id:userId, class: userClass}
-    console.log(data)
+  const data = { id: userId, class: userClass };
+  console.log(data);
   try {
-    const docRef = await setDoc(doc(db,'users',userId),data);
+    const docRef = await setDoc(doc(db, 'users', userId), data);
   } catch (error) {
     console.error('Error adding document: ', error);
   }

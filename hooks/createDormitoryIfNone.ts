@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { RequestBody as RequestBodyCreate } from '@/@types/RESTAPI/createChatting.types';
+import { useFireFetch } from './useFireFetch';
 
 type ResponseValue = any;
 
@@ -22,29 +23,24 @@ const createDormitoryIfNone = (
   myName: string,
   setGryffindorChatInfo: React.Dispatch<React.SetStateAction<DormChatInfo>>,
 ) => {
+  const firefetch = useFireFetch();
+
   if (!hasDormitory) {
     axios
       .post(createChatUrl, requestData, { headers })
-      .then((response) => {
+      .then(async (response) => {
         console.log(`${requestData.name} 채팅방 생성 완료`, response.data);
-        setGryffindorChatInfo((prevChatInfo) => ({
-          ...prevChatInfo,
-          id: response.data.id,
-        }));
-
-        let host = '';
-        if (response.data.users.includes(myName)) {
-          host = myName;
-        }
 
         const newDormChatInfo = {
+          id: response.data.id,
           name: response.data.name,
           users: response.data.users,
           isPrivate: response.data.isPrivate,
           updatedAt: response.data.updatedAt,
-          host,
+          host: myName,
         };
-        
+
+        await firefetch.add('chatInfo', newDormChatInfo);
         setGryffindorChatInfo((prevChatInfo) => ({
           ...prevChatInfo,
           ...newDormChatInfo,
