@@ -11,7 +11,7 @@ export const SignupContainer = styled.div`
   flex-direction: row;
   /* justify-content: center; */
   align-items: center;
-  img {
+  .LoginTitile {
     width: 180px;
     height: 100px;
     position: absolute;
@@ -20,7 +20,8 @@ export const SignupContainer = styled.div`
   }
   form {
     position: relative;
-    left : 30%;
+    left: 20%;
+    display: flex;
   }
   label {
     font-size: 18px;
@@ -30,8 +31,10 @@ export const SignupContainer = styled.div`
     display: flex;
     flex-direction: column;
     margin-bottom: 30px;
+    margin-right: 80px;
   }
   input {
+    width: 350px;
     background-color: inherit;
     border: none;
     border-bottom: 0.1px solid white;
@@ -42,5 +45,46 @@ export const SignupContainer = styled.div`
     height: 48px;
     background-color: inherit;
     color: #ffffff;
+  }
+  .profile__img {
+    width: 15rem;
+    height: 15rem;
+    object-fit: cover;
+    border-radius: 50%;
+    background-color: #ffffff;
+  }
+  .button__test {
+    width: 154px;
+    height: 38px;
+    position: relative;
+  }
+
+  .input__test {
+    width: 180px;
+    margin-right: 20px;
+  }
+
+  .button__submit {
+    margin-top: 20px;
+  }
+  #picture {
+    display: none;
+  }
+
+ .button__save__img {
+    width: 4rem;
+      height: 4rem;
+      object-fit: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: absolute;
+      top: 12rem;
+      right: 6rem;
+      border-radius: 50%;
+      background-color: white;
+      color :black;
+      z-index: 3;
+
   }
 `;

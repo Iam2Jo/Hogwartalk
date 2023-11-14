@@ -1,6 +1,6 @@
 'use client';
-import Hat from '../../../../assets/img/Hat.svg';
-import Logo from '../../../../assets/img/Logo.svg';
+import Hat from '@assets/img/Hat.svg';
+import Logo from '@assets/img/Logo.svg';
 import * as style from './Content.styles';
 import QuizForm from './form/QuizForm';
 

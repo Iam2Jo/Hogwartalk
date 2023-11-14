@@ -4,10 +4,10 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import * as style from './Modal.styles';
 import Link from 'next/link';
 
-import Gryffindor from '../../../../../assets/img/Gryffindor.svg';
-import Hufflepuff from '../../../../../assets/img/Hufflepuff.svg';
-import Ravenclaw from '../../../../../assets/img/Ravenclaw.svg';
-import Slytherin from '../../../../../assets/img/Slytherin.svg';
+import Gryffindor from '@assets/img/Gryffindor.svg';
+import Hufflepuff from '@assets/img/Hufflepuff.svg';
+import Ravenclaw from '@assets/img/Ravenclaw.svg';
+import Slytherin from '@assets/img/Slytherin.svg';
 
 const Modal = () => {
   const team = useRecoilValue(teamState);
