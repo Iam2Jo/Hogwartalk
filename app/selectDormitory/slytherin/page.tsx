@@ -10,6 +10,7 @@ const DormSlytherin: NextPage = () => {
         gap: '1rem',
         padding: '1rem',
         backgroundColor: '#1f1f1f',
+        height: '100vh',
       }}
     >
       <MyChatting />
