@@ -7,6 +7,7 @@ export const GlobalStyle = createGlobalStyle`
     line-height: 1.5;
     font-size: 16px;
     box-sizing: border-box;
+
   }
 
   #root {
@@ -24,21 +25,25 @@ export const GlobalStyle = createGlobalStyle`
   * {
     padding: 0;
     margin: 0;
+    
   }
 
   body {    
     background-color: #222;
+    
   }
   
   a {
     color: inherit;
     text-decoration: none;
+    
   }
   
   div,
   li,
   section {
     box-sizing: border-box;
+
   }
   
   ul,
