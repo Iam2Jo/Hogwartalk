@@ -1,18 +1,15 @@
-import { modalState, teamState } from '@/recoil/atom';
+import { teamState } from '@recoil/atom';
 import React from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import * as style from './Modal.styles';
 import Link from 'next/link';
-
-import Gryffindor from '../../../../../assets/img/Gryffindor.svg';
-import Hufflepuff from '../../../../../assets/img/Hufflepuff.svg';
-import Ravenclaw from '../../../../../assets/img/Ravenclaw.svg';
-import Slytherin from '../../../../../assets/img/Slytherin.svg';
+import Gryffindor from '@assets/img/Gryffindor.svg';
+import Hufflepuff from '@assets/img/Hufflepuff.svg';
+import Ravenclaw from '@assets/img/Ravenclaw.svg';
+import Slytherin from '@assets/img/Slytherin.svg';
 
 const Modal = () => {
   const team = useRecoilValue(teamState);
-  const modalOpen = useRecoilValue(modalState);
-  const setModalOpen = useSetRecoilState(modalState);
 
   return (
     <style.Modal>
@@ -21,13 +18,13 @@ const Modal = () => {
           {(() => {
             switch (team) {
               case '그리핀도르':
-                return <Gryffindor />;
+                return <Gryffindor width="360" height="400" />;
               case '후플푸프':
-                return <Hufflepuff />;
+                return <Hufflepuff width="360" height="400" />;
               case '래번클로':
-                return <Ravenclaw />;
+                return <Ravenclaw width="360" height="400" />;
               case '슬리데린':
-                return <Slytherin />;
+                return <Slytherin width="360" height="400" />;
             }
           })()}
         </style.Img>

@@ -1,8 +1,8 @@
 import React, { use, useEffect, useState } from 'react';
-import QuizData from '../../../db/QuizData';
+import QuizData from '@/app/signup/quiz/db/QuizData';
 import * as style from './QuizForm.style';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
-import { modalState, teamState } from '@/recoil/atom';
+import { modalState, teamState } from '@recoil/atom';
 
 const QuizForm = () => {
   //진행중인 문항 번호
