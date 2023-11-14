@@ -4,26 +4,11 @@ import { Fragment, useState } from 'react';
 import cookies from 'react-cookies';
 import { LoginContainer, LoginFormStyle } from './loginStyle';
 import { useRouter } from 'next/navigation';
+import { getToken, getUserdata, loginUser } from '../utils/service';
 type LoginData = {
   id: string;
   password: string;
 };
-
-async function loginUser(loginData: LoginData) {
-  const res = await fetch('https://fastcampus-chat.net/login', {
-    method: 'POST',
-    body: JSON.stringify(loginData),
-    headers: {
-      'content-type': 'application/json',
-      serverId: '660d616b',
-    },
-  });
-  if (res.ok) {
-    const tokenData = await res.json();
-    return tokenData;
-  }
-}
-
 const main: NextPage = () => {
   const router = useRouter();
   const [loginData, setLoginData] = useState<LoginData>({
@@ -35,9 +20,17 @@ const main: NextPage = () => {
     setLoginData({ ...loginData, [id]: value });
   };
   const handleButtonClick = async () => {
-    const token = await loginUser(loginData);
-    cookies.save('accessToken', token.accessToken);
-    cookies.save('refreshToken', token.refreshToken);
+    try {
+      const token = await loginUser(loginData);
+    cookies.save('accessToken', token?.accessToken, { maxAge: 3600 });
+    cookies.save('refreshToken', token?.refreshToken);
+    const rest = await getUserdata();
+    console.log(rest);
+    }
+    catch (error) {
+      alert('아이디와 비밀번호가 올바른지 확인해주세요')
+      throw new Error(error)
+    }
   };
 
   return (
