@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 import ChevronDown from '@assets/img/ChevronDown.svg';
+import PersonSVG from '@assets/img/Person.svg';
+import MoreSVG from '@assets/img/More.svg';
 
 interface MessageProps {
   $isCurrentUser: boolean;
@@ -9,10 +11,28 @@ interface ScrollToBottomButtonProps {
   $isVisible: boolean;
 }
 
+export const MoreItemContainer = styled.button`
+  background: black;
+  color: var(--color-white);
+  padding: 1rem;
+  position: absolute;
+  top: 8%;
+  right: 3%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 15%;
+  height: 12%;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+`;
+
 export const DormitoryContainer = styled.div`
+  position: relative;
   background-color: #1f1f1f;
   width: 73.4vw;
-  height: calc(100vh -2rem); // 패딩 1rem 해줬어서
+  height: calc(100vh -3rem); // 패딩 1rem 해줬어서
   ::-webkit-scrollbar {
     width: 10px;
   }
@@ -27,12 +47,25 @@ export const DormitoryContainer = styled.div`
   }
 `;
 
+export const DormitoryHeader = styled.div`
+  background-color: black;
+  width: 100%;
+  height: 10%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #f2cc00;
+  margin-bottom: 1rem;
+`;
+
 export const MessageContainer = styled.div`
   background-color: black;
   border-radius: 0.5rem;
   padding: 0.5rem 1rem;
   width: 100%;
-  height: 90%;
+  height: 77.5%;
   overflow-y: auto;
 `;
 
@@ -108,4 +141,50 @@ export const BottomIcon = styled(ChevronDown)`
   height: 1.25rem;
   width: 1.25rem;
   fill: white;
+`;
+
+export const PersonIcon = styled(PersonSVG)`
+  transform: scale(0.7);
+  margin-right: 0.25rem;
+`;
+
+export const MoreIcon = styled(MoreSVG)`
+  height: 1.25rem;
+  width: 1.25rem;
+  fill: white;
+  margin-right: 2rem;
+  cursor: pointer;
+`;
+
+export const TitleWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const Title = styled.span`
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin-left: 2rem;
+  margin-right: 0.5rem;
+  color: white;
+`;
+
+export const Badge = styled.div`
+  border-radius: 6.25rem;
+  background: #f2cc00;
+  width: 4.1875rem;
+  height: 1.8125rem;
+  color: #000;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const Button = styled.button`
+  background-color: black;
+  color: white;
+  font-size: 0.9rem;
+  border: none;
 `;

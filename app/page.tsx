@@ -22,15 +22,15 @@ const main: NextPage = () => {
   const handleButtonClick = async () => {
     try {
       const token = await loginUser(loginData);
+    cookies.save('accessToken', token?.accessToken, { maxAge: 3600 });
+    cookies.save('refreshToken', token?.refreshToken);
+    const rest = await getUserdata();
+    console.log(rest);
     }
     catch (error) {
       alert('아이디와 비밀번호가 올바른지 확인해주세요')
       throw new Error(error)
     }
-    cookies.save('accessToken', token?.accessToken, { maxAge: 3600 });
-    cookies.save('refreshToken', token?.refreshToken);
-    const rest = await getUserdata();
-    console.log(rest);
   };
 
   return (

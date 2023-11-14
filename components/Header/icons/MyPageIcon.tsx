@@ -7,17 +7,19 @@ interface MyPageIconProps {
   isToggled: boolean;
 }
 
-const IconContainer = styled.div<{ isToggled: boolean }>`
+const IconContainer = styled.div<{ $isToggled: boolean }>`
   ${commonIconStyles}
-  filter: ${(props) =>
-    props.isToggled
-      ? 'sepia(89%) saturate(6054%) brightness(97%) contrast(113%)'
-      : 'none'};
+
+  ${({ $isToggled }) =>
+    $isToggled &&
+    css`
+      filter: sepia(89%) saturate(6054%) brightness(97%) contrast(113%);
+    `}
 `;
 
 const MyPageIcon: React.FC<MyPageIconProps> = ({ onClick, isToggled }) => {
   return (
-    <IconContainer onClick={onClick} isToggled={isToggled}>
+    <IconContainer onClick={onClick} $isToggled={isToggled}>
       <img
         src="/assets/icons/mypage.svg"
         alt="My Page"

@@ -100,3 +100,13 @@ export const Emoji = styled.span`
   margin-left: 3px;
   vertical-align: middle;
 `;
+
+export const RefreshButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 13px;
+
+  background: transparent;
+  border: none;
+  cursor: pointer;
+`;

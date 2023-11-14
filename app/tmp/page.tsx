@@ -5,7 +5,6 @@ import ChatRoomInfoModal from '@/components/ChatRoomInfoModal/ChatRoomInfoModal'
 import InviteToChatRoomModal from '@components/InviteToChatRoomModal/InviteToChatRoomModal';
 import { io } from 'socket.io-client';
 import { useRecoilValue } from 'recoil';
-import * as dormChatId from '@/recoil/dormChatId';
 import * as dormChatInfo from '@/recoil/dormChatInfo';
 import extractDateFromString from '@/utils/extractDateFromString';
 import cutStringAfterColon from '@/utils/cutStringAfterColon';
@@ -17,7 +16,7 @@ const tmp = () => {
   const [isConnected, setIsConnected] = useState([]);
   const [myName, setMyName] = useState('');
 
-  // const chatId = useRecoilValue(dormChatId.gryffindorChatIdState);
+  // const { id } = useRecoilValue(dormChatInfo.gryffindorChatInfoState);
   const chatId = 'd3d7bff2-5b10-41c0-b6cd-5b5366995e31'; // 임시 chatId
   const { name, users, updatedAt, host } = useRecoilValue(
     dormChatInfo.gryffindorChatInfoState,
