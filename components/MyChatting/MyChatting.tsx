@@ -5,6 +5,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import * as styled from './MyChatting.styles';
 import Link from 'next/link';
 import { getToken } from '@utils/service';
+import UserIcon from '@assets/icon/UserIcon.svg';
+
 // import { ResponseValue } from '@/@types/RESTAPI/findMyChatting.types';
 type ResponseValue = any;
 
@@ -86,12 +88,16 @@ const MyChatting = () => {
                   $isCurrentChat={chat.name === currentDormitory}
                 >
                   <styled.ChattingInfo>
-                    <div style={{ display: 'flex' }}>
+                    <div style={{ display: 'flex', gap: '0.3rem' }}>
                       <styled.ChatName
                         $isCurrentChat={chat.name === currentDormitory}
                       >
                         {chat.name}
                       </styled.ChatName>
+                      <styled.IconWrapper>
+                        <UserIcon />
+                      </styled.IconWrapper>
+
                       <styled.ChatUsersLength>
                         {chat.users.length}
                       </styled.ChatUsersLength>
