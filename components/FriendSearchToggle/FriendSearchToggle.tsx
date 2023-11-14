@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import io, { Socket } from 'socket.io-client';
 import * as styled from './FriendSearchToggle.styles';
 
+import { useFireFetch } from '@/hooks/useFireFetch';
+
 import { getUsersClass } from '@utils/firebase';
 import { doc, getDocs } from 'firebase/firestore';
-import { useFetchUsers, usePullUsers } from '@hooks/useChatSocketHooks';
 
 interface FriendSearchToggleProps {
   isVisible: boolean;
@@ -94,6 +95,7 @@ const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
     fetchUsers();
   }, [isVisible]);
 
+  // 접속 유무
   useEffect(() => {
     const accessTokenCookie = document.cookie
       .split('; ')
@@ -145,6 +147,30 @@ const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
     };
   }, []);
   // }, [users]); // 무한 호출 때문에 잠시 주석
+
+  // const fireFetch = useFireFetch();
+
+  // useEffect(() => {
+  //   const fetchData = async (userId) => {
+  //     try {
+  //       // useFireFetch를 사용하여 id와 일치하는 데이터 가져오기
+  //       const userData = await fireFetch.get('users', 'id', userId);
+
+  //       if (userData.length > 0) {
+  //         // userData에서 class 값을 가져와서 사용
+  //         const userClass = userData[0].class;
+  //         console.log('User Class:', userClass);
+  //       } else {
+  //         console.error('User not found');
+  //       }
+  //     } catch (error) {
+  //       console.error('Error fetching user data:', error);
+  //     }
+  //   };
+
+  //   // 예시로 userId를 '123'으로 가정
+  //   fetchData('123');
+  // }, []); // userId가 바뀌어야 할 경우, 해당 의존성 배열을 업데이트하세요.
 
   const checkDuplicateUserId = async (accessToken: string) => {
     try {

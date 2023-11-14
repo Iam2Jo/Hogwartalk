@@ -47,11 +47,37 @@ export async function setStorageImage(file, fileName) {
 }
 
 export async function setUsersClass(userId, userClass) {
-    const data  = {id:userId, class: userClass}
-    console.log(data)
+  const data = { id: userId, class: userClass };
+  console.log(data);
   try {
-    const docRef = await setDoc(doc(db,'users',userId),data);
+    const docRef = await setDoc(doc(db, 'users', userId), data);
   } catch (error) {
     console.error('Error adding document: ', error);
   }
 }
+
+// 특정 유저 ID에 따른 class를 가져오기
+export async function getUsersClass(userId) {
+  try {
+    const userDocRef = doc(db, 'users', userId);
+    const userDocSnap = await getDocs(userDocRef);
+
+    if (userDocSnap.exists()) {
+      const userData = userDocSnap.data();
+      if (userData && userData.class) {
+        return userData.class;
+      } else {
+        console.error('User data or class information not found.');
+        return null;
+      }
+    } else {
+      console.error('User document not found.');
+      return null;
+    }
+  } catch (error) {
+    console.error('Error fetching user class:', error);
+    return null;
+  }
+}
+
+export { app, db, storage };
