@@ -19,13 +19,6 @@ import { RequestData } from '@/@types/Socket/emit/messageToServer.types';
 import { Message } from '@/@types/Socket/on/messagesToClient.types';
 import axios from 'axios';
 import extractDateFromString from '@/utils/extractDateFromString';
-import { useRecoilValue } from 'recoil';
-import {
-  gryffindorChatInfoState,
-  hufflepuffChatInfoState,
-  ravenclawChatInfoState,
-  slytherinChatInfoState,
-} from '@/recoil/dormChatInfo';
 import ChatRoomInfoModal from '@/components/ChatRoomInfoModal/ChatRoomInfoModal';
 import InviteToChatRoomModal from '@components/InviteToChatRoomModal/InviteToChatRoomModal';
 import { getToken } from '@utils/service';
@@ -46,10 +39,6 @@ const Dormitory = ({ chatId, dormName }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isConnected, setIsConnected] = useState([]);
 
-  const gryffindorChatInfo = useRecoilValue(gryffindorChatInfoState);
-  const hufflepuffChatInfo = useRecoilValue(hufflepuffChatInfoState);
-  const ravenclawChatInfo = useRecoilValue(ravenclawChatInfoState);
-  const slytherinChatInfo = useRecoilValue(slytherinChatInfoState);
   const { name, users, updatedAt, host } = currentDormChatInfo;
   const modalData = {
     title: name,
@@ -102,23 +91,6 @@ const Dormitory = ({ chatId, dormName }) => {
   }, []);
 
   useEffect(() => {
-    switch (dormName) {
-      case 'gryffindor':
-        setCurrentDormChatInfo({ ...gryffindorChatInfo });
-      case 'hufflepuff':
-        setCurrentDormChatInfo({ ...hufflepuffChatInfo });
-      case 'ravenclaw':
-        setCurrentDormChatInfo({ ...ravenclawChatInfo });
-      case 'slytherin':
-        setCurrentDormChatInfo({ ...slytherinChatInfo });
-    }
-  }, []);
-
-  useEffect(() => {
-    console.log('currentDormChatInfo: ', currentDormChatInfo);
-  }, [currentDormChatInfo]);
-
-  useEffect(() => {
     if (isAtBottom) {
       scrollToBottom(messagesEndRef);
     }
@@ -161,7 +133,7 @@ const Dormitory = ({ chatId, dormName }) => {
   /********************************************************** */
 
   return (
-    <>
+    <styled.DormitoryContainer>
       <ChatRoomInfoModal
         title={modalData.title}
         numParticipants={modalData.numParticipants}
@@ -179,80 +151,76 @@ const Dormitory = ({ chatId, dormName }) => {
         chatId={chatId}
         setCurrentRoomChatInfo={setCurrentDormChatInfo}
       />
-      <styled.DormitoryContainer>
-        {isOpen ? (
-          <styled.MoreItemContainer>
-            <styled.Button onClick={openInfoModal}>채팅방 정보</styled.Button>
-            <styled.Button onClick={leaveChatRoom}>나가기</styled.Button>
-          </styled.MoreItemContainer>
-        ) : null}
-        <styled.DormitoryHeader>
-          <styled.TitleWrapper>
-            <styled.Title>{dormName}</styled.Title>
-            <styled.Badge onClick={openInviteModal}>
-              <styled.PersonIcon />
-              {currentDormChatInfo?.users.length}
-            </styled.Badge>
-          </styled.TitleWrapper>
-          <styled.MoreIcon onClick={() => setIsOpen(!isOpen)} />
-        </styled.DormitoryHeader>
-        <styled.MessageContainer
-          ref={messageContainerRef}
-          onScroll={(e) => handleScroll(e, setIsAtBottom, messageContainerRef)}
-        >
-          {previousMessages.map((message) => {
-            const messageDate = new Date(message.createdAt);
-            const timeString = messageDate.toLocaleString('en-US', {
-              timeZone: 'Asia/Seoul',
-              hour12: false,
-              hour: 'numeric',
-              minute: 'numeric',
-            });
-            return (
-              <styled.MessageWrapper
-                key={message.id}
-                $isCurrentUser={message.userId === myId}
-              >
-                <styled.MessageInfo>
-                  {message.userId !== myId && (
-                    <styled.MessageUserId>
-                      {message.userId}
-                    </styled.MessageUserId>
-                  )}
-                  <styled.MessageTime>{timeString}</styled.MessageTime>
-                </styled.MessageInfo>
-                <div>
-                  <styled.MessageText $isCurrentUser={message.userId === myId}>
-                    {message.text}
-                  </styled.MessageText>
-                </div>
-              </styled.MessageWrapper>
-            );
-          })}
-          <div ref={messagesEndRef} />
-        </styled.MessageContainer>
-        <styled.ScrollToBottomButton
-          onClick={() => scrollToBottom(messagesEndRef)}
-          $isVisible={!isAtBottom}
-        >
-          <styled.BottomIcon />
-        </styled.ScrollToBottomButton>
-        <styled.InputWrapper>
-          <input
-            type="text"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault();
-                sendMessage();
-              }
-            }}
-          />
-          <button onClick={sendMessage}>전송</button>
-        </styled.InputWrapper>
-      </styled.DormitoryContainer>
-    </>
+      {isOpen ? (
+        <styled.MoreItemContainer>
+          <styled.Button onClick={openInfoModal}>채팅방 정보</styled.Button>
+          <styled.Button onClick={leaveChatRoom}>나가기</styled.Button>
+        </styled.MoreItemContainer>
+      ) : null}
+      <styled.DormitoryHeader>
+        <styled.TitleWrapper>
+          <styled.Title>{dormName}</styled.Title>
+          <styled.Badge onClick={openInviteModal}>
+            <styled.PersonIcon />
+            {currentDormChatInfo?.users.length}
+          </styled.Badge>
+        </styled.TitleWrapper>
+        <styled.MoreIcon onClick={() => setIsOpen(!isOpen)} />
+      </styled.DormitoryHeader>
+      <styled.MessageContainer
+        ref={messageContainerRef}
+        onScroll={(e) => handleScroll(e, setIsAtBottom, messageContainerRef)}
+      >
+        {previousMessages.map((message) => {
+          const messageDate = new Date(message.createdAt);
+          const timeString = messageDate.toLocaleString('en-US', {
+            timeZone: 'Asia/Seoul',
+            hour12: false,
+            hour: 'numeric',
+            minute: 'numeric',
+          });
+          return (
+            <styled.MessageWrapper
+              key={message.id}
+              $isCurrentUser={message.userId === myId}
+            >
+              <styled.MessageInfo>
+                {message.userId !== myId && (
+                  <styled.MessageUserId>{message.userId}</styled.MessageUserId>
+                )}
+                <styled.MessageTime>{timeString}</styled.MessageTime>
+              </styled.MessageInfo>
+              <div>
+                <styled.MessageText $isCurrentUser={message.userId === myId}>
+                  {message.text}
+                </styled.MessageText>
+              </div>
+            </styled.MessageWrapper>
+          );
+        })}
+        <div ref={messagesEndRef} />
+      </styled.MessageContainer>
+      <styled.ScrollToBottomButton
+        onClick={() => scrollToBottom(messagesEndRef)}
+        $isVisible={!isAtBottom}
+      >
+        <styled.BottomIcon />
+      </styled.ScrollToBottomButton>
+      <styled.InputWrapper>
+        <input
+          type="text"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              sendMessage();
+            }
+          }}
+        />
+        <button onClick={sendMessage}>전송</button>
+      </styled.InputWrapper>
+    </styled.DormitoryContainer>
   );
 };
 
