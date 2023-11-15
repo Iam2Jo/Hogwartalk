@@ -182,7 +182,8 @@ const MyPageToggle: React.FC<MyPageToggleProps> = ({ isVisible, onClose }) => {
             console.error('Firebase에 이미지 업로드 오류:', error);
           }
         };
-        reader.readAsDataURL(selectedFile);
+        // reader.readAsDataURL(selectedFile);
+        await handleImageResizeAndUpload(selectedFile);
       }
     } catch (error) {
       console.error('프로필 사진 변경 오류:', error);
@@ -202,6 +203,44 @@ const MyPageToggle: React.FC<MyPageToggleProps> = ({ isVisible, onClose }) => {
     } catch (error) {
       console.error('프로필 사진 변경 오류:', error);
     }
+  };
+
+  const handleImageResizeAndUpload = async (file: File) => {
+    const MAX_WIDTH = 500;
+
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      const image = new Image();
+      image.src = reader.result as string;
+
+      image.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d')!;
+
+        const scaleFactor = MAX_WIDTH / image.width;
+        canvas.width = MAX_WIDTH;
+        canvas.height = image.height * scaleFactor;
+
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+        canvas.toBlob(async (blob) => {
+          if (blob) {
+            const resizedFile = new File([blob], file.name, {
+              type: file.type,
+            });
+            setTempNewPicture(URL.createObjectURL(resizedFile));
+
+            // 업로드
+            try {
+              await setStorageImage(resizedFile, userData.id);
+            } catch (error) {
+              console.error('Firebase에 이미지 업로드 오류:', error);
+            }
+          }
+        }, file.type);
+      };
+    };
+    reader.readAsDataURL(file);
   };
 
   return (
