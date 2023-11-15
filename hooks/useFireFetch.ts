@@ -65,11 +65,12 @@ export const updateFirebaseData = async (initialCollection, id, newData) => {
   }
 };
 
-export const addFirebaseData = async (initialCollection, data) => {
+export const addFirebaseData = async (collectionName, documentId, data) => {
   try {
-    const docRef = await addDoc(collection(db, initialCollection), data);
+    const docRef = doc(db, collectionName, documentId);
+    await setDoc(docRef, data);
 
-    console.log('성공, 문서 ID:', docRef.id);
+    console.log('성공, 문서 ID:', documentId);
   } catch (error) {
     console.error(error);
   }
