@@ -23,9 +23,15 @@ import ChatRoomInfoModal from '@/components/ChatRoomInfoModal/ChatRoomInfoModal'
 import InviteToChatRoomModal from '@components/InviteToChatRoomModal/InviteToChatRoomModal';
 import { getToken } from '@utils/service';
 import { getFirebaseDatabyKeyVal } from '@hooks/useFireFetch';
+import { useSearchParams } from 'next/navigation';
 import cutStringAfterColon from '@/utils/cutStringAfterColon';
 
 const Dormitory = ({ chatId, dormName }) => {
+  const params = useSearchParams();
+  const queryString = params.get('id');
+
+  const chatName = queryString.split('?name=')[1];
+
   const [text, setText] = useState<RequestData>('');
   const [previousMessages, setPreviousMessages] = useState<Message[]>([]);
   const [isAtBottom, setIsAtBottom] = useState(true);
@@ -229,7 +235,7 @@ const Dormitory = ({ chatId, dormName }) => {
       <styled.DormitoryHeader>
         <styled.TitleWrapper>
           <styled.Title>{dormName}</styled.Title>
-          <styled.Badge onClick={openInviteModal}>
+          <styled.Badge chatName={chatName} onClick={openInviteModal}>
             <styled.PersonIcon />
             {currentDormChatInfo?.users.length}
           </styled.Badge>
