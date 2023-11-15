@@ -44,6 +44,37 @@ export const getFirebaseData = async (
   }
 };
 
+export const getFirebaseDatabyKeyVal = async (initialCollection, key = null, value = null) => {
+  try {
+    if (key) {
+      const Ref = collection(db, initialCollection);
+      const q = query(Ref, where(key, '==', value));
+      const querySnapshot = await getDocs(q);
+      const userData = [];
+
+      querySnapshot.forEach((doc) => {
+        userData.push(doc.data());
+      });
+
+      console.log('good');
+      return userData;
+    } else {
+      const Ref = collection(db, initialCollection);
+      const userData = [];
+      const querySnapshot = await getDocs(Ref);
+
+      querySnapshot.forEach((doc) => {
+        userData.push(doc.data());
+      });
+
+      console.log('good');
+      return userData;
+    }
+  } catch (error) {
+    console.error('bad: ', error);
+  }
+};
+
 export const postFirebaseData = async (initialCollection, id, data) => {
   try {
     await setDoc(doc(db, initialCollection, id), data);
