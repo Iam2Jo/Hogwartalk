@@ -63,7 +63,6 @@ export async function getUsersClass(userId) {
       const userData = userDoc.data();
       return userData.class || null;
     } else {
-      console.error('사용자 문서를 찾을 수 없습니다.');
       return null;
     }
   } catch (error) {
