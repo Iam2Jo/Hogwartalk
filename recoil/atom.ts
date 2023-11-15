@@ -38,3 +38,8 @@ export const audioState = atom({
   key: 'audioState',
   default: false,
 });
+
+export const loadingState = atom({
+  key: 'loadingState',
+  default: false,
+});

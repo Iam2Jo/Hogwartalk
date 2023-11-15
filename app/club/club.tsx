@@ -16,6 +16,7 @@ import JoinModal from '@components/club/joinModal/page';
 import CreateModal from '@components/club/createModal/page';
 import Loading from '@components/club/loading/page';
 import { getToken } from '@utils/service';
+import { loadingState } from '@recoil/atom';
 
 const club = () => {
   const SERVER_KEY = '660d616b';
@@ -31,7 +32,8 @@ const club = () => {
 
   const chatList = useRecoilValue(chatListState);
   const setChatList = useSetRecoilState(chatListState);
-  const [loading, setLoading] = useState(true);
+  const loading = useRecoilValue(loadingState);
+  const setLoading = useSetRecoilState(loadingState);
 
   useEffect(() => {
     const token = getToken();
