@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import * as styled from './MyPageToggle.styles';
+import { getUsersClass, getStorageURL, setStorageImage } from '@utils/firebase';
 
 interface MyPageToggleProps {
   isVisible: boolean;
@@ -19,7 +20,7 @@ interface ResponseValue {
 
 interface RequestBody {
   name?: string;
-  picture?: string | File;
+  picture?: string;
 }
 
 const MyPageToggle: React.FC<MyPageToggleProps> = ({ isVisible, onClose }) => {
@@ -28,45 +29,59 @@ const MyPageToggle: React.FC<MyPageToggleProps> = ({ isVisible, onClose }) => {
   const [newName, setNewName] = useState('');
   const [newPicture, setNewPicture] = useState('');
   const [tempNewPicture, setTempNewPicture] = useState('');
+  const [ActualDormitory, setActualDormitory] = useState('');
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const accessTokenCookie = document.cookie
-          .split('; ')
-          .find((row) => row.startsWith('accessToken='));
+  const fetchData = async () => {
+    try {
+      const accessTokenCookie = document.cookie
+        .split('; ')
+        .find((row) => row.startsWith('accessToken='));
 
-        if (!accessTokenCookie) {
-          // 쿠키에 액세스 토큰이 없는 경우
-          return;
-        }
+      if (!accessTokenCookie) {
+        // 쿠키에 액세스 토큰이 없는 경우
+        return;
+      }
 
-        const accessToken = accessTokenCookie.split('=')[1];
+      const accessToken = accessTokenCookie.split('=')[1];
 
-        const serverId = '660d616b';
+      const serverId = '660d616b';
 
-        const response = await fetch('https://fastcampus-chat.net/auth/me', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            serverId: serverId,
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
+      const response = await fetch('https://fastcampus-chat.net/auth/me', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          serverId: serverId,
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
 
-        if (response.ok) {
-          const data: ResponseValue = await response.json();
-          if (data.auth && data.user) {
-            setUserData(data.user);
-          } else {
+      if (response.ok) {
+        const data: ResponseValue = await response.json();
+        if (data.auth && data.user) {
+          setUserData(data.user);
+
+          const imageURL = await getStorageURL(data.user.id);
+          setUserData((prevUserData) => ({
+            ...prevUserData,
+            picture: imageURL,
+          }));
+
+          const userClass = await getUsersClass(data.user.id);
+          if (userClass !== null) {
+            setActualDormitory(userClass);
+            console.log(userClass);
           }
+          console.log(userClass);
         } else {
         }
-      } catch (error) {
-        console.error('사용자 정보 업데이트 오류:', error);
+      } else {
       }
-    };
+    } catch (error) {
+      console.error('사용자 정보 업데이트 오류:', error);
+    }
+  };
 
+  useEffect(() => {
     if (isVisible) {
       fetchData();
     }
@@ -80,12 +95,8 @@ const MyPageToggle: React.FC<MyPageToggleProps> = ({ isVisible, onClose }) => {
     try {
       const requestBody: RequestBody = {
         name: newName,
-        picture: newPicture || tempNewPicture,
+        picture: tempNewPicture,
       };
-
-      // 만약 File(즉, base64)이면 수정할 필요 없음/ 그렇지 않으면 URL임
-      if (typeof requestBody.picture === 'string') {
-      }
 
       const accessTokenCookie = document.cookie
         .split('; ')
@@ -115,8 +126,10 @@ const MyPageToggle: React.FC<MyPageToggleProps> = ({ isVisible, onClose }) => {
         setUserData({
           ...userData,
           name: updatedData.user?.name || userData.name,
-          picture: updatedData.user?.picture || userData.picture,
+          picture: updatedData.user?.picture || userData.picture, //필요없음
         });
+
+        fetchData();
       } else {
         console.error('사용자 정보 업데이트 오류:', response.statusText);
       }
@@ -161,8 +174,13 @@ const MyPageToggle: React.FC<MyPageToggleProps> = ({ isVisible, onClose }) => {
         console.log(selectedFile);
 
         const reader = new FileReader();
-        reader.onloadend = () => {
+        reader.onloadend = async () => {
           setTempNewPicture(reader.result as string);
+          try {
+            await setStorageImage(selectedFile, userData.id);
+          } catch (error) {
+            console.error('Firebase에 이미지 업로드 오류:', error);
+          }
         };
         reader.readAsDataURL(selectedFile);
       }
@@ -208,7 +226,9 @@ const MyPageToggle: React.FC<MyPageToggleProps> = ({ isVisible, onClose }) => {
               </styled.LabelsContainer>
               <styled.LabelsContainer>
                 <styled.DormitoryLabel>기숙사</styled.DormitoryLabel>
-                <styled.ActualDormitory>그리핀도르</styled.ActualDormitory>
+                <styled.ActualDormitory>
+                  {ActualDormitory}
+                </styled.ActualDormitory>
               </styled.LabelsContainer>
               <styled.LabelsContainer>
                 <styled.ProfileImageLabel>대표사진</styled.ProfileImageLabel>
@@ -237,7 +257,9 @@ const MyPageToggle: React.FC<MyPageToggleProps> = ({ isVisible, onClose }) => {
               </styled.LabelsContainer>
               <styled.LabelsContainer>
                 <styled.DormitoryLabel>기숙사</styled.DormitoryLabel>
-                <styled.ActualDormitory>그리핀도르</styled.ActualDormitory>
+                <styled.ActualDormitory>
+                  {ActualDormitory}
+                </styled.ActualDormitory>
               </styled.LabelsContainer>
             </>
           )}
