@@ -4,19 +4,21 @@ import axios from 'axios';
 import React, { useState, useRef, useEffect } from 'react';
 import * as styled from './MyChatting.styles';
 import Link from 'next/link';
+import { getToken } from '@utils/service';
+import UserIcon from '@assets/icon/UserIcon.svg';
+
 // import { ResponseValue } from '@/@types/RESTAPI/findMyChatting.types';
 type ResponseValue = any;
 
 const MyChatting = () => {
   const SERVER_KEY = '660d616b';
   const FIND_MY_CHAT_URL = 'https://fastcampus-chat.net/chat';
-  const ACCESS_TOKEN =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGQ2MTZiOmhlcm1pb25lIiwiaWF0IjoxNjk5NDIzOTI4LCJleHAiOjE3MDAwMjg3Mjh9.9FA24mkoipWSd4KlpxTX0L8mKmJj7LAVd_XEcW1Xt7w';
+  const [accessToken, setAccessToken] = useState('');
 
   const headers = {
     'Content-Type': 'application/json',
     serverId: SERVER_KEY,
-    Authorization: `Bearer ${ACCESS_TOKEN}`,
+    ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
   };
 
   const [data, setData] = useState<ResponseValue | null>(null);
@@ -38,17 +40,17 @@ const MyChatting = () => {
   };
 
   useEffect(() => {
-    // 초기 데이터 불러오기
-    fetchData();
+    const token = getToken();
+    setAccessToken(token);
+  }, []);
 
-    // 주기적으로 데이터 업데이트
+  useEffect(() => {
+    fetchData();
     const intervalId = setInterval(() => {
       fetchData();
-    }, 1000); // 5초마다 업데이트, 필요에 따라 조절 가능
-
-    // 컴포넌트가 언마운트될 때 clearInterval로 인터벌 정리
+    }, 5000);
     return () => clearInterval(intervalId);
-  }, []); // 빈 배열을 전달하여 최초 한 번만 실행되도록 함
+  }, []);
 
   useEffect(() => {
     console.log('currentDormitory', currentDormitory);
@@ -81,12 +83,16 @@ const MyChatting = () => {
                   $isCurrentChat={chat.name === currentDormitory}
                 >
                   <styled.ChattingInfo>
-                    <div style={{ display: 'flex' }}>
+                    <div style={{ display: 'flex', gap: '0.3rem' }}>
                       <styled.ChatName
                         $isCurrentChat={chat.name === currentDormitory}
                       >
                         {chat.name}
                       </styled.ChatName>
+                      <styled.IconWrapper>
+                        <UserIcon />
+                      </styled.IconWrapper>
+
                       <styled.ChatUsersLength>
                         {chat.users.length}
                       </styled.ChatUsersLength>

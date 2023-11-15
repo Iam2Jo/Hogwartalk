@@ -101,6 +101,7 @@ const InviteToChatRoomModal = ({
       .get(GET_ALL_CHATTINGS_URL, { headers })
       .then((response) => {
         const chats = response.data.chats;
+        console.log('chats: ', chats, chatId);
         const { users } = chats?.find((room) => room.id === chatId);
         setCurrentChatUsers(users);
       })

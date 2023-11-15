@@ -1,4 +1,4 @@
-import { modalState, teamState } from '@/recoil/atom';
+import { modalState, teamState } from '@recoil/quizTeam';
 import React from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import * as style from './Modal.styles';
@@ -11,8 +11,6 @@ import Slytherin from '@assets/img/Slytherin.svg';
 
 const Modal = () => {
   const team = useRecoilValue(teamState);
-  const modalOpen = useRecoilValue(modalState);
-  const setModalOpen = useSetRecoilState(modalState);
 
   return (
     <style.Modal>

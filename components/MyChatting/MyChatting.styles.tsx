@@ -62,7 +62,6 @@ export const MyChatting = styled.div<MyChattingProps>`
 `;
 
 export const ChattingInfo = styled.div`
-  gap: 1rem;
   display: flex;
   justify-content: space-between;
 `;
@@ -72,13 +71,19 @@ export const ChatName = styled.div<MyChattingProps>`
   text-overflow: ellipsis;
   white-space: nowrap;
   display: inline-block;
-  max-width: 100%;
+  max-width: 80%;
   color: ${(props) => (props.$isCurrentChat ? '#f2cc00' : '#d1d1d1')};
+`;
+
+export const IconWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 0.2rem;
 `;
 
 export const ChatUsersLength = styled.div`
   color: white;
-  margin-left: 0.2rem;
 `;
 
 export const ChatTime = styled.span<MyChattingProps>`

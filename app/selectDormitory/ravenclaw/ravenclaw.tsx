@@ -1,12 +1,32 @@
 'use client';
-import { useRecoilValue } from 'recoil';
-import { ravenclawChatInfoState } from '@recoil/dormChatInfo';
+
+import { useState, useEffect } from 'react';
 import { Dormitory } from '@components/Dormitory';
+import { getFirebaseData } from '@hooks/useFireFetch';
 
 const Ravenclaw = () => {
-  const { id, name } = useRecoilValue(ravenclawChatInfoState);
+  const [chatId, setChatId] = useState(null);
+  const [name, setName] = useState(null);
 
-  return <Dormitory chatId={id} dormName={name} />;
+  useEffect(() => {
+    const fetchData = async () => {
+      const firebaseId = await getFirebaseData('chatInfo', 'ravenclaw', 'id');
+      const firebaseName = await getFirebaseData(
+        'chatInfo',
+        'ravenclaw',
+        'name',
+      );
+      setChatId(firebaseId);
+      setName(firebaseName);
+    };
+    fetchData();
+  }, []);
+
+  if (!chatId || !name) {
+    return <div>로딩중...</div>;
+  }
+
+  return <Dormitory chatId={chatId} dormName={name} />;
 };
 
 export default Ravenclaw;

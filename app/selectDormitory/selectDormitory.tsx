@@ -2,21 +2,15 @@
 
 import React, { useEffect, useState } from 'react';
 import * as styled from './selectDormitory.styles';
-import { readChatting } from '@hooks/readChatting';
+import { readChatting } from '@hooks/RESTAPI/readChatting';
 import Link from 'next/link';
 import axios from 'axios';
-import {
-  gryffindorChatInfoState,
-  hufflepuffChatInfoState,
-  ravenclawChatInfoState,
-  slytherinChatInfoState,
-} from '@recoil/dormChatInfo';
-
-import { useSetRecoilState, useRecoilState } from 'recoil';
 import { doesDormitoryExist } from '@hooks/doesDormitoryExist';
 import createDormitoryIfNone from '@hooks/createDormitoryIfNone';
 import { RequestBody as RequestBodyCreate } from '@/@types/RESTAPI/createChatting.types';
 import { RequestBody as RequestBodyParticipate } from '@/@types/RESTAPI/participateChatting.types';
+import { getToken } from '@utils/service';
+import { getFirebaseData } from '@hooks/useFireFetch';
 
 interface RequestBody {
   name: string;
@@ -43,54 +37,42 @@ const SelectDormitory = () => {
   const [hasSlytherin, setHasSlytherin] = useState(true);
   const [hasHufflepuff, setHasHufflepuff] = useState(true);
   const [hasRavenclaw, setHasRavenclaw] = useState(true);
-
-  const [gryffindorChatInfo, setGryffindorChatInfo] = useRecoilState(
-    gryffindorChatInfoState,
-  );
-  const [hufflepuffChatInfo, setHufflepuffChatInfo] = useRecoilState(
-    hufflepuffChatInfoState,
-  );
-  const [ravenclawChatInfo, setRavenclawChatInfo] = useRecoilState(
-    ravenclawChatInfoState,
-  );
-
-  const [slytherinChatInfo, setSlytherinChatInfo] = useRecoilState(
-    slytherinChatInfoState,
-  );
-
+  const [gryffindorFirebaseData, setGryffindorFirebaseData] =
+    useState<any>(null);
+  const [slytherinFirebaseData, setSlytherinFirebaseData] = useState<any>(null);
+  const [hufflepuffFirebaseData, setHufflepuffFirebaseData] =
+    useState<any>(null);
+  const [ravenclawFirebaseData, setRavenclawFirebaseData] = useState<any>(null);
   const SERVER_KEY = '660d616b';
-  // 현재 헤르미온느 ACCESS_TOKEN임!
-  const ACCESS_TOKEN =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGQ2MTZiOmhlcm1pb25lIiwiaWF0IjoxNjk5NDIzOTI4LCJleHAiOjE3MDAwMjg3Mjh9.9FA24mkoipWSd4KlpxTX0L8mKmJj7LAVd_XEcW1Xt7w';
+  const [accessToken, setAccessToken] = useState('');
   const CREATE_CHAT_URL = 'https://fastcampus-chat.net/chat';
   const FIND_ALL_USER_URL = 'https://fastcampus-chat.net/users';
-  const FIND_MY_CHAT_URL = 'https://fastcampus-chat.net/chat';
   const GET_MY_INFO_URL = 'https://fastcampus-chat.net/auth/me';
 
   const headers = {
     'Content-Type': 'application/json',
-    Authorization: `Bearer ${ACCESS_TOKEN}`,
+    ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
     serverId: SERVER_KEY,
   };
 
   const gryffindorRequestData: RequestBodyCreate = {
     name: 'gryffindor',
-    users: ['ron'],
+    users: [],
   };
 
   const hufflepuffRequestData: RequestBodyCreate = {
     name: 'hufflepuff',
-    users: ['ron'],
+    users: [],
   };
 
   const ravenclawRequestData: RequestBodyCreate = {
     name: 'ravenclaw',
-    users: ['ron'],
+    users: [],
   };
 
   const slytherinRequestData: RequestBodyCreate = {
     name: 'slytherin',
-    users: ['ron'],
+    users: [],
   };
 
   const handleParticipate = (chatId: string) => {
@@ -107,6 +89,11 @@ const SelectDormitory = () => {
         console.error('채팅 참여 실패!', error);
       });
   };
+
+  useEffect(() => {
+    const token = getToken();
+    setAccessToken(token);
+  }, []);
 
   useEffect(() => {
     setChatData(data);
@@ -134,10 +121,6 @@ const SelectDormitory = () => {
   doesDormitoryExist('hufflepuff', chatData, setHasHufflepuff);
   doesDormitoryExist('ravenclaw', chatData, setHasRavenclaw);
 
-  useEffect(() => {
-    console.log('gryffindorChatId', gryffindorChatInfo.id);
-  }, [gryffindorChatInfo]);
-
   // 모듈화 필요
   useEffect(() => {
     axios.get(GET_MY_INFO_URL, { headers }).then((res) => {
@@ -148,69 +131,54 @@ const SelectDormitory = () => {
   useEffect(() => {
     createDormitoryIfNone(
       hasGryffindor,
-      chatData,
       CREATE_CHAT_URL,
       gryffindorRequestData,
       headers,
       myName,
-      setGryffindorChatInfo,
-    );
+    ).then(() => {
+      const firebaseData = getFirebaseData('chatInfo', 'gryffindor', 'id');
+      setGryffindorFirebaseData(firebaseData);
+    });
   }, [hasGryffindor, chatData]);
 
   useEffect(() => {
     createDormitoryIfNone(
       hasSlytherin,
-      chatData,
       CREATE_CHAT_URL,
       slytherinRequestData,
       headers,
       myName,
-      setSlytherinChatInfo,
-    );
+    ).then(() => {
+      const firebaseData = getFirebaseData('chatInfo', 'slytherin', 'id');
+      setSlytherinFirebaseData(firebaseData);
+    });
   }, [hasSlytherin, chatData]);
 
   useEffect(() => {
     createDormitoryIfNone(
       hasHufflepuff,
-      chatData,
       CREATE_CHAT_URL,
       hufflepuffRequestData,
       headers,
       myName,
-      setHufflepuffChatInfo,
-    );
+    ).then(() => {
+      const firebaseData = getFirebaseData('chatInfo', 'hufflepuff', 'id');
+      setHufflepuffFirebaseData(firebaseData);
+    });
   }, [hasHufflepuff, chatData]);
 
   useEffect(() => {
     createDormitoryIfNone(
       hasRavenclaw,
-      chatData,
       CREATE_CHAT_URL,
       ravenclawRequestData,
       headers,
       myName,
-      setRavenclawChatInfo,
-    );
+    ).then(() => {
+      const firebaseData = getFirebaseData('chatInfo', 'ravenclaw', 'id');
+      setRavenclawFirebaseData(firebaseData);
+    });
   }, [hasRavenclaw, chatData]);
-
-  // useEffect(() => {
-  //   console.log('gryffindorChatId', gryffindorChatId);
-  // }, [gryffindorChatId]);
-  // useEffect(() => {
-  //   console.log('ravenclawChatId', ravenclawChatId);
-  // }, [ravenclawChatId]);
-  // useEffect(() => {
-  //   console.log('hufflepuffChatId', hufflepuffChatId);
-  // }, [hufflepuffChatId]);
-  // useEffect(() => {
-  //   console.log('slytherinChatId', slytherinChatId);
-  // }, [slytherinChatId]);
-
-  // useEffect(() => {
-  //   if (chatData) {
-  //     console.log('chatData.chats', chatData.chats);
-  //   }
-  // }, [chatData]);
 
   return (
     <styled.Wrapper>
@@ -220,7 +188,7 @@ const SelectDormitory = () => {
           style={{ width: '100%', height: '100%' }}
         >
           <styled.GryffindorSVG
-            onClick={() => handleParticipate(gryffindorChatInfo.id)}
+            onClick={() => handleParticipate(gryffindorFirebaseData[0]?.id)}
             width="224"
             height="272"
           />
@@ -230,7 +198,7 @@ const SelectDormitory = () => {
           style={{ width: '100%', height: '100%' }}
         >
           <styled.RavenclawSVG
-            onClick={() => handleParticipate(ravenclawChatInfo.id)}
+            onClick={() => handleParticipate(ravenclawFirebaseData[0]?.id)}
             width="224"
             height="272"
           />
@@ -245,7 +213,7 @@ const SelectDormitory = () => {
           style={{ width: '100%', height: '100%' }}
         >
           <styled.HufflepuffSVG
-            onClick={() => handleParticipate(hufflepuffChatInfo.id)}
+            onClick={() => handleParticipate(hufflepuffFirebaseData[0]?.id)}
             width="224"
             height="272"
           />
@@ -255,7 +223,7 @@ const SelectDormitory = () => {
           style={{ width: '100%', height: '100%' }}
         >
           <styled.SlytherinSVG
-            onClick={() => handleParticipate(slytherinChatInfo.id)}
+            onClick={() => handleParticipate(slytherinFirebaseData[0]?.id)}
             width="224"
             height="272"
           />
