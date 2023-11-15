@@ -86,7 +86,10 @@ const MyChatting = () => {
                   chat.name === 'hufflepuff' ||
                   chat.name === 'ravenclaw'
                     ? `/selectDormitory/${chat.name}`
-                    : `/club/chatting/?id=${chat.id}?name=${chat.name}`
+                    : {
+                        pathname: '/club/chatting',
+                        query: { id: chat.id, name: chat.name },
+                      }
                 }
               >
                 <styled.MyChatting
