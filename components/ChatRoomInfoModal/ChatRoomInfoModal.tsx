@@ -11,14 +11,23 @@ import {
 // import { useSetRecoilState } from 'recoil';
 // import * as dormChatInfo from '@/recoil/dormChatInfo';
 import axios from 'axios';
-import { useFireFetch } from '@hooks/useFireFetch';
+import {
+  updateFirebaseData,
+  getFirebaseDatabyKeyVal,
+} from '@hooks/useFireFetch';
+
+interface User {
+  id: string;
+  picture: string;
+  username: string;
+}
 
 interface ChatRoomInfoModalProps {
   title?: string;
   numParticipants?: number;
   host?: string;
   creationDate?: string;
-  participants?: string[];
+  participants?: User[];
   isOpen: boolean;
   onClose: () => void;
   onTitleChange: (newTitle: string) => void;
@@ -39,8 +48,6 @@ const ChatRoomInfoModal = ({
   dormName,
 }: ChatRoomInfoModalProps) => {
   if (!isOpen) return null;
-
-  const fireFetch = useFireFetch();
 
   const SERVER_KEY = '660d616b';
   const ACCESS_TOKEN =
@@ -63,9 +70,9 @@ const ChatRoomInfoModal = ({
   // );
 
   useEffect(() => {
-    fireFetch.get('chatInfo', 'name', dormName).then((res) => {
+    getFirebaseDatabyKeyVal('chatInfo', 'name', dormName).then((res) => {
       console.log('res: ', res);
-      setChatInfo(res[0].id);
+      setChatInfo(res[0]);
     });
   }, []);
 
@@ -94,7 +101,7 @@ const ChatRoomInfoModal = ({
       name: newTitle,
     };
 
-    await fireFetch.update('chatInfo', dormName, newChatInfo.name);
+    await updateFirebaseData('chatInfo', dormName, newChatInfo.name);
   };
 
   const handleOverlayClick = (
@@ -173,8 +180,8 @@ const ChatRoomInfoModal = ({
                   />
                   <UserInfo>
                     <Username>
-                      {participant}{' '}
-                      {getStatusCircleColor(participant) ? (
+                      {participant.username}{' '}
+                      {getStatusCircleColor(participant.username) ? (
                         <Emoji>🟢</Emoji>
                       ) : (
                         <Emoji>🔴</Emoji>
