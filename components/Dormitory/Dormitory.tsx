@@ -46,6 +46,8 @@ const Dormitory = ({ chatId, dormName }) => {
   });
   const [isOpen, setIsOpen] = useState(false);
   const [isConnected, setIsConnected] = useState([]);
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
 
   // const gryffindorChatInfo = useRecoilValue(gryffindorChatInfoState);
   // const hufflepuffChatInfo = useRecoilValue(hufflepuffChatInfoState);
@@ -57,7 +59,7 @@ const Dormitory = ({ chatId, dormName }) => {
       console.log('firebase chatInfo:  ', res);
       setCurrentDormChatInfo(res[0]);
     });
-  }, []);
+  }, [isInviteModalOpen]);
 
   // const { name, users, updatedAt, host } = currentDormChatInfo;
   const modalData = {
@@ -171,9 +173,6 @@ const Dormitory = ({ chatId, dormName }) => {
   }, [isAtBottom]);
 
   /********************************************************** */
-  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
-  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
-
   const openInfoModal = () => {
     setIsInfoModalOpen(true);
   };
@@ -192,7 +191,7 @@ const Dormitory = ({ chatId, dormName }) => {
       'ravenclaw',
       'hufflepuff',
       'slytherin',
-    ].includes(chatName);
+    ].includes(modalData.title);
 
     if (!isDisabled) {
       setIsInviteModalOpen(true);
@@ -230,6 +229,7 @@ const Dormitory = ({ chatId, dormName }) => {
         dormName={dormName}
       />
       <InviteToChatRoomModal
+        title={modalData.title}
         isOpen={isInviteModalOpen}
         onClose={closeInviteModal}
         chatId={chatId}
