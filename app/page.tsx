@@ -4,14 +4,17 @@ import { Fragment, useState } from 'react';
 import cookies from 'react-cookies';
 import { LoginContainer, LoginFormStyle } from './loginStyle';
 import { useRouter } from 'next/navigation';
-import { getToken, getUserdata, loginUser } from '../utils/service';
-import Link from 'next/link';
+import { reissueAccessToken, getToken, getUserdata, loginUser } from '../utils/service';
+import { audioState } from '@recoil/atom';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 
 type LoginData = {
   id: string;
   password: string;
 };
 const main: NextPage = () => {
+  const setPlay = useSetRecoilState(audioState);
+
   const router = useRouter();
   const [loginData, setLoginData] = useState<LoginData>({
     id: '',
@@ -21,19 +24,26 @@ const main: NextPage = () => {
     const { id, value } = e.target;
     setLoginData({ ...loginData, [id]: value });
   };
+  const handleAudio = (e: React.MouseEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    setPlay(true);
+  };
   const handleButtonClick = async () => {
     try {
       const token = await loginUser(loginData);
-      cookies.save('accessToken', token?.accessToken, { maxAge: 3600 });
-      cookies.save('refreshToken', token?.refreshToken);
-      const rest = await getUserdata();
-      console.log(rest);
-      router.push('/selectDormitory');
-    } catch (error) {
+
+    cookies.save('accessToken', token?.accessToken, { maxAge: 3600 * 24 * 7});
+    cookies.save('refreshToken', token?.refreshToken);
+    const userData = await getUserdata();
+    router.push('/selectDormitory');
+    }
+    catch (error) {
+
       alert('아이디와 비밀번호가 올바른지 확인해주세요');
       throw new Error(error);
     }
   };
+  getUserdata();
 
   return (
     <LoginContainer>
@@ -51,6 +61,7 @@ const main: NextPage = () => {
                 id="id"
                 value={loginData.id}
                 onChange={handleInputChange}
+                onClick={handleAudio}
               />
             </div>
             <div className="form__input">
@@ -71,6 +82,7 @@ const main: NextPage = () => {
                 type="button"
                 onClick={() => {
                   router.push('/signup');
+                  setPlay(true);
                 }}
               >
                 입학하기

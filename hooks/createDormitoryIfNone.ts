@@ -7,6 +7,7 @@ const createDormitoryIfNone = async (
   createChatUrl: string,
   requestData: RequestBodyCreate,
   headers: { [key: string]: string },
+  dormName: string,
   myName: string,
 ) => {
   if (!hasDormitory) {
@@ -24,7 +25,7 @@ const createDormitoryIfNone = async (
         host: myName,
       };
 
-      await addFirebaseData('chatInfo', newDormChatInfo);
+      await addFirebaseData('chatInfo', dormName, newDormChatInfo);
       console.log(`${requestData.name} 채팅방 생성 완료`, response.data);
     } catch (error) {
       console.error('Error sending the request:', error);

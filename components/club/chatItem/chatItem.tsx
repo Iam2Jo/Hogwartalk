@@ -49,11 +49,6 @@ const chatItem = ({ id, name, users }: Chat) => {
   const setChatInfo = useSetRecoilState(chatInfoState);
 
   const handleJoin = () => {
-    for (let i = 0; i < myChatList.length; i++) {
-      if (id == myChatList[i].id) {
-        return router.push('/club/' + id);
-      }
-    }
     setJoinModalOpen(true);
     document.body.style.overflowY = 'hidden';
     const chatDetail = {

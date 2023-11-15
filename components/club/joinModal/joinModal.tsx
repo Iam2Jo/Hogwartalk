@@ -44,6 +44,9 @@ const joinModal = () => {
     e.preventDefault();
     console.log(chatId);
     handleParticipate(chatId);
+    const idParam = chatInfo[0].id;
+    const nameParam = chatInfo[0].name;
+    router.push('/club/chatting' + '?id=' + idParam + '?name=' + nameParam);
   };
 
   useEffect(() => {
