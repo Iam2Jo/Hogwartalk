@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect, useMemo, use } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { findMyId } from '@hooks/findMyId';
 import { io } from 'socket.io-client';
 import * as styled from './Dormitory.styles';
