@@ -38,6 +38,19 @@ const Dormitory = ({ chatId, dormName }) => {
   });
   const [isOpen, setIsOpen] = useState(false);
   const [isConnected, setIsConnected] = useState([]);
+  const fireFetch = useFireFetch();
+
+  // const gryffindorChatInfo = useRecoilValue(gryffindorChatInfoState);
+  // const hufflepuffChatInfo = useRecoilValue(hufflepuffChatInfoState);
+  // const ravenclawChatInfo = useRecoilValue(ravenclawChatInfoState);
+  // const slytherinChatInfo = useRecoilValue(slytherinChatInfoState);
+
+  useEffect(() => {
+    fireFetch.get('chatInfo', 'name', dormName).then((res) => {
+      console.log('res: ', res);
+      setCurrentDormChatInfo(res[0]);
+    });
+  }, []);
 
   const { name, users, updatedAt, host } = currentDormChatInfo;
   const modalData = {
@@ -144,6 +157,7 @@ const Dormitory = ({ chatId, dormName }) => {
         isOpen={isInfoModalOpen}
         onClose={closeInfoModal}
         isConnected={isConnected}
+        dormName={dormName}
       />
       <InviteToChatRoomModal
         isOpen={isInviteModalOpen}
