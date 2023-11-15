@@ -1,17 +1,16 @@
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { StyledImage } from './Icon.styles';
 import { audioState } from '@recoil/atom';
-import DisBgmIcon from './DisBgmIcon';
 import { useRef } from 'react';
 
-const BgmIcon = () => {
-  const play = useRecoilState(audioState);
+const DisBgmIcon = () => {
   const setPlay = useSetRecoilState(audioState);
+  const play = useRecoilState(audioState);
 
   return (
     <StyledImage
-      src="/assets/icons/bgm.svg"
-      alt="Bgm"
+      src="/assets/icons/Disbgm.svg"
+      alt="DisBgm"
       width="15"
       height="15"
       onClick={() => {
@@ -22,4 +21,4 @@ const BgmIcon = () => {
   );
 };
 
-export default BgmIcon;
+export default DisBgmIcon;

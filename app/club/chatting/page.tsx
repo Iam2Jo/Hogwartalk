@@ -1,8 +1,9 @@
 import type { NextPage } from 'next';
-import Hufflepuff from './hufflepuff';
+import React from 'react';
+import Chatting from './chatting';
 import { MyChatting } from '@components/MyChatting';
 
-const DormHufflepuff: NextPage = () => {
+const ClubChatting: NextPage = () => {
   return (
     <div
       style={{
@@ -14,9 +15,9 @@ const DormHufflepuff: NextPage = () => {
       }}
     >
       <MyChatting />
-      <Hufflepuff />
+      <Chatting />
     </div>
   );
 };
 
-export default DormHufflepuff;
+export default ClubChatting;

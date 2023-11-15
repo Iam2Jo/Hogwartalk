@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as styled from './Header.styles';
 import MyPageIcon from './icons/MyPageIcon';
 import SearchIcon from './icons/SearchIcon';
@@ -7,19 +7,34 @@ import BgmIcon from './icons/BgmIcon';
 import LogoutIcon from './icons/LogoutIcon';
 import { MyPageToggle } from '../MyPageToggle';
 import { FriendSearchToggle } from '../FriendSearchToggle';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { audioState } from '@recoil/atom';
+import DisBgmIcon from './icons/DisBgmIcon';
+import { MyChatToggle } from '../MyChatToggle';
+
 
 const Header = () => {
+  const play = useRecoilState(audioState);
   const [isMyPageVisible, setMyPageVisible] = useState(false);
   const [isSearchVisible, setSearchVisible] = useState(false);
+  const [isMyChatVisible, setMyChatVisible] = useState(false);
 
   const toggleMyPage = () => {
     setMyPageVisible(!isMyPageVisible);
     setSearchVisible(false);
+    setMyChatVisible(false);
   };
 
   const toggleSearch = () => {
     setSearchVisible(!isSearchVisible);
     setMyPageVisible(false);
+    setMyChatVisible(false);
+  };
+
+  const toggleMyChat = () => {
+    setMyChatVisible(!isMyChatVisible);
+    setMyPageVisible(false);
+    setSearchVisible(false);
   };
 
   return (
@@ -29,10 +44,10 @@ const Header = () => {
         <styled.SearchIconWrapper>
           <SearchIcon onClick={toggleSearch} isToggled={isSearchVisible} />
         </styled.SearchIconWrapper>
-        <ChatIcon />
+        <ChatIcon onClick={toggleMyChat} isToggled={isMyChatVisible} />
       </styled.LeftIcons>
       <styled.RightIcons>
-        <BgmIcon />
+        {play[0] === true ? <BgmIcon /> : <DisBgmIcon />}
         <LogoutIcon />
       </styled.RightIcons>
       {isMyPageVisible && (
@@ -45,6 +60,12 @@ const Header = () => {
         <FriendSearchToggle
           isVisible={isSearchVisible}
           onClose={() => setSearchVisible(false)}
+        />
+      )}
+      {isMyChatVisible && (
+        <MyChatToggle
+          isVisible={isMyChatVisible}
+          onClose={() => setMyChatVisible(false)}
         />
       )}
     </styled.HeaderWrapper>

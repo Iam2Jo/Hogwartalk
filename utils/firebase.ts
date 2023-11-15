@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { doc, getFirestore } from 'firebase/firestore';
-import { collection, addDoc, getDocs, setDoc } from 'firebase/firestore';
+import { collection, addDoc, getDoc, setDoc } from 'firebase/firestore';
 import {
   uploadBytesResumable,
   getDownloadURL,
@@ -47,11 +47,27 @@ export async function setStorageImage(file, fileName) {
 }
 
 export async function setUsersClass(userId, userClass) {
-    const data  = {id:userId, class: userClass}
-    console.log(data)
+  const data = { id: userId, class: userClass };
+  console.log(data);
   try {
-    const docRef = await setDoc(doc(db,'users',userId),data);
+    const docRef = await setDoc(doc(db, 'users', userId), data);
   } catch (error) {
     console.error('Error adding document: ', error);
+  }
+}
+
+export async function getUsersClass(userId) {
+  try {
+    const userDoc = await getDoc(doc(db, 'users', userId));
+    if (userDoc.exists()) {
+      const userData = userDoc.data();
+      return userData.class || null;
+    } else {
+      console.error('사용자 문서를 찾을 수 없습니다.');
+      return null;
+    }
+  } catch (error) {
+    console.error('사용자 클래스 검색 오류: ', error);
+    return null;
   }
 }

@@ -8,20 +8,31 @@ import {
   Emoji,
   UserDormitory,
 } from '../FriendSearchToggle/FriendSearchToggle.styles';
-import { useSetRecoilState } from 'recoil';
-import * as dormChatInfo from '@/recoil/dormChatInfo';
+// import { useSetRecoilState } from 'recoil';
+// import * as dormChatInfo from '@/recoil/dormChatInfo';
 import axios from 'axios';
+import {
+  updateFirebaseData,
+  getFirebaseDatabyKeyVal,
+} from '@hooks/useFireFetch';
+
+interface User {
+  id: string;
+  picture: string;
+  username: string;
+}
 
 interface ChatRoomInfoModalProps {
   title?: string;
   numParticipants?: number;
   host?: string;
   creationDate?: string;
-  participants?: string[];
+  participants?: User[];
   isOpen: boolean;
   onClose: () => void;
   onTitleChange: (newTitle: string) => void;
   isConnected: string[];
+  dormName: string;
 }
 
 const ChatRoomInfoModal = ({
@@ -34,6 +45,7 @@ const ChatRoomInfoModal = ({
   onClose,
   onTitleChange,
   isConnected,
+  dormName,
 }: ChatRoomInfoModalProps) => {
   if (!isOpen) return null;
 
@@ -51,10 +63,18 @@ const ChatRoomInfoModal = ({
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [newTitle, setNewTitle] = useState(title || '');
   const [isHost, setIsHost] = useState(false);
+  const [chatInfo, setChatInfo] = useState({});
 
-  const setGryffindorChatInfo = useSetRecoilState(
-    dormChatInfo.gryffindorChatInfoState,
-  );
+  // const setGryffindorChatInfo = useSetRecoilState(
+  //   dormChatInfo.gryffindorChatInfoState,
+  // );
+
+  useEffect(() => {
+    getFirebaseDatabyKeyVal('chatInfo', 'name', dormName).then((res) => {
+      console.log('res: ', res);
+      setChatInfo(res[0]);
+    });
+  }, []);
 
   useEffect(() => {
     setNewTitle(title || '');
@@ -64,17 +84,24 @@ const ChatRoomInfoModal = ({
     setIsEditingTitle(true);
   };
 
-  const handleTitleSaveClick = () => {
+  const handleTitleSaveClick = async () => {
     onTitleChange(newTitle);
     setIsEditingTitle(false);
-    setGryffindorChatInfo((prevChatInfo) => {
-      const newChatInfo = {
-        ...prevChatInfo,
-        name: newTitle,
-      };
+    // setGryffindorChatInfo((prevChatInfo) => {
+    //   const newChatInfo = {
+    //     ...prevChatInfo,
+    //     name: newTitle,
+    //   };
 
-      return newChatInfo;
-    });
+    //   return newChatInfo;
+    // });
+
+    const newChatInfo = {
+      ...chatInfo,
+      name: newTitle,
+    };
+
+    await updateFirebaseData('chatInfo', dormName, newChatInfo.name);
   };
 
   const handleOverlayClick = (
@@ -153,8 +180,8 @@ const ChatRoomInfoModal = ({
                   />
                   <UserInfo>
                     <Username>
-                      {participant}{' '}
-                      {getStatusCircleColor(participant) ? (
+                      {participant.username}{' '}
+                      {getStatusCircleColor(participant.username) ? (
                         <Emoji>🟢</Emoji>
                       ) : (
                         <Emoji>🔴</Emoji>

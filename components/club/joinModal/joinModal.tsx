@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import * as styled from './joinModal.styles';
 import CancelIcon from '@assets/icon/cancelIcon.svg';
 import { chatInfoState, joinModalState } from '@recoil/chatList';
@@ -6,16 +6,16 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import axios from 'axios';
 import { RequestBody as RequestBodyParticipate } from '@hooks/RESTAPI/participateChatting.types';
 import { useRouter } from 'next/navigation';
+import { getToken } from '@utils/service';
 
-//헤르미온느 토큰
 const joinModal = () => {
   const router = useRouter();
   const SERVER_KEY = '660d616b';
-  const ACCESS_TOKEN =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGQ2MTZiOmhlcm1pb25lIiwiaWF0IjoxNjk5NDIzOTI4LCJleHAiOjE3MDAwMjg3Mjh9.9FA24mkoipWSd4KlpxTX0L8mKmJj7LAVd_XEcW1Xt7w';
+  const [accessToken, setAccessToken] = useState('');
+
   const headers = {
     'Content-Type': 'application/json',
-    Authorization: `Bearer ${ACCESS_TOKEN}`,
+    ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
     serverId: SERVER_KEY,
   };
 
@@ -44,7 +44,15 @@ const joinModal = () => {
     e.preventDefault();
     console.log(chatId);
     handleParticipate(chatId);
+    const idParam = chatInfo[0].id;
+    const nameParam = chatInfo[0].name;
+    router.push('/club/chatting' + '?id=' + idParam + '?name=' + nameParam);
   };
+
+  useEffect(() => {
+    const token = getToken();
+    setAccessToken(token);
+  }, []);
 
   return (
     <>
