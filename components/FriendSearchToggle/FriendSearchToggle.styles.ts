@@ -112,5 +112,6 @@ export const RefreshButton = styled.button`
 `;
 
 export const UserClass = styled.div`
-  font-size: 6px;
+  font-size: 10px;
+  color: gray;
 `;
