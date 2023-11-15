@@ -134,6 +134,7 @@ const SelectDormitory = () => {
       CREATE_CHAT_URL,
       gryffindorRequestData,
       headers,
+      'gryffindor',
       myName,
     ).then(() => {
       const firebaseData = getFirebaseData('chatInfo', 'gryffindor', 'id');
@@ -147,6 +148,7 @@ const SelectDormitory = () => {
       CREATE_CHAT_URL,
       slytherinRequestData,
       headers,
+      'slytherin',
       myName,
     ).then(() => {
       const firebaseData = getFirebaseData('chatInfo', 'slytherin', 'id');
@@ -160,6 +162,7 @@ const SelectDormitory = () => {
       CREATE_CHAT_URL,
       hufflepuffRequestData,
       headers,
+      'hufflepuff',
       myName,
     ).then(() => {
       const firebaseData = getFirebaseData('chatInfo', 'hufflepuff', 'id');
@@ -173,6 +176,7 @@ const SelectDormitory = () => {
       CREATE_CHAT_URL,
       ravenclawRequestData,
       headers,
+      'ravenclaw',
       myName,
     ).then(() => {
       const firebaseData = getFirebaseData('chatInfo', 'ravenclaw', 'id');
@@ -205,7 +209,9 @@ const SelectDormitory = () => {
         </Link>
       </styled.LeftSection>
       <styled.CenterSection>
-        <styled.ClubSVG />
+        <Link href="/club">
+          <styled.ClubSVG />
+        </Link>
       </styled.CenterSection>
       <styled.RightSection>
         <Link
