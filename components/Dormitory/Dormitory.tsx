@@ -187,7 +187,16 @@ const Dormitory = ({ chatId, dormName }) => {
   };
 
   const openInviteModal = () => {
-    setIsInviteModalOpen(true);
+    const isDisabled = [
+      'gryffindor',
+      'ravenclaw',
+      'hufflepuff',
+      'slytherin',
+    ].includes(chatName);
+
+    if (!isDisabled) {
+      setIsInviteModalOpen(true);
+    }
   };
 
   const closeInviteModal = () => {
@@ -235,7 +244,7 @@ const Dormitory = ({ chatId, dormName }) => {
       <styled.DormitoryHeader>
         <styled.TitleWrapper>
           <styled.Title>{dormName}</styled.Title>
-          <styled.Badge chatName={chatName} onClick={openInviteModal}>
+          <styled.Badge onClick={openInviteModal}>
             <styled.PersonIcon />
             {currentDormChatInfo?.users.length}
           </styled.Badge>
