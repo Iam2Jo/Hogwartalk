@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import io from 'socket.io-client';
+import React, { useState, useEffect, useMemo } from 'react';
+import io, { Socket } from 'socket.io-client';
 import * as styled from './FriendSearchToggle.styles';
+import { getUsersClass } from '@utils/firebase';
 
 interface FriendSearchToggleProps {
   isVisible: boolean;
@@ -12,6 +13,7 @@ interface User {
   name: string;
   picture: string;
   isOnline?: boolean;
+  class?: string;
 }
 
 interface ResponseData {
@@ -25,7 +27,9 @@ const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [initialized, setInitialized] = useState(false);
+  const [isConnected, setIsConnected] = useState([]);
 
+  // 모든 유저 불러오기
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -56,8 +60,6 @@ const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
         if (response.ok) {
           const data: User[] = await response.json();
 
-          console.log('All Users:', data); // 모든 유저 목록 콘솔 출력
-
           const myUserId = await checkDuplicateUserId(accessToken);
           if (myUserId !== null) {
             const onlineUsers = data.map((user) => ({
@@ -66,7 +68,14 @@ const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
               ...user,
             }));
 
-            setUsers(onlineUsers.filter((user) => user.id !== myUserId));
+            const updatedUsers = await Promise.all(
+              onlineUsers.map(async (user) => {
+                const userClass = await getUsersClass(user.id);
+                return { ...user, class: userClass };
+              }),
+            );
+
+            setUsers(updatedUsers.filter((user) => user.id !== myUserId));
           } else {
             console.error('Failed to fetch user information');
           }
@@ -80,53 +89,76 @@ const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
       }
     };
 
-    if (isVisible && !initialized) {
+    if (isVisible) {
       fetchUsers();
       setInitialized(true);
     }
-  }, [isVisible, initialized]);
+    fetchUsers();
+  }, [isVisible]);
 
-  // 접속 유무
-  useEffect(() => {
-    const accessTokenCookie = document.cookie
-      .split('; ')
-      .find((row) => row.startsWith('accessToken='));
+  const accessTokenCookie = document.cookie
+    .split('; ')
+    .find((row) => row.startsWith('accessToken='));
 
-    if (!accessTokenCookie) {
-      console.error('Access token not found in cookies');
-      return;
-    }
+  if (!accessTokenCookie) {
+    console.error('Access token not found in cookies');
+    return;
+  }
 
-    const accessToken = accessTokenCookie.split('=')[1];
+  const accessToken = accessTokenCookie.split('=')[1];
 
-    const serverId = '660d616b';
+  const serverId = '660d616b';
 
-    const socket = io('https://fastcampus-chat.net', {
+  // const socket = io('https://fastcampus-chat.net/server', {
+  //   extraHeaders: {
+  //     'content-type': 'application/json',
+  //     Authorization: `Bearer ${accessToken}`,
+  //     serverId: serverId,
+  //   },
+  // });
+
+  const socket = useMemo(() => {
+    return io('https://fastcampus-chat.net/server', {
       extraHeaders: {
         'content-type': 'application/json',
         Authorization: `Bearer ${accessToken}`,
         serverId: serverId,
       },
     });
+  }, [accessToken]);
 
-    socket.on('users-to-client', (data: ResponseData) => {
-      console.log('Online Users:', data.user); // 접속 중인 유저 목록 콘솔 출력
+  // 접속 유무
+  useEffect(() => {
+    try {
+      socket.emit('users-server');
+      console.log('C->S 접속 상태 유저 목록 fetch 성공!');
+    } catch (error) {
+      console.error('C->S 접속 상태 유저 목록 fetch 실패!', error);
+    }
 
-      setUsers((prevUsers) => {
-        const onlineUsers = prevUsers.map((user) => {
-          return {
-            ...user,
-            isOnline: data.user.includes(user.id.toString()),
-          };
-        });
-        return onlineUsers;
-      });
+    socket.on('users-server-to-client', (response) => {
+      console.log('접속 상태 유저 목록: ', response.users);
+      console.log('S->C 접속 상태 유저 목록 pull 성공!');
+      try {
+        const connectedUserIds = response.users;
+        const updatedUsers = users.map((user) => ({
+          ...user,
+          isOnline: connectedUserIds.includes(user.id),
+        }));
+
+        setUsers(updatedUsers);
+        // if (!arraysAreEqual(users, updatedUsers)) {
+        //   setUsers(updatedUsers);
+        // }
+      } catch (error) {
+        console.error('S->C 접속 상태 유저 목록 pull 실패!', error);
+      }
     });
-
     return () => {
       socket.disconnect();
     };
-  }, [setUsers]);
+  }, [socket]);
+  // }, [users]); // 무한 호출 때문에 잠시 주석
 
   const checkDuplicateUserId = async (accessToken: string) => {
     try {
@@ -162,6 +194,20 @@ const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
     }
   };
 
+  // const arraysAreEqual = (arr1, arr2) => {
+  //   if (arr1.length !== arr2.length) {
+  //     return false;
+  //   }
+
+  //   for (let i = 0; i < arr1.length; i++) {
+  //     if (arr1[i] !== arr2[i]) {
+  //       return false;
+  //     }
+  //   }
+
+  //   return true;
+  // };
+
   return (
     <styled.Sidebar isVisible={isVisible}>
       <styled.CloseButton onClick={onClose}>
@@ -184,6 +230,7 @@ const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
                 {user.name}{' '}
                 <styled.Emoji>{user.isOnline ? '🟢' : '🔴'}</styled.Emoji>
               </styled.Username>
+              {user.class && <styled.UserClass>{user.class}</styled.UserClass>}
             </styled.UserInfo>
           </styled.UserItem>
         ))}
