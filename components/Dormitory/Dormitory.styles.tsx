@@ -170,13 +170,18 @@ export const Title = styled.span`
   color: white;
 `;
 
-export const Badge = styled.div`
+interface BadgeProps {
+  chatName: string;
+}
+
+export const Badge = styled.div<BadgeProps>`
   border-radius: 6.25rem;
   background: #f2cc00;
   width: 4.1875rem;
   height: 1.8125rem;
   color: #000;
-  cursor: pointer;
+  cursor: ${(props) =>
+    props.chatName === 'gryffindor' ? 'not-allowed' : 'pointer'};
   display: flex;
   align-items: center;
   justify-content: center;

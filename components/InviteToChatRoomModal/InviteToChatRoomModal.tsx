@@ -9,6 +9,7 @@ import {
   UserDormitory,
 } from '../FriendSearchToggle/FriendSearchToggle.styles';
 import axios from 'axios';
+import { updateFirebaseData } from '@hooks/useFireFetch';
 
 interface DormChatInfo {
   id: string | null;
@@ -83,6 +84,9 @@ const InviteToChatRoomModal = ({
       )
       .then((response) => {
         alert(`${invitedUsersName.join(', ')} 초대하기 성공!`);
+        updateFirebaseData('chatInfo', 'id', response.data.users);
+      })
+      .then(() => {
         onClose();
       })
       .catch((error) => {
