@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import * as styled from './selectDormitory.styles';
-import { readChatting } from '@hooks/readChatting';
+import { readChatting } from '@hooks/RESTAPI/readChatting';
 import Link from 'next/link';
 import axios from 'axios';
 import {
