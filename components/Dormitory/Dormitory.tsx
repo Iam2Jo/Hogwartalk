@@ -46,6 +46,8 @@ const Dormitory = ({ chatId, dormName }) => {
   });
   const [isOpen, setIsOpen] = useState(false);
   const [isConnected, setIsConnected] = useState([]);
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
 
   // const gryffindorChatInfo = useRecoilValue(gryffindorChatInfoState);
   // const hufflepuffChatInfo = useRecoilValue(hufflepuffChatInfoState);
@@ -57,7 +59,7 @@ const Dormitory = ({ chatId, dormName }) => {
       console.log('firebase chatInfo:  ', res);
       setCurrentDormChatInfo(res[0]);
     });
-  }, []);
+  }, [isInviteModalOpen]);
 
   // const { name, users, updatedAt, host } = currentDormChatInfo;
   const modalData = {
@@ -171,9 +173,6 @@ const Dormitory = ({ chatId, dormName }) => {
   }, [isAtBottom]);
 
   /********************************************************** */
-  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
-  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
-
   const openInfoModal = () => {
     setIsInfoModalOpen(true);
   };
@@ -187,7 +186,16 @@ const Dormitory = ({ chatId, dormName }) => {
   };
 
   const openInviteModal = () => {
-    setIsInviteModalOpen(true);
+    const isDisabled = [
+      'gryffindor',
+      'ravenclaw',
+      'hufflepuff',
+      'slytherin',
+    ].includes(modalData.title);
+
+    if (!isDisabled) {
+      setIsInviteModalOpen(true);
+    }
   };
 
   const closeInviteModal = () => {
@@ -221,6 +229,7 @@ const Dormitory = ({ chatId, dormName }) => {
         dormName={dormName}
       />
       <InviteToChatRoomModal
+        title={modalData.title}
         isOpen={isInviteModalOpen}
         onClose={closeInviteModal}
         chatId={chatId}
@@ -235,7 +244,7 @@ const Dormitory = ({ chatId, dormName }) => {
       <styled.DormitoryHeader>
         <styled.TitleWrapper>
           <styled.Title>{dormName}</styled.Title>
-          <styled.Badge chatName={chatName} onClick={openInviteModal}>
+          <styled.Badge onClick={openInviteModal}>
             <styled.PersonIcon />
             {currentDormChatInfo?.users.length}
           </styled.Badge>
