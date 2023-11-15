@@ -20,7 +20,6 @@
     "react": "^18",
     "react-cookies": "^0.1.1",
     "react-dom": "^18",
-    "react-icons": "^4.11.0",
     "react-router-dom": "^6.18.0",
     "recoil": "^0.7.7",
     "socket.io-client": "^4.7.2",
