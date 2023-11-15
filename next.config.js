@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  compiler: {
+    swcMinify: false,
+    styledComponents: true,
+  },
   reactStrictMode: false,
   webpack: (config) => {
     config.module.rules.push({
