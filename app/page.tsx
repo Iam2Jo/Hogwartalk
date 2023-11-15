@@ -32,12 +32,12 @@ const main: NextPage = () => {
       throw new Error(error);
     }
   };
-  getUserdata();
+
 
   return (
     <LoginContainer>
       <header>
-        <img src="/LoginTitle.png" alt="" />
+        <img src="/LoginTitle.png" alt="logintitle" />
       </header>
       <main>
         <LoginFormStyle>
