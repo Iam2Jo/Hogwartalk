@@ -52,7 +52,7 @@ const ChatRoomInfoModal = ({
   const SERVER_KEY = '660d616b';
   const ACCESS_TOKEN =
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGQ2MTZiOmhhcnJ5cG90dGVyIiwiaWF0IjoxNjk5MzQ1NDkzLCJleHAiOjE2OTk5NTAyOTN9.b5s4_9f-pVBj9ki17SXc6VvoiApMJZCJXfk5G2wskyo';
-  const GET_MY_INFO_URL = 'https://fastcampus-chat.net/auth/me';
+  const GET_MY_INFO_URL = process.env.REACT_APP_GET_MY_INFO_URL;
 
   const headers = {
     'Content-Type': 'application/json',

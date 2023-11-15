@@ -67,7 +67,7 @@ const Dormitory = ({ chatId, dormName }) => {
   const SERVER_KEY = '660d616b';
   const [accessToken, setAccessToken] = useState('');
 
-  const CHATROOM_LEAVE_URL = 'https://fastcampus-chat.net/chat/leave';
+  const CHATROOM_LEAVE_URL = process.env.REACT_APP_CHATROOM_LEAVE_URL;
   const myId = findMyId(accessToken);
   const headers = {
     ...(accessToken && { Authorization: `Bearer ${accessToken}` }),

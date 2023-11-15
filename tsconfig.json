@@ -34,7 +34,8 @@
     "**/*.ts",
     "**/*.tsx",
     "custom.d.ts",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "hooks/useFireFetch.js"
   ],
   "exclude": ["node_modules"]
 }

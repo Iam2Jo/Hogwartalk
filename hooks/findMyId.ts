@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 
 export function findMyId(ACCESS_TOKEN) {
   const SERVER_KEY = '660d616b';
-  const FIND_MY_ID_URL = 'https://fastcampus-chat.net/auth/me';
+  const FIND_MY_ID_URL = process.env.REACT_APP_FIND_MY_ID_URL;
 
   const headers = {
     'Content-Type': 'application/json',

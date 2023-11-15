@@ -45,9 +45,9 @@ const SelectDormitory = () => {
   const [ravenclawFirebaseData, setRavenclawFirebaseData] = useState<any>(null);
   const SERVER_KEY = '660d616b';
   const [accessToken, setAccessToken] = useState('');
-  const CREATE_CHAT_URL = 'https://fastcampus-chat.net/chat';
-  const FIND_ALL_USER_URL = 'https://fastcampus-chat.net/users';
-  const GET_MY_INFO_URL = 'https://fastcampus-chat.net/auth/me';
+  const CREATE_CHAT_URL = process.env.REACT_APP_CREATE_CHAT_URL;
+  const FIND_ALL_USER_URL = process.env.REACT_APP_FIND_ALL_USER_URL;
+  const GET_MY_INFO_URL = process.env.REACT_APP_GET_MY_INFO_URL;
 
   const headers = {
     'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ const SelectDormitory = () => {
   };
 
   const handleParticipate = (chatId: string) => {
-    const PARTICIPATE_CHAT_URL = 'https://fastcampus-chat.net/chat/participate';
+    const PARTICIPATE_CHAT_URL = process.env.REACT_APP_PARTICIPATE_CHAT_URL;
     const requestData: RequestBodyParticipate = {
       chatId: chatId,
     };

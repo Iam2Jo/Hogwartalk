@@ -52,9 +52,9 @@ const InviteToChatRoomModal = ({
   const SERVER_KEY = '660d616b';
   const ACCESS_TOKEN =
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGQ2MTZiOmhlcm1pb25lIiwiaWF0IjoxNjk5NDIzOTI4LCJleHAiOjE3MDAwMjg3Mjh9.9FA24mkoipWSd4KlpxTX0L8mKmJj7LAVd_XEcW1Xt7w';
-  const GET_ALL_USERS_URL = 'https://fastcampus-chat.net/users';
-  const GET_ALL_CHATTINGS_URL = 'https://fastcampus-chat.net/chat/all';
-  const INVITE_TO_CHATROOM_URL = 'https://fastcampus-chat.net/chat/invite';
+  const GET_ALL_USERS_URL = process.env.REACT_APP_GET_ALL_USERS_URL;
+  const GET_ALL_CHATTINGS_URL = process.env.REACT_APP_GET_ALL_CHATTINGS_URL;
+  const INVITE_TO_CHATROOM_URL = process.env.REACT_APP_INVITE_TO_CHATROOM_URL;
 
   const headers = {
     'Content-Type': 'application/json',

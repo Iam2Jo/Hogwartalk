@@ -25,7 +25,8 @@ const joinModal = () => {
   const chatId = chatInfo[0].id;
 
   const handleParticipate = (chatId: string) => {
-    const PARTICIPATE_CHAT_URL = 'https://fastcampus-chat.net/chat/participate';
+    const PARTICIPATE_CHAT_URL = process.env.REACT_APP_PARTICIPATE_CHAT_URL;
+
     const requestData: RequestBodyParticipate = {
       chatId: chatId,
     };
