@@ -4,6 +4,8 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import GlobalStyle from '../styles/globalStyle';
 import '../styles/fonts/font.css';
+import BgmPlayer from './home/page';
+import MousePointer from '@components/MousePointer/mousePointer';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -22,7 +24,11 @@ export default function RootLayout({
       <GlobalStyle />
       <RecoilRoot>
         <html lang="en">
-          <body className={inter.className}>{children}</body>
+          <body className={inter.className}>
+            <BgmPlayer />
+            {/* <MousePointer /> */}
+            {children}
+          </body>
         </html>
       </RecoilRoot>
     </>
