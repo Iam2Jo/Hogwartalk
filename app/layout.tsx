@@ -1,11 +1,10 @@
 'use client';
 import { RecoilRoot } from 'recoil';
-import { Registry as StyledComponentsRegistry} from 'app/registry.tsx';
+import { Registry as StyledComponentsRegistry } from 'app/registry.tsx';
 import { Inter } from 'next/font/google';
 import GlobalStyle from '../styles/globalStyle';
 import '../styles/fonts/font.css';
 import { Registry } from './\bregistry';
-
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -21,11 +20,13 @@ export default function RootLayout({
 }) {
   return (
     <>
-      <GlobalStyle />
       <RecoilRoot>
         <html lang="en">
           <body className={inter.className}>
-            <Registry>{children}</Registry>
+            <Registry>
+              <GlobalStyle />
+              {children}
+            </Registry>
           </body>
         </html>
       </RecoilRoot>
