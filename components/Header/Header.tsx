@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 import * as styled from './Header.styles';
 import MyPageIcon from './icons/MyPageIcon';
 import SearchIcon from './icons/SearchIcon';
@@ -12,17 +13,29 @@ import { audioState } from '@recoil/atom';
 import DisBgmIcon from './icons/DisBgmIcon';
 import { MyChatToggle } from '../MyChatToggle';
 
-
 const Header = () => {
   const play = useRecoilState(audioState);
   const [isMyPageVisible, setMyPageVisible] = useState(false);
   const [isSearchVisible, setSearchVisible] = useState(false);
   const [isMyChatVisible, setMyChatVisible] = useState(false);
+  // const [pageStates, setPageStates] = useState({
+  //   isMainButtonVisible: false,
+  // });
+
+  // useEffect(() => {
+  //   const currentPath = window.location.pathname;
+  //   setPageStates((prevState) => ({
+  //     ...prevState,
+  //     isMainButtonVisible: currentPath !== '/selectDormitory',
+  //   }));
+  // }, [window.location.pathname]);
 
   const toggleMyPage = () => {
     setMyPageVisible(!isMyPageVisible);
     setSearchVisible(false);
     setMyChatVisible(false);
+    // isMainButtonVisible(false);
+    // isClubButtonVisible(false);
   };
 
   const toggleSearch = () => {
@@ -44,9 +57,19 @@ const Header = () => {
         <styled.SearchIconWrapper>
           <SearchIcon onClick={toggleSearch} isToggled={isSearchVisible} />
         </styled.SearchIconWrapper>
-        <ChatIcon onClick={toggleMyChat} isToggled={isMyChatVisible} />
+        <styled.ChatIconWrapper>
+          <ChatIcon onClick={toggleMyChat} isToggled={isMyChatVisible} />
+        </styled.ChatIconWrapper>
       </styled.LeftIcons>
       <styled.RightIcons>
+        {/* {pageStates.isMainButtonVisible && (
+          <Link href="/selectDormitory">
+            <styled.MainButton>MAIN</styled.MainButton>
+          </Link>
+        )} */}
+        <Link href="/selectDormitory">
+          <styled.MainButton>MAIN</styled.MainButton>
+        </Link>
         {play[0] === true ? <BgmIcon /> : <DisBgmIcon />}
         <LogoutIcon />
       </styled.RightIcons>

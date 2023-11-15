@@ -28,9 +28,21 @@ export const SearchIconWrapper = styled.div`
   margin-top: 5px;
 `;
 
+export const ChatIconWrapper = styled.div`
+  margin-top: 5px;
+`;
+
 export const RightIcons = styled.div`
   ${flexCenter}
   & > *:not(:last-child) {
     margin-right: 16px;
+  }
+`;
+
+export const MainButton = styled.div`
+  color: #806c2a;
+
+  &:hover {
+    color: var(--color-main-yellow);
   }
 `;

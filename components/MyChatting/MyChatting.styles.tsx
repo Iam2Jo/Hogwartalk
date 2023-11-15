@@ -9,6 +9,7 @@ export const MyChattingContainer = styled.div`
   border-radius: 0.5rem;
   width: 25.6vw;
   height: calc(100vh - 2rem); // 패딩 1rem 해줬어서
+  margin-top: 50px; // header
   padding: 1.5rem 1rem 1.5rem 1.5rem;
   overflow-y: hidden;
 

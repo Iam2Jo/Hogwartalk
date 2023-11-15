@@ -33,6 +33,8 @@ export const DormitoryContainer = styled.div`
   background-color: #1f1f1f;
   width: 73.4vw;
   height: calc(100vh -2rem); // 패딩 1rem 해줬어서
+  margin-top: 50px; // header
+
   ::-webkit-scrollbar {
     width: 10px;
   }
