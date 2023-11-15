@@ -28,6 +28,18 @@ export const MoreItemContainer = styled.button`
   border-radius: 8px;
 `;
 
+export const ButtonWrapper = styled.div`
+  background-color: black;
+  color: white;
+  font-size: 0.9rem;
+  border: none;
+
+  &:hover {
+    background-color: #f2cc00;
+    cursor: pointer;
+  }
+`;
+
 export const DormitoryContainer = styled.div`
   /* position: relative; */
   background-color: #1f1f1f;

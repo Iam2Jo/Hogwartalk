@@ -167,8 +167,12 @@ const Dormitory = ({ chatId, dormName }) => {
       />
       {isOpen ? (
         <styled.MoreItemContainer>
-          <styled.Button onClick={openInfoModal}>채팅방 정보</styled.Button>
-          <styled.Button onClick={leaveChatRoom}>나가기</styled.Button>
+          <styled.ButtonWrapper>
+            <styled.Button onClick={openInfoModal}>채팅방 정보</styled.Button>
+          </styled.ButtonWrapper>
+          <styled.ButtonWrapper>
+            <styled.Button onClick={leaveChatRoom}>나가기</styled.Button>
+          </styled.ButtonWrapper>
         </styled.MoreItemContainer>
       ) : null}
       <styled.DormitoryHeader>
