@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import io, { Socket } from 'socket.io-client';
 import * as styled from './FriendSearchToggle.styles';
 
-import { useFireFetch } from '@/hooks/useFireFetch';
+// import { useFireFetch } from '@/hooks/useFireFetch';
 
-import { getUsersClass } from '@utils/firebase';
-import { doc, getDocs } from 'firebase/firestore';
+// import { getUsersClass } from '@utils/firebase';
+// import { doc, getDocs } from 'firebase/firestore';
 
 interface FriendSearchToggleProps {
   isVisible: boolean;
