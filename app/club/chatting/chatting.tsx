@@ -12,8 +12,13 @@ const ClubChatting = () => {
   const id = queryString.split('?name=')[0];
   const name = queryString.split('?name=')[1];
 
+  useEffect(() => {
+    console.log('id', id);
+    console.log('name', name);
+  }, [id, name]);
+
   if (!id || !name) {
-    return <div>로딩중...</div>;
+    return <div style={{ backgroundColor: 'white' }}>로딩중...</div>;
   }
 
   return <Dormitory chatId={id} dormName={name} />;
