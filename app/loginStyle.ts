@@ -34,13 +34,13 @@ export const LoginFormStyle = styled.div`
     height: 2.62rem;
   }
   button {
-    margin-left: 15rem;
     width: 254px;
     height: 48px;
     background-color: inherit;
     color: #ffffff;
     border: none;
     border: 0.1px solid #4e4e4e;
+    margin-left: 15rem;
     cursor: pointer;
     &:hover {
       background-color: var(--color-main-yellow);

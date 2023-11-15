@@ -1,5 +1,6 @@
 'use client';
 import type { NextPage } from 'next';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState, useRef } from 'react';
 import { SignupContainer } from './signupStyle';
@@ -8,7 +9,7 @@ import {
   getStorageURL,
   setStorageImage,
   setUsersClass,
-} from '@utils/firebase.js';
+} from '@utils/firebase.ts';
 import { checkUserIdAvailability, signupUser } from '@utils/service.js';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import {
@@ -87,7 +88,9 @@ const signup: NextPage = () => {
   return (
     <SignupContainer>
       <header>
-        <img src="LoginTitle.png" alt="" className="LoginTitile" />
+        <Link href="/">
+          <img src="LoginTitle.png" alt="" className="LoginTitle" />
+        </Link>
       </header>
       <form>
         <div>
