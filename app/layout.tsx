@@ -4,7 +4,7 @@ import { Registry as StyledComponentsRegistry } from 'app/registry.tsx';
 import { Inter } from 'next/font/google';
 import GlobalStyle from '../styles/globalStyle';
 import '../styles/fonts/font.css';
-import { Registry } from './\bregistry';
+import { Registry } from './registry';
 import BgmPlayer from './home/page';
 import MousePointer from '@components/MousePointer/mousePointer';
 
