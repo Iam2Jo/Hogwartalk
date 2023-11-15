@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { doc, getFirestore } from 'firebase/firestore';
-import { collection, addDoc, getDocs, setDoc } from 'firebase/firestore';
+import { collection, addDoc, getDoc, setDoc } from 'firebase/firestore';
 import {
   uploadBytesResumable,
   getDownloadURL,
@@ -56,28 +56,18 @@ export async function setUsersClass(userId, userClass) {
   }
 }
 
-// 특정 유저 ID에 따른 class를 가져오기
 export async function getUsersClass(userId) {
   try {
-    const userDocRef = doc(db, 'users', userId);
-    const userDocSnap = await getDocs(userDocRef);
-
-    if (userDocSnap.exists()) {
-      const userData = userDocSnap.data();
-      if (userData && userData.class) {
-        return userData.class;
-      } else {
-        console.error('User data or class information not found.');
-        return null;
-      }
+    const userDoc = await getDoc(doc(db, 'users', userId));
+    if (userDoc.exists()) {
+      const userData = userDoc.data();
+      return userData.class || null;
     } else {
-      console.error('User document not found.');
+      console.error('사용자 문서를 찾을 수 없습니다.');
       return null;
     }
   } catch (error) {
-    console.error('Error fetching user class:', error);
+    console.error('사용자 클래스 검색 오류: ', error);
     return null;
   }
 }
-
-export { app, db, storage };
