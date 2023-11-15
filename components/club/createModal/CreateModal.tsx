@@ -44,7 +44,6 @@ const createModal = () => {
       const response = await axios.post(CREATE_CHAT_URL, requestData, {
         headers,
       });
-      alert('채팅방 생성이 완료되었습니다.');
 
       const newDormChatInfo = {
         id: response.data.id,
@@ -54,6 +53,13 @@ const createModal = () => {
         updatedAt: response.data.updatedAt,
         host: myName,
       };
+      router.push(
+        '/club/chatting' +
+          '?id=' +
+          newDormChatInfo.id +
+          '?name=' +
+          newDormChatInfo.name,
+      );
 
       await addFirebaseData('chatInfo', name, newDormChatInfo);
       console.log(`${name} 채팅방 생성 완료`, response.data);
