@@ -8,9 +8,10 @@ import {
   Emoji,
   UserDormitory,
 } from '../FriendSearchToggle/FriendSearchToggle.styles';
-import { useSetRecoilState } from 'recoil';
-import * as dormChatInfo from '@/recoil/dormChatInfo';
+// import { useSetRecoilState } from 'recoil';
+// import * as dormChatInfo from '@/recoil/dormChatInfo';
 import axios from 'axios';
+import { useFireFetch } from '@hooks/useFireFetch';
 
 interface ChatRoomInfoModalProps {
   title?: string;
@@ -22,6 +23,7 @@ interface ChatRoomInfoModalProps {
   onClose: () => void;
   onTitleChange: (newTitle: string) => void;
   isConnected: string[];
+  dormName: string;
 }
 
 const ChatRoomInfoModal = ({
@@ -34,8 +36,11 @@ const ChatRoomInfoModal = ({
   onClose,
   onTitleChange,
   isConnected,
+  dormName,
 }: ChatRoomInfoModalProps) => {
   if (!isOpen) return null;
+
+  const fireFetch = useFireFetch();
 
   const SERVER_KEY = '660d616b';
   const ACCESS_TOKEN =
@@ -51,10 +56,18 @@ const ChatRoomInfoModal = ({
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [newTitle, setNewTitle] = useState(title || '');
   const [isHost, setIsHost] = useState(false);
+  const [chatInfo, setChatInfo] = useState({});
 
-  const setGryffindorChatInfo = useSetRecoilState(
-    dormChatInfo.gryffindorChatInfoState,
-  );
+  // const setGryffindorChatInfo = useSetRecoilState(
+  //   dormChatInfo.gryffindorChatInfoState,
+  // );
+
+  useEffect(() => {
+    fireFetch.get('chatInfo', 'name', dormName).then((res) => {
+      console.log('res: ', res);
+      setChatInfo(res[0].id);
+    });
+  }, []);
 
   useEffect(() => {
     setNewTitle(title || '');
@@ -64,17 +77,24 @@ const ChatRoomInfoModal = ({
     setIsEditingTitle(true);
   };
 
-  const handleTitleSaveClick = () => {
+  const handleTitleSaveClick = async () => {
     onTitleChange(newTitle);
     setIsEditingTitle(false);
-    setGryffindorChatInfo((prevChatInfo) => {
-      const newChatInfo = {
-        ...prevChatInfo,
-        name: newTitle,
-      };
+    // setGryffindorChatInfo((prevChatInfo) => {
+    //   const newChatInfo = {
+    //     ...prevChatInfo,
+    //     name: newTitle,
+    //   };
 
-      return newChatInfo;
-    });
+    //   return newChatInfo;
+    // });
+
+    const newChatInfo = {
+      ...chatInfo,
+      name: newTitle,
+    };
+
+    await fireFetch.update('chatInfo', dormName, newChatInfo.name);
   };
 
   const handleOverlayClick = (

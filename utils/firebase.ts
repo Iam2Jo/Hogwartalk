@@ -18,7 +18,7 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
-const db = getFirestore(app);
+export const db = getFirestore(app);
 
 export async function getStorageURL(fileName) {
   const storageRef = ref(

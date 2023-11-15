@@ -7,6 +7,10 @@ export const useFetchMessages = (chatSocket) => {
     try {
       chatSocket.emit('fetch-messages');
       console.log('C->S 이전 대화목록 가져오기 성공!');
+
+      // return () => {
+      //   chatSocket.disconnect();
+      // };
     } catch (error) {
       console.error('C->S 이전 대화목록 가져오기 실패!', error);
     }
@@ -19,6 +23,9 @@ export const useMessageToClient = (chatSocket) => {
       chatSocket.on('message-to-client', (messageObject: any) => {
         console.log(messageObject);
         console.log('S->C 메시지 전송 성공!');
+        // return () => {
+        //   chatSocket.disconnect();
+        // };
       });
     } catch (error) {
       console.error('S->C 메시지 전송 실패!', error);
@@ -32,6 +39,9 @@ export const useMessagesToClient = (chatSocket, setPreviousMessages) => {
       chatSocket.on('messages-to-client', (messageObject: any) => {
         setPreviousMessages(messageObject.messages);
         console.log('S->C 이전 대화목록 가져오기 성공!');
+        // return () => {
+        //   chatSocket.disconnect();
+        // };
       });
     } catch (error) {
       console.error('S->C 이전 대화목록 가져오기 실패!', error);
@@ -58,6 +68,9 @@ export const useFetchUsers = (chatSocket) => {
     try {
       chatSocket.emit('users');
       console.log('C->S 접속 상태 유저 목록 fetch 성공!');
+      // return () => {
+      //   chatSocket.disconnect();
+      // };
     } catch (error) {
       console.error('C->S 접속 상태 유저 목록 fetch 실패!', error);
     }
@@ -71,6 +84,9 @@ export const usePullUsers = (chatSocket, setIsConnected) => {
         console.log('접속 상태 유저 목록: ', response.users);
         console.log('S->C 접속 상태 유저 목록 pull 성공!');
         setIsConnected(response.users);
+        // return () => {
+        //   chatSocket.disconnect();
+        // };
       });
     } catch (error) {
       console.error('S->C 접속 상태 유저 목록 pull 실패!', error);
@@ -88,6 +104,9 @@ export const useJoinUsers = (chatSocket, setIsConnected) => {
       setIsConnected(response.users);
       console.log('S->C 유저 입장 정보 불러오기 성공!');
     });
+    // return () => {
+    //   chatSocket.disconnect();
+    // };
   } catch (error) {
     console.error('S->C 유저 입장 정보 불러오기 실패!', error);
   }
@@ -100,6 +119,9 @@ export const useLeaveUsers = (chatSocket, setIsConnected) => {
       setIsConnected(response.users);
       console.log('S->C 유저 퇴장 정보 불러오기 성공!');
     });
+    // return () => {
+    //   chatSocket.disconnect();
+    // };
   } catch (error) {
     console.error('S->C 유저 퇴장 정보 불러오기 실패!', error);
   }
