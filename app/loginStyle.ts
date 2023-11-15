@@ -27,10 +27,11 @@ export const LoginFormStyle = styled.div`
     margin-bottom: 30px;
   }
   input {
-    background-color: inherit;
+    background: transparent;
     border: none;
     border-bottom: 0.1px solid #4e4e4e;
     color: #ffffff;
+      outline: none;
     height: 2.62rem;
   }
   button {

@@ -40,6 +40,7 @@ export const SignupContainer = styled.div`
     border: none;
     border-bottom: 0.1px solid #4e4e4e;
     color: #ffffff;
+    outline: none;
     height: 2.62rem;
   }
   button {
