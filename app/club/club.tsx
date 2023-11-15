@@ -54,8 +54,6 @@ const club = () => {
     getChatList();
   }, []);
 
-  console.log(chatList[0]);
-
   const setMyChatList = useSetRecoilState(myChatListState);
 
   useEffect(() => {
@@ -106,14 +104,28 @@ const club = () => {
                 chat.name !== 'gryffindor' &&
                 chat.name !== 'ravenclaw',
             )
-            .map((chat) => (
-              <ChatItem
-                key={chat.id}
-                id={chat.id}
-                name={chat.name}
-                users={chat.users}
-              />
-            ))}
+            .sort(
+              (a, b) =>
+                (new Date(b.updatedAt) as any) - (new Date(a.updatedAt) as any),
+            )
+            .map((chat) => {
+              const messageDate = new Date(chat.updatedAt);
+              const timeString = messageDate.toLocaleString('en-US', {
+                timeZone: 'Asia/Seoul',
+                hour12: false,
+                hour: 'numeric',
+                minute: 'numeric',
+              });
+
+              return (
+                <ChatItem
+                  key={chat.id}
+                  id={chat.id}
+                  name={chat.name}
+                  users={chat.users}
+                />
+              );
+            })}
         </styled.ChatList>
       </styled.Container>
     </>
