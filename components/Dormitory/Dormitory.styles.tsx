@@ -29,10 +29,10 @@ export const MoreItemContainer = styled.button`
 `;
 
 export const DormitoryContainer = styled.div`
-  position: relative;
+  /* position: relative; */
   background-color: #1f1f1f;
   width: 73.4vw;
-  height: calc(100vh -3rem); // 패딩 1rem 해줬어서
+  height: calc(100vh -2rem); // 패딩 1rem 해줬어서
   ::-webkit-scrollbar {
     width: 10px;
   }
@@ -65,7 +65,7 @@ export const MessageContainer = styled.div`
   border-radius: 0.5rem;
   padding: 0.5rem 1rem;
   width: 100%;
-  height: 77.5%;
+  height: 80%;
   overflow-y: auto;
 `;
 

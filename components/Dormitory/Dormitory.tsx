@@ -19,15 +19,10 @@ import { RequestData } from '@/@types/Socket/emit/messageToServer.types';
 import { Message } from '@/@types/Socket/on/messagesToClient.types';
 import axios from 'axios';
 import extractDateFromString from '@/utils/extractDateFromString';
-import { useRecoilValue } from 'recoil';
-import {
-  gryffindorChatInfoState,
-  hufflepuffChatInfoState,
-  ravenclawChatInfoState,
-  slytherinChatInfoState,
-} from '@/recoil/dormChatInfo';
 import ChatRoomInfoModal from '@/components/ChatRoomInfoModal/ChatRoomInfoModal';
 import InviteToChatRoomModal from '@components/InviteToChatRoomModal/InviteToChatRoomModal';
+import { getToken } from '@utils/service';
+import { getFirebaseDatabyKeyVal } from '@hooks/useFireFetch';
 
 const Dormitory = ({ chatId, dormName }) => {
   const [text, setText] = useState<RequestData>('');
@@ -45,32 +40,37 @@ const Dormitory = ({ chatId, dormName }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isConnected, setIsConnected] = useState([]);
 
-  const gryffindorChatInfo = useRecoilValue(gryffindorChatInfoState);
-  const hufflepuffChatInfo = useRecoilValue(hufflepuffChatInfoState);
-  const ravenclawChatInfo = useRecoilValue(ravenclawChatInfoState);
-  const slytherinChatInfo = useRecoilValue(slytherinChatInfoState);
-  const { name, users, updatedAt, host } = currentDormChatInfo;
+  // const gryffindorChatInfo = useRecoilValue(gryffindorChatInfoState);
+  // const hufflepuffChatInfo = useRecoilValue(hufflepuffChatInfoState);
+  // const ravenclawChatInfo = useRecoilValue(ravenclawChatInfoState);
+  // const slytherinChatInfo = useRecoilValue(slytherinChatInfoState);
+
+  useEffect(() => {
+    getFirebaseDatabyKeyVal('chatInfo', 'name', dormName).then((res) => {
+      console.log('res: ', res);
+      setCurrentDormChatInfo(res[0]);
+    });
+  }, []);
+
+  // const { name, users, updatedAt, host } = currentDormChatInfo;
   const modalData = {
-    title: name,
-    numParticipants: users.length,
-    host,
-    creationDate: extractDateFromString(updatedAt),
-    participants: users,
+    title: currentDormChatInfo.name,
+    numParticipants: currentDormChatInfo.users.length,
+    host: currentDormChatInfo.host,
+    creationDate: extractDateFromString(currentDormChatInfo.updatedAt),
+    participants: currentDormChatInfo.users,
   };
   const [chatRoomTitle, setChatRoomTitle] = useState(modalData.title);
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const messageContainerRef = useRef<HTMLDivElement | null>(null);
   const SERVER_KEY = '660d616b';
-  const ACCESS_TOKEN_HARRY =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGQ2MTZiOmhhcnJ5cG90dGVyIiwiaWF0IjoxNjk5MzQ1NDkzLCJleHAiOjE2OTk5NTAyOTN9.b5s4_9f-pVBj9ki17SXc6VvoiApMJZCJXfk5G2wskyo';
-  const ACCESS_TOKEN_HERMIONE =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGQ2MTZiOmhlcm1pb25lIiwiaWF0IjoxNjk5NDIzOTI4LCJleHAiOjE3MDAwMjg3Mjh9.9FA24mkoipWSd4KlpxTX0L8mKmJj7LAVd_XEcW1Xt7w';
-  const CHATROOM_LEAVE_URL = 'https://fastcampus-chat.net/chat/leave';
+  const [accessToken, setAccessToken] = useState('');
 
-  const myId = findMyId(ACCESS_TOKEN_HERMIONE);
+  const CHATROOM_LEAVE_URL = 'https://fastcampus-chat.net/chat/leave';
+  const myId = findMyId(accessToken);
   const headers = {
-    Authorization: `Bearer ${ACCESS_TOKEN_HERMIONE}`,
+    ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
     serverId: SERVER_KEY,
   };
   const chatSocket = io(`https://fastcampus-chat.net/chat?chatId=${chatId}`, {
@@ -99,21 +99,9 @@ const Dormitory = ({ chatId, dormName }) => {
   useLeaveUsers(chatSocket, setIsConnected);
 
   useEffect(() => {
-    switch (dormName) {
-      case 'gryffindor':
-        setCurrentDormChatInfo({ ...gryffindorChatInfo });
-      case 'hufflepuff':
-        setCurrentDormChatInfo({ ...hufflepuffChatInfo });
-      case 'ravenclaw':
-        setCurrentDormChatInfo({ ...ravenclawChatInfo });
-      case 'slytherin':
-        setCurrentDormChatInfo({ ...slytherinChatInfo });
-    }
+    const token = getToken();
+    setAccessToken(token);
   }, []);
-
-  useEffect(() => {
-    console.log('currentDormChatInfo: ', currentDormChatInfo);
-  }, [currentDormChatInfo]);
 
   useEffect(() => {
     if (isAtBottom) {
@@ -158,7 +146,7 @@ const Dormitory = ({ chatId, dormName }) => {
   /********************************************************** */
 
   return (
-    <>
+    <styled.DormitoryContainer>
       <ChatRoomInfoModal
         title={modalData.title}
         numParticipants={modalData.numParticipants}
@@ -169,6 +157,7 @@ const Dormitory = ({ chatId, dormName }) => {
         isOpen={isInfoModalOpen}
         onClose={closeInfoModal}
         isConnected={isConnected}
+        dormName={dormName}
       />
       <InviteToChatRoomModal
         isOpen={isInviteModalOpen}
@@ -176,80 +165,76 @@ const Dormitory = ({ chatId, dormName }) => {
         chatId={chatId}
         setCurrentRoomChatInfo={setCurrentDormChatInfo}
       />
-      <styled.DormitoryContainer>
-        {isOpen ? (
-          <styled.MoreItemContainer>
-            <styled.Button onClick={openInfoModal}>채팅방 정보</styled.Button>
-            <styled.Button onClick={leaveChatRoom}>나가기</styled.Button>
-          </styled.MoreItemContainer>
-        ) : null}
-        <styled.DormitoryHeader>
-          <styled.TitleWrapper>
-            <styled.Title>{dormName}</styled.Title>
-            <styled.Badge onClick={openInviteModal}>
-              <styled.PersonIcon />
-              {currentDormChatInfo?.users.length}
-            </styled.Badge>
-          </styled.TitleWrapper>
-          <styled.MoreIcon onClick={() => setIsOpen(!isOpen)} />
-        </styled.DormitoryHeader>
-        <styled.MessageContainer
-          ref={messageContainerRef}
-          onScroll={(e) => handleScroll(e, setIsAtBottom, messageContainerRef)}
-        >
-          {previousMessages.map((message) => {
-            const messageDate = new Date(message.createdAt);
-            const timeString = messageDate.toLocaleString('en-US', {
-              timeZone: 'Asia/Seoul',
-              hour12: false,
-              hour: 'numeric',
-              minute: 'numeric',
-            });
-            return (
-              <styled.MessageWrapper
-                key={message.id}
-                $isCurrentUser={message.userId === myId}
-              >
-                <styled.MessageInfo>
-                  {message.userId !== myId && (
-                    <styled.MessageUserId>
-                      {message.userId}
-                    </styled.MessageUserId>
-                  )}
-                  <styled.MessageTime>{timeString}</styled.MessageTime>
-                </styled.MessageInfo>
-                <div>
-                  <styled.MessageText $isCurrentUser={message.userId === myId}>
-                    {message.text}
-                  </styled.MessageText>
-                </div>
-              </styled.MessageWrapper>
-            );
-          })}
-          <div ref={messagesEndRef} />
-        </styled.MessageContainer>
-        <styled.ScrollToBottomButton
-          onClick={() => scrollToBottom(messagesEndRef)}
-          $isVisible={!isAtBottom}
-        >
-          <styled.BottomIcon />
-        </styled.ScrollToBottomButton>
-        <styled.InputWrapper>
-          <input
-            type="text"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault();
-                sendMessage();
-              }
-            }}
-          />
-          <button onClick={sendMessage}>전송</button>
-        </styled.InputWrapper>
-      </styled.DormitoryContainer>
-    </>
+      {isOpen ? (
+        <styled.MoreItemContainer>
+          <styled.Button onClick={openInfoModal}>채팅방 정보</styled.Button>
+          <styled.Button onClick={leaveChatRoom}>나가기</styled.Button>
+        </styled.MoreItemContainer>
+      ) : null}
+      <styled.DormitoryHeader>
+        <styled.TitleWrapper>
+          <styled.Title>{dormName}</styled.Title>
+          <styled.Badge onClick={openInviteModal}>
+            <styled.PersonIcon />
+            {currentDormChatInfo?.users.length}
+          </styled.Badge>
+        </styled.TitleWrapper>
+        <styled.MoreIcon onClick={() => setIsOpen(!isOpen)} />
+      </styled.DormitoryHeader>
+      <styled.MessageContainer
+        ref={messageContainerRef}
+        onScroll={(e) => handleScroll(e, setIsAtBottom, messageContainerRef)}
+      >
+        {previousMessages.map((message) => {
+          const messageDate = new Date(message.createdAt);
+          const timeString = messageDate.toLocaleString('en-US', {
+            timeZone: 'Asia/Seoul',
+            hour12: false,
+            hour: 'numeric',
+            minute: 'numeric',
+          });
+          return (
+            <styled.MessageWrapper
+              key={message.id}
+              $isCurrentUser={message.userId === myId}
+            >
+              <styled.MessageInfo>
+                {message.userId !== myId && (
+                  <styled.MessageUserId>{message.userId}</styled.MessageUserId>
+                )}
+                <styled.MessageTime>{timeString}</styled.MessageTime>
+              </styled.MessageInfo>
+              <div>
+                <styled.MessageText $isCurrentUser={message.userId === myId}>
+                  {message.text}
+                </styled.MessageText>
+              </div>
+            </styled.MessageWrapper>
+          );
+        })}
+        <div ref={messagesEndRef} />
+      </styled.MessageContainer>
+      <styled.ScrollToBottomButton
+        onClick={() => scrollToBottom(messagesEndRef)}
+        $isVisible={!isAtBottom}
+      >
+        <styled.BottomIcon />
+      </styled.ScrollToBottomButton>
+      <styled.InputWrapper>
+        <input
+          type="text"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              sendMessage();
+            }
+          }}
+        />
+        <button onClick={sendMessage}>전송</button>
+      </styled.InputWrapper>
+    </styled.DormitoryContainer>
   );
 };
 

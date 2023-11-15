@@ -6,15 +6,18 @@ export function getToken() {
 }
 //요청 인터셉터
 axios.interceptors.request.use(
-  (config) => {
+  async(config) => {
     config.headers['content-type'] = 'application/json';
     config.headers.serverId = '660d616b';
     // 헤더에 액세스 토큰을 추가
     const token = getToken();
-    if (token !== undefined) {
-      config.headers.Authorization = `Bearer ${token}`;
-
-    }
+    if (token === undefined) {
+        const reAccessToken = await reissueAccessToken()
+        cookies.save('accessToken',reAccessToken, { maxAge: 3600 * 24 * 7 });
+        config.headers.Authorization = `Bearer ${reAccessToken}`;    
+      } else {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
     return config;
   },
   (error) => {
@@ -56,4 +59,30 @@ export async function checkUserIdAvailability(id){
         const responseData = await resData.data;
         return responseData.isDuplicated;
     }
+}
+
+export async function reissueAccessToken() {
+  const refreshToken = cookies.load('refreshToken');
+
+  try {
+    const response = await fetch('https://fastcampus-chat.net/refresh', {
+      method: 'POST',
+      headers: {
+        serverId : '660d616b',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ refreshToken: refreshToken }),
+    });
+
+    if (response.ok) {
+      const responseData = await response.json();
+      return responseData.accessToken;
+    } else {
+      console.error('Failed to reissue access token:', response.statusText);
+      // 실패할 경우 예외 처리 또는 다른 로직 추가
+    }
+  } catch (error) {
+    console.error('Error during reissueAccessToken:', error);
+    // 네트워크 오류 등의 예외 처리
+  }
 }
