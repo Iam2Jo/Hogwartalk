@@ -4,10 +4,19 @@ import { useRouter } from 'next/navigation';
 import { useState, useRef } from 'react';
 import { SignupContainer } from './signupStyle';
 import { BsCamera } from 'react-icons/bs';
-import { getStorageURL, setStorageImage,setUsersClass } from '@utils/firebase.js';
+import {
+  getStorageURL,
+  setStorageImage,
+  setUsersClass,
+} from '@utils/firebase.js';
 import { checkUserIdAvailability, signupUser } from '@utils/service.js';
-import { useRecoilValue,useRecoilState } from 'recoil';
-import { teamState,signupState,userPreviewState,userImageState } from '@recoil/atom';
+import { useRecoilValue, useRecoilState } from 'recoil';
+import {
+  teamState,
+  signupState,
+  userPreviewState,
+  userImageState,
+} from '@recoil/atom';
 type FormData = {
   id: string;
   password: string;
@@ -27,9 +36,9 @@ const signup: NextPage = () => {
     setFormData({ ...formData, [id]: value });
   };
   const handleButtonClick = async () => {
-    if (formData.id.trim() === ''){
+    if (formData.id.trim() === '') {
       alert('아이디를 입력하세요');
-      throw new Error('아이디를 입력하세요')
+      throw new Error('아이디를 입력하세요');
     }
     const isDuplicated = await checkUserIdAvailability(formData.id);
     if (isDuplicated === true) {
@@ -40,14 +49,14 @@ const signup: NextPage = () => {
       alert('비밀번호를 입력하세요.');
       throw new Error('비밀번호를 입력하세요.');
     } else if (formData.password.length < 6) {
-      alert('비밀번호는 최소 6자 이상이어야 합니다.')
+      alert('비밀번호는 최소 6자 이상이어야 합니다.');
       throw new Error('비밀번호는 최소 6자 이상이어야 합니다.');
     }
-    if (team.trim() === ''){
+    if (team.trim() === '') {
       alert('기숙사를 선택하세요');
       throw new Error('기숙사를 선택하세요');
     }
-    await setUsersClass(formData.id,team);
+    await setUsersClass(formData.id, team);
     if (userImage) {
       await setStorageImage(userImage, formData.id);
       const imageURL = await getStorageURL(formData.id);
@@ -59,7 +68,7 @@ const signup: NextPage = () => {
   };
   const handleInputImgChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
-    setUserImage(file)
+    setUserImage(file);
     if (file) {
       const reader = new FileReader();
       reader.onloadend = (e) => {
@@ -72,7 +81,7 @@ const signup: NextPage = () => {
     }
   };
 
-  function handleTestButtonClick (){
+  function handleTestButtonClick() {
     router.push('signup/quiz');
   }
   return (
@@ -117,8 +126,19 @@ const signup: NextPage = () => {
           <div>
             <label htmlFor="">기숙사</label>
             <div>
-              <input value={team}  disabled type="text" id="name" className="input__test" required/>
-              <button type="button" className="button__test" onClick={handleTestButtonClick}>
+              <input
+                value={team}
+                disabled
+                type="text"
+                id="name"
+                className="input__test"
+                required
+              />
+              <button
+                type="button"
+                className="button__test"
+                onClick={handleTestButtonClick}
+              >
                 기숙사 시험보기
               </button>
             </div>
@@ -128,7 +148,7 @@ const signup: NextPage = () => {
             className="button__submit"
             onClick={handleButtonClick}
           >
-            입학신청서 작성 완료
+            작성 완료
           </button>
         </div>
         <div>

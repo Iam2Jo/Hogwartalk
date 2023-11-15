@@ -2,6 +2,7 @@
 import styled from 'styled-components';
 
 export const LoginContainer = styled.div`
+  padding-top: 7rem;
   width: 100vw;
   height: 100vh;
   background-image: url('/loginBackimg.jpg');
@@ -14,12 +15,11 @@ export const LoginContainer = styled.div`
   align-items: center;
 `;
 export const LoginFormStyle = styled.div`
-position: relative;
+  position: relative;
 
   label {
     color: #ffffff;
-    font-size : 18px;
-    
+    font-size: 18px;
   }
   .form__input {
     display: flex;
@@ -29,15 +29,28 @@ position: relative;
   input {
     background-color: inherit;
     border: none;
-    border-bottom: 0.1px solid white;
+    border-bottom: 0.1px solid #4e4e4e;
     color: #ffffff;
+    height: 2.62rem;
   }
   button {
+    margin-left: 15rem;
     width: 254px;
     height: 48px;
     background-color: inherit;
     color: #ffffff;
+    border: none;
+    border: 0.1px solid #4e4e4e;
+    cursor: pointer;
+    &:hover {
+      background-color: var(--color-main-yellow);
+      color: #000;
+      box-shadow: 0px 0px 20px 0px rgba(242, 204, 0, 0.49);
+    }
   }
-  
+  .footer {
+    display: flex;
+    gap: 1rem;
+    flex-direction: column;
+  }
 `;
-
