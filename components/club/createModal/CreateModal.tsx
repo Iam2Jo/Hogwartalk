@@ -1,16 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import * as styled from './CreateModal.styles';
 import CancelIcon from '@assets/icon/cancelIcon.svg';
-import {
-  createModalState,
-  chatInfoState,
-  joinModalState,
-} from '@recoil/chatList';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { createModalState } from '@recoil/chatList';
+import { useSetRecoilState } from 'recoil';
 import axios from 'axios';
-import { RequestBody as RequestBodyCreateChatting } from '@hooks/RESTAPI/createChatting.type';
 import { useRouter } from 'next/navigation';
 import { getToken } from '@utils/service';
+import { addFirebaseData } from '@hooks/useFireFetch';
 
 const createModal = () => {
   const SERVER_KEY = '660d616b';
@@ -28,40 +24,65 @@ const createModal = () => {
     setChatName(e.target.value);
   };
   const [isPrivate, setIsPrivate] = useState(false);
+  const [myName, setMyName] = useState('');
+  const GET_MY_INFO_URL = 'https://fastcampus-chat.net/auth/me';
 
-  const handleCreateChat = (
+  const handleCreateChat = async (
     name: string,
     users: string[],
+    myName: string,
     isPrivate?: boolean,
   ) => {
     const CREATE_CHAT_URL = 'https://fastcampus-chat.net/chat';
-    const requestData: RequestBodyCreateChatting = {
+    const requestData: any = {
       name: name,
       users: users,
+      myName: myName,
       isPrivate: isPrivate,
     };
-    axios
-      .post(CREATE_CHAT_URL, requestData, { headers })
-      .then((response) => {
-        console.log('방 생성 성공!', response.data);
-        alert('채팅방 생성이 완료되었습니다.채팅방으로 이동합니다.');
-        router.push('/club/' + response.data.id);
-      })
-      .catch((error) => {
-        console.error('방 생성 실패!', error);
+    try {
+      const response = await axios.post(CREATE_CHAT_URL, requestData, {
+        headers,
       });
+      alert('채팅방 생성이 완료되었습니다.');
+
+      const newDormChatInfo = {
+        id: response.data.id,
+        name: response.data.name,
+        users: response.data.users,
+        isPrivate: response.data.isPrivate,
+        updatedAt: response.data.updatedAt,
+        host: myName,
+      };
+
+      await addFirebaseData('chatInfo', name, newDormChatInfo);
+      console.log(`${name} 채팅방 생성 완료`, response.data);
+    } catch (error) {
+      console.error('방 생성 실패!', error);
+    }
   };
 
   const setCreateChat = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    if (onChangeChatName === null) {
+    if (!myName) {
+      return alert('내 정보를 불러오는 중입니다. 잠시 후 다시 시도해주세요.');
+    }
+
+    if (!chatName) {
       return alert('채팅방 제목을 입력하세요.');
-    } else handleCreateChat(chatName, [], isPrivate);
+    }
+    handleCreateChat(chatName, [], myName, isPrivate);
   };
 
   useEffect(() => {
     const token = getToken();
     setAccessToken(token);
+  }, []);
+
+  useEffect(() => {
+    axios.get(GET_MY_INFO_URL, { headers }).then((res) => {
+      setMyName(res.data.user.name);
+    });
   }, []);
 
   return (
