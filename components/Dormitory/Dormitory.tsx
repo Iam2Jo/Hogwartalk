@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { findMyId } from '@hooks/findMyId';
 import { io } from 'socket.io-client';
 import * as styled from './Dormitory.styles';
@@ -23,8 +23,15 @@ import ChatRoomInfoModal from '@/components/ChatRoomInfoModal/ChatRoomInfoModal'
 import InviteToChatRoomModal from '@components/InviteToChatRoomModal/InviteToChatRoomModal';
 import { getToken } from '@utils/service';
 import { getFirebaseDatabyKeyVal } from '@hooks/useFireFetch';
+import { useSearchParams } from 'next/navigation';
+import cutStringAfterColon from '@/utils/cutStringAfterColon';
 
 const Dormitory = ({ chatId, dormName }) => {
+  const params = useSearchParams();
+  const queryString = params.get('id');
+
+  const chatName = queryString.split('?name=')[1];
+
   const [text, setText] = useState<RequestData>('');
   const [previousMessages, setPreviousMessages] = useState<Message[]>([]);
   const [isAtBottom, setIsAtBottom] = useState(true);
@@ -47,7 +54,7 @@ const Dormitory = ({ chatId, dormName }) => {
 
   useEffect(() => {
     getFirebaseDatabyKeyVal('chatInfo', 'name', dormName).then((res) => {
-      console.log('res: ', res);
+      console.log('firebase chatInfo:  ', res);
       setCurrentDormChatInfo(res[0]);
     });
   }, []);
@@ -73,9 +80,14 @@ const Dormitory = ({ chatId, dormName }) => {
     ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
     serverId: SERVER_KEY,
   };
-  const chatSocket = io(`https://fastcampus-chat.net/chat?chatId=${chatId}`, {
-    extraHeaders: headers,
-  });
+  // const chatSocket = io(`https://fastcampus-chat.net/chat?chatId=${chatId}`, {
+  //   extraHeaders: headers,
+  // });
+  const chatSocket = useMemo(() => {
+    return io(`https://fastcampus-chat.net/chat?chatId=${chatId}`, {
+      extraHeaders: headers,
+    });
+  }, [accessToken]);
 
   const sendMessage = () => {
     try {
@@ -89,14 +101,63 @@ const Dormitory = ({ chatId, dormName }) => {
     }
   };
 
-  useFetchMessages(chatSocket);
-  useMessageToClient(chatSocket);
-  useMessagesToClient(chatSocket, setPreviousMessages);
+  const handleMessageToClient = (messageObject: any) => {
+    console.log(messageObject);
+    console.log('S->C 메시지 전송 성공!');
+  };
+
+  const handleMessagesToClient = (messageObject) => {
+    setPreviousMessages(messageObject.messages);
+    console.log('S->C 이전 대화목록 가져오기 성공!');
+  };
+
+  const handlePullUsers = (response) => {
+    console.log('접속 상태 유저 목록: ', response.users);
+    console.log('S->C 접속 상태 유저 목록 pull 성공!');
+    setIsConnected(response.users);
+  };
+
+  const handleJoinUsers = (response) => {
+    console.log(
+      cutStringAfterColon(response.joiners[0].id),
+      '님이 입장하셨습니다.',
+    );
+    setIsConnected(response.users);
+    console.log('S->C 유저 입장 정보 불러오기 성공!');
+  };
+
+  const handleLeaveUsers = (response) => {
+    console.log(response.leaver, '님이 퇴장하셨습니다.');
+    setIsConnected(response.users);
+    console.log('S->C 유저 퇴장 정보 불러오기 성공!');
+  };
+
+  useEffect(() => {
+    useFetchMessages(chatSocket);
+    useMessageToClient(chatSocket, handleMessageToClient);
+    useFetchUsers(chatSocket);
+    usePullUsers(chatSocket, handlePullUsers);
+    useJoinUsers(chatSocket, handleJoinUsers);
+    useLeaveUsers(chatSocket, handleLeaveUsers);
+
+    return () => {
+      console.log('Cleanup function called');
+      chatSocket.off('message-to-client', handleMessageToClient);
+      chatSocket.off('users-to-client', handlePullUsers);
+      chatSocket.off('join', handleJoinUsers);
+      chatSocket.off('leave', handleLeaveUsers);
+    };
+  }, [chatSocket]);
+
+  useEffect(() => {
+    useMessagesToClient(chatSocket, handleMessagesToClient);
+
+    return () => {
+      chatSocket.off('messages-to-client', handleMessagesToClient);
+    };
+  }, [chatSocket, setPreviousMessages]);
+
   useScrollToBottom(messageContainerRef, previousMessages);
-  useFetchUsers(chatSocket);
-  // usePullUsers(chatSocket, setIsConnected);
-  useJoinUsers(chatSocket, setIsConnected);
-  useLeaveUsers(chatSocket, setIsConnected);
 
   useEffect(() => {
     const token = getToken();
@@ -174,7 +235,7 @@ const Dormitory = ({ chatId, dormName }) => {
       <styled.DormitoryHeader>
         <styled.TitleWrapper>
           <styled.Title>{dormName}</styled.Title>
-          <styled.Badge onClick={openInviteModal}>
+          <styled.Badge chatName={chatName} onClick={openInviteModal}>
             <styled.PersonIcon />
             {currentDormChatInfo?.users.length}
           </styled.Badge>

@@ -1,9 +1,10 @@
 'use client';
 import { RecoilRoot } from 'recoil';
-import type { Metadata } from 'next';
+import { Registry as StyledComponentsRegistry } from 'app/registry.tsx';
 import { Inter } from 'next/font/google';
 import GlobalStyle from '../styles/globalStyle';
 import '../styles/fonts/font.css';
+import { Registry } from './\bregistry';
 import BgmPlayer from './home/page';
 import MousePointer from '@components/MousePointer/mousePointer';
 
@@ -21,13 +22,15 @@ export default function RootLayout({
 }) {
   return (
     <>
-      <GlobalStyle />
       <RecoilRoot>
         <html lang="en">
           <body className={inter.className}>
-            <BgmPlayer />
+            <Registry>
+              <GlobalStyle />
+              {children}
+              <BgmPlayer />
+            </Registry>
             {/* <MousePointer /> */}
-            {children}
           </body>
         </html>
       </RecoilRoot>

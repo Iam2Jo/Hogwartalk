@@ -1,6 +1,7 @@
+'use client';
 import styled from 'styled-components';
 
-const LoginContainer = styled.div`
+export const LoginContainer = styled.div`
   width: 100vw;
   height: 100vh;
   background-image: url('/loginBackimg.jpg');
@@ -12,7 +13,7 @@ const LoginContainer = styled.div`
   /* justify-content: center; */
   align-items: center;
 `;
-const LoginFormStyle = styled.div`
+export const LoginFormStyle = styled.div`
 position: relative;
 
   label {
@@ -39,6 +40,4 @@ position: relative;
   }
   
 `;
-LoginContainer.displayName = 'LoginContainer';
-LoginFormStyle.displayName = 'LoginFormStyle';
-export {LoginContainer,LoginFormStyle}
+

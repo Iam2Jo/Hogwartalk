@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  compiler: {
+    styledComponents: true,
+  },
   reactStrictMode: false,
   webpack(config, options) {
     const { isServer } = options;
