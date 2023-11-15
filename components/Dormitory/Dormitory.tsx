@@ -30,7 +30,7 @@ const Dormitory = ({ chatId, dormName }) => {
   const params = useSearchParams();
   const queryString = params.get('id');
 
-  const chatName = queryString.split('?name=')[1];
+  const chatName = queryString?.split('?name=')[1];
 
   const [text, setText] = useState<RequestData>('');
   const [previousMessages, setPreviousMessages] = useState<Message[]>([]);
@@ -61,11 +61,11 @@ const Dormitory = ({ chatId, dormName }) => {
 
   // const { name, users, updatedAt, host } = currentDormChatInfo;
   const modalData = {
-    title: currentDormChatInfo.name,
-    numParticipants: currentDormChatInfo.users.length,
-    host: currentDormChatInfo.host,
-    creationDate: extractDateFromString(currentDormChatInfo.updatedAt),
-    participants: currentDormChatInfo.users,
+    title: currentDormChatInfo?.name,
+    numParticipants: currentDormChatInfo?.users.length,
+    host: currentDormChatInfo?.host,
+    creationDate: extractDateFromString(currentDormChatInfo?.updatedAt),
+    participants: currentDormChatInfo?.users,
   };
   const [chatRoomTitle, setChatRoomTitle] = useState(modalData.title);
 
