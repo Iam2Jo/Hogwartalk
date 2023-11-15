@@ -132,7 +132,7 @@ const SelectDormitory = () => {
         case '후플푸프':
           setMyDorm('hufflepuff');
           break;
-        case '레번클로':
+        case '래번클로':
           setMyDorm('ravenclaw');
           break;
         default:
@@ -226,34 +226,34 @@ const SelectDormitory = () => {
         <Link
           href="/selectDormitory/gryffindor"
           style={{ width: '100%', height: '100%' }}
-        >
-          <styled.GryffindorSVG
-            onClick={() =>
-              handleParticipate(
-                'gryffindor',
-                myDorm,
-                gryffindorFirebaseData[0]?.id,
-              )
+          onClick={(e) => {
+            if ('gryffindor' !== myDorm) {
+              e.preventDefault();
             }
-            width="224"
-            height="272"
-          />
+            handleParticipate(
+              'gryffindor',
+              myDorm,
+              gryffindorFirebaseData[0]?.id,
+            );
+          }}
+        >
+          <styled.GryffindorSVG width="224" height="272" />
         </Link>
         <Link
           href="/selectDormitory/ravenclaw"
           style={{ width: '100%', height: '100%' }}
-        >
-          <styled.RavenclawSVG
-            onClick={() =>
-              handleParticipate(
-                'ravenclaw',
-                myDorm,
-                ravenclawFirebaseData[0]?.id,
-              )
+          onClick={(e) => {
+            if ('ravenclaw' !== myDorm) {
+              e.preventDefault();
             }
-            width="224"
-            height="272"
-          />
+            handleParticipate(
+              'ravenclaw',
+              myDorm,
+              gryffindorFirebaseData[0]?.id,
+            );
+          }}
+        >
+          <styled.RavenclawSVG width="224" height="272" />
         </Link>
       </styled.LeftSection>
       <styled.CenterSection>
@@ -265,34 +265,34 @@ const SelectDormitory = () => {
         <Link
           href="/selectDormitory/hufflepuff"
           style={{ width: '100%', height: '100%' }}
-        >
-          <styled.HufflepuffSVG
-            onClick={() =>
-              handleParticipate(
-                'hufflepuff',
-                myDorm,
-                hufflepuffFirebaseData[0]?.id,
-              )
+          onClick={(e) => {
+            if ('hufflepuff' !== myDorm) {
+              e.preventDefault();
             }
-            width="224"
-            height="272"
-          />
+            handleParticipate(
+              'hufflepuff',
+              myDorm,
+              gryffindorFirebaseData[0]?.id,
+            );
+          }}
+        >
+          <styled.HufflepuffSVG width="224" height="272" />
         </Link>
         <Link
           href="/selectDormitory/slytherin"
           style={{ width: '100%', height: '100%' }}
-        >
-          <styled.SlytherinSVG
-            onClick={() =>
-              handleParticipate(
-                'slytherin',
-                myDorm,
-                slytherinFirebaseData[0]?.id,
-              )
+          onClick={(e) => {
+            if ('slytherin' !== myDorm) {
+              e.preventDefault();
             }
-            width="224"
-            height="272"
-          />
+            handleParticipate(
+              'slytherin',
+              myDorm,
+              gryffindorFirebaseData[0]?.id,
+            );
+          }}
+        >
+          <styled.SlytherinSVG width="224" height="272" />
         </Link>
       </styled.RightSection>
     </styled.Wrapper>
