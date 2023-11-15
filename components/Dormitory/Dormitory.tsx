@@ -64,7 +64,7 @@ const Dormitory = ({ chatId, dormName }) => {
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const messageContainerRef = useRef<HTMLDivElement | null>(null);
-  const SERVER_KEY = '660d616b';
+  const SERVER_KEY = process.env.REACT_APP_SERVER_KEY;
   const [accessToken, setAccessToken] = useState('');
 
   const CHATROOM_LEAVE_URL = process.env.REACT_APP_CHATROOM_LEAVE_URL;

@@ -10,7 +10,7 @@ import { getToken } from '@utils/service';
 
 const joinModal = () => {
   const router = useRouter();
-  const SERVER_KEY = '660d616b';
+  const SERVER_KEY = process.env.REACT_APP_SERVER_KEY;
   const [accessToken, setAccessToken] = useState('');
 
   const headers = {

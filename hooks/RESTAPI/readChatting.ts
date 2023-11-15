@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { ResponseValue } from '@/@types/RESTAPI/findAllChatting.types';
 
 export function readChatting() {
-  const SERVER_KEY = '660d616b';
+  const SERVER_KEY = process.env.REACT_APP_SERVER_KEY;
   const CREATE_CHAT_URL = process.env.REACT_APP_CREATE_CHAT_URL;
 
   const ACCESS_TOKEN =

@@ -49,7 +49,7 @@ const ChatRoomInfoModal = ({
 }: ChatRoomInfoModalProps) => {
   if (!isOpen) return null;
 
-  const SERVER_KEY = '660d616b';
+  const SERVER_KEY = process.env.REACT_APP_SERVER_KEY;
   const ACCESS_TOKEN =
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGQ2MTZiOmhhcnJ5cG90dGVyIiwiaWF0IjoxNjk5MzQ1NDkzLCJleHAiOjE2OTk5NTAyOTN9.b5s4_9f-pVBj9ki17SXc6VvoiApMJZCJXfk5G2wskyo';
   const GET_MY_INFO_URL = process.env.REACT_APP_GET_MY_INFO_URL;

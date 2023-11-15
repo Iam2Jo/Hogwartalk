@@ -11,7 +11,7 @@ import UserIcon from '@assets/icon/UserIcon.svg';
 type ResponseValue = any;
 
 const MyChatting = () => {
-  const SERVER_KEY = '660d616b';
+  const SERVER_KEY = process.env.REACT_APP_SERVER_KEY;
   const FIND_MY_CHAT_URL = process.env.REACT_APP_FIND_MY_CHAT_URL;
 
   const [accessToken, setAccessToken] = useState('');

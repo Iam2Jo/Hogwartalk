@@ -6,18 +6,18 @@ export function getToken() {
 }
 //요청 인터셉터
 axios.interceptors.request.use(
-  async(config) => {
+  async (config) => {
     config.headers['content-type'] = 'application/json';
-    config.headers.serverId = '660d616b';
+    config.headers.serverId = process.env.REACT_APP_SERVER_KEY;
     // 헤더에 액세스 토큰을 추가
     const token = getToken();
     if (token === undefined) {
-        const reAccessToken = await reissueAccessToken()
-        cookies.save('accessToken',reAccessToken, { maxAge: 3600 * 24 * 7 });
-        config.headers.Authorization = `Bearer ${reAccessToken}`;    
-      } else {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
+      const reAccessToken = await reissueAccessToken();
+      cookies.save('accessToken', reAccessToken, { maxAge: 3600 * 24 * 7 });
+      config.headers.Authorization = `Bearer ${reAccessToken}`;
+    } else {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     return config;
   },
   (error) => {
@@ -53,12 +53,14 @@ export async function loginUser(loginData) {
   }
 }
 
-export async function checkUserIdAvailability(id){
-    const resData = await axios.post('https://fastcampus-chat.net/check/id',{id:id})
-    if (resData.status === 200) {
-        const responseData = await resData.data;
-        return responseData.isDuplicated;
-    }
+export async function checkUserIdAvailability(id) {
+  const resData = await axios.post('https://fastcampus-chat.net/check/id', {
+    id: id,
+  });
+  if (resData.status === 200) {
+    const responseData = await resData.data;
+    return responseData.isDuplicated;
+  }
 }
 
 export async function reissueAccessToken() {
@@ -68,7 +70,7 @@ export async function reissueAccessToken() {
     const response = await fetch('https://fastcampus-chat.net/refresh', {
       method: 'POST',
       headers: {
-        serverId : '660d616b',
+        serverId: '660d616b',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ refreshToken: refreshToken }),

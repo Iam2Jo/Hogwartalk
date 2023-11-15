@@ -9,7 +9,7 @@ import { getToken } from '@utils/service';
 import { addFirebaseData } from '@hooks/useFireFetch';
 
 const createModal = () => {
-  const SERVER_KEY = '660d616b';
+  const SERVER_KEY = process.env.REACT_APP_SERVER_KEY;
   const [accessToken, setAccessToken] = useState('');
   const headers = {
     'Content-Type': 'application/json',

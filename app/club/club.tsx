@@ -18,7 +18,7 @@ import Loading from '@components/club/loading/page';
 import { getToken } from '@utils/service';
 
 const club = () => {
-  const SERVER_KEY = '660d616b';
+  const SERVER_KEY = process.env.REACT_APP_SERVER_KEY;
   const [accessToken, setAccessToken] = useState('');
   const FIND_ALL_CHAT_URL = process.env.REACT_APP_FIND_ALL_CHAT_URL;
   const FIND_MY_CHAT_URL = process.env.REACT_APP_FIND_MY_CHAT_URL;

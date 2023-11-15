@@ -49,7 +49,7 @@ const InviteToChatRoomModal = ({
   const [currentChatUsers, setCurrentChatUsers] = useState<User[]>([]);
   const [invitedUsers, setInvitedUsers] = useState<InvitedUser[]>([]);
 
-  const SERVER_KEY = '660d616b';
+  const SERVER_KEY = process.env.REACT_APP_SERVER_KEY;
   const ACCESS_TOKEN =
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGQ2MTZiOmhlcm1pb25lIiwiaWF0IjoxNjk5NDIzOTI4LCJleHAiOjE3MDAwMjg3Mjh9.9FA24mkoipWSd4KlpxTX0L8mKmJj7LAVd_XEcW1Xt7w';
   const GET_ALL_USERS_URL = process.env.REACT_APP_GET_ALL_USERS_URL;

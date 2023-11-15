@@ -43,7 +43,7 @@ const SelectDormitory = () => {
   const [hufflepuffFirebaseData, setHufflepuffFirebaseData] =
     useState<any>(null);
   const [ravenclawFirebaseData, setRavenclawFirebaseData] = useState<any>(null);
-  const SERVER_KEY = '660d616b';
+  const SERVER_KEY = process.env.REACT_APP_SERVER_KEY;
   const [accessToken, setAccessToken] = useState('');
   const CREATE_CHAT_URL = process.env.REACT_APP_CREATE_CHAT_URL;
   const FIND_ALL_USER_URL = process.env.REACT_APP_FIND_ALL_USER_URL;
