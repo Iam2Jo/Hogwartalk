@@ -1,6 +1,5 @@
 'use client';
 import { RecoilRoot } from 'recoil';
-import { Registry as StyledComponentsRegistry } from 'app/registry.tsx';
 import { Inter } from 'next/font/google';
 import GlobalStyle from '../styles/globalStyle';
 import '../styles/fonts/font.css';
