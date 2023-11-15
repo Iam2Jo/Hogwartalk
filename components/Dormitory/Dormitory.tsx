@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useEffect, useMemo, use } from 'react';
 import { findMyId } from '@hooks/findMyId';
 import { io } from 'socket.io-client';
 import * as styled from './Dormitory.styles';
@@ -135,21 +135,38 @@ const Dormitory = ({ chatId, dormName }) => {
   };
 
   useEffect(() => {
-    useFetchMessages(chatSocket);
-    useMessageToClient(chatSocket, handleMessageToClient);
-    useFetchUsers(chatSocket);
-    usePullUsers(chatSocket, handlePullUsers);
-    useJoinUsers(chatSocket, handleJoinUsers);
-    useLeaveUsers(chatSocket, handleLeaveUsers);
+    const fetchDataAndAttachListeners = async () => {
+      try {
+        await useFetchMessages(chatSocket);
+        await useFetchUsers(chatSocket);
+        useMessageToClient(chatSocket, handleMessageToClient);
+        usePullUsers(chatSocket, handlePullUsers);
+        useJoinUsers(chatSocket, handleJoinUsers);
+        useLeaveUsers(chatSocket, handleLeaveUsers);
+      } catch (error) {
+        console.error(
+          '데이터 가져오기 또는 이벤트 리스너 추가 중 오류 발생:',
+          error,
+        );
+      }
+    };
+
+    fetchDataAndAttachListeners();
 
     return () => {
-      console.log('Cleanup function called');
+      console.log('클린업 함수 호출됨');
       chatSocket.off('message-to-client', handleMessageToClient);
       chatSocket.off('users-to-client', handlePullUsers);
       chatSocket.off('join', handleJoinUsers);
       chatSocket.off('leave', handleLeaveUsers);
     };
-  }, [chatSocket]);
+  }, [
+    chatSocket,
+    handleMessageToClient,
+    handlePullUsers,
+    handleJoinUsers,
+    handleLeaveUsers,
+  ]);
 
   useEffect(() => {
     useMessagesToClient(chatSocket, handleMessagesToClient);
