@@ -1,12 +1,32 @@
 'use client';
-import { useRecoilValue } from 'recoil';
-import { hufflepuffChatInfoState } from '@recoil/dormChatInfo';
+
+import { useState, useEffect } from 'react';
 import { Dormitory } from '@components/Dormitory';
+import { getFirebaseData } from '@hooks/useFireFetch';
 
 const Hufflepuff = () => {
-  const { id, name } = useRecoilValue(hufflepuffChatInfoState);
+  const [chatId, setChatId] = useState(null);
+  const [name, setName] = useState(null);
 
-  return <Dormitory chatId={id} dormName={name} />;
+  useEffect(() => {
+    const fetchData = async () => {
+      const firebaseId = await getFirebaseData('chatInfo', 'hufflepuff', 'id');
+      const firebaseName = await getFirebaseData(
+        'chatInfo',
+        'hufflepuff',
+        'name',
+      );
+      setChatId(firebaseId);
+      setName(firebaseName);
+    };
+    fetchData();
+  }, []);
+
+  if (!chatId || !name) {
+    return <div>로딩중...</div>;
+  }
+
+  return <Dormitory chatId={chatId} dormName={name} />;
 };
 
 export default Hufflepuff;

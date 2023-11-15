@@ -4,7 +4,9 @@ import { Fragment, useState } from 'react';
 import cookies from 'react-cookies';
 import { LoginContainer, LoginFormStyle } from './loginStyle';
 import { useRouter } from 'next/navigation';
+
 import { reissueAccessToken, getToken, getUserdata, loginUser } from '../utils/service';
+
 type LoginData = {
   id: string;
   password: string;
@@ -28,6 +30,7 @@ const main: NextPage = () => {
     router.push('/selectDormitory');
     }
     catch (error) {
+
       alert('아이디와 비밀번호가 올바른지 확인해주세요');
       throw new Error(error);
     }
