@@ -10,7 +10,7 @@ import createDormitoryIfNone from '@hooks/createDormitoryIfNone';
 import { RequestBody as RequestBodyCreate } from '@/@types/RESTAPI/createChatting.types';
 import { RequestBody as RequestBodyParticipate } from '@/@types/RESTAPI/participateChatting.types';
 import { getToken } from '@utils/service';
-import { getFirebaseData } from '@hooks/useFireFetch';
+import { getFirebaseData, getFirebaseDatabyKeyVal } from '@hooks/useFireFetch';
 
 interface RequestBody {
   name: string;
@@ -33,6 +33,8 @@ const SelectDormitory = () => {
   const data: ResponseValue | null = readChatting();
   const [chatData, setChatData] = useState<ResponseValue | null>();
   const [myName, setMyName] = useState('');
+  const [myId, setMyId] = useState('');
+  const [myDorm, setMyDorm] = useState('');
   const [hasGryffindor, setHasGryffindor] = useState(true);
   const [hasSlytherin, setHasSlytherin] = useState(true);
   const [hasHufflepuff, setHasHufflepuff] = useState(true);
@@ -75,7 +77,16 @@ const SelectDormitory = () => {
     users: [],
   };
 
-  const handleParticipate = (chatId: string) => {
+  const handleParticipate = (
+    dormitoryName: string,
+    myDorm: string,
+    chatId: string,
+  ) => {
+    if (dormitoryName !== myDorm) {
+      alert('본인 기숙사가 아닌 기숙사는 참여할 수 없습니다!');
+      return;
+    }
+
     const PARTICIPATE_CHAT_URL = 'https://fastcampus-chat.net/chat/participate';
     const requestData: RequestBodyParticipate = {
       chatId: chatId,
@@ -101,9 +112,34 @@ const SelectDormitory = () => {
 
   useEffect(() => {
     axios.get(GET_MY_INFO_URL, { headers }).then((res) => {
+      setMyId(res.data.user.id);
       setMyName(res.data.user.name);
     });
   }, []);
+
+  useEffect(() => {
+    getFirebaseDatabyKeyVal('users', 'id', myId).then((res) => {
+      console.log('firebase userInfo:  ', res);
+      const dormitoryName = res[0]?.class;
+
+      switch (dormitoryName) {
+        case '그리핀도르':
+          setMyDorm('gryffindor');
+          break;
+        case '슬리데린':
+          setMyDorm('slytherin');
+          break;
+        case '후플푸프':
+          setMyDorm('hufflepuff');
+          break;
+        case '레번클로':
+          setMyDorm('ravenclaw');
+          break;
+        default:
+          break;
+      }
+    });
+  }, [myId]);
 
   useEffect(() => {
     axios
@@ -192,7 +228,13 @@ const SelectDormitory = () => {
           style={{ width: '100%', height: '100%' }}
         >
           <styled.GryffindorSVG
-            onClick={() => handleParticipate(gryffindorFirebaseData[0]?.id)}
+            onClick={() =>
+              handleParticipate(
+                'gryffindor',
+                myDorm,
+                gryffindorFirebaseData[0]?.id,
+              )
+            }
             width="224"
             height="272"
           />
@@ -202,7 +244,13 @@ const SelectDormitory = () => {
           style={{ width: '100%', height: '100%' }}
         >
           <styled.RavenclawSVG
-            onClick={() => handleParticipate(ravenclawFirebaseData[0]?.id)}
+            onClick={() =>
+              handleParticipate(
+                'ravenclaw',
+                myDorm,
+                ravenclawFirebaseData[0]?.id,
+              )
+            }
             width="224"
             height="272"
           />
@@ -219,7 +267,13 @@ const SelectDormitory = () => {
           style={{ width: '100%', height: '100%' }}
         >
           <styled.HufflepuffSVG
-            onClick={() => handleParticipate(hufflepuffFirebaseData[0]?.id)}
+            onClick={() =>
+              handleParticipate(
+                'hufflepuff',
+                myDorm,
+                hufflepuffFirebaseData[0]?.id,
+              )
+            }
             width="224"
             height="272"
           />
@@ -229,7 +283,13 @@ const SelectDormitory = () => {
           style={{ width: '100%', height: '100%' }}
         >
           <styled.SlytherinSVG
-            onClick={() => handleParticipate(slytherinFirebaseData[0]?.id)}
+            onClick={() =>
+              handleParticipate(
+                'slytherin',
+                myDorm,
+                slytherinFirebaseData[0]?.id,
+              )
+            }
             width="224"
             height="272"
           />
