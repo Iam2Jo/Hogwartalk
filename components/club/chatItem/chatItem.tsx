@@ -58,7 +58,7 @@ const chatItem = ({ id, name, users }: Chat) => {
     if (isMyChat) {
       const idParam = chatDetail.id;
       const nameParam = chatDetail.name;
-      router.push('/club/chatting' + '?id=' + idParam + '&name=' + nameParam);
+      router.push('/club/' + idParam + '&name=' + nameParam);
       return;
     }
     setJoinModalOpen(true);

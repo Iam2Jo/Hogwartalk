@@ -28,6 +28,9 @@ import cutStringAfterColon from '@/utils/cutStringAfterColon';
 import { useRouter } from 'next/navigation';
 
 const Dormitory = ({ chatId, dormName }) => {
+  const [currentChatId, setCurrentChatId] = useState(chatId);
+  const [currentDormName, setCurrentDormName] = useState(dormName);
+
   const params = useSearchParams();
   const router = useRouter();
 
@@ -272,7 +275,7 @@ const Dormitory = ({ chatId, dormName }) => {
           <styled.Button onClick={leaveChatRoom}>나가기</styled.Button>
         </styled.MoreItemContainer>
       ) : null}
-      <styled.DormitoryHeader >
+      <styled.DormitoryHeader>
         <styled.TitleWrapper>
           <styled.Title>{dormName}</styled.Title>
           <styled.Badge onClick={openInviteModal}>
