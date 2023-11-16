@@ -67,7 +67,7 @@ export const MessageContainer = styled.div`
   border-radius: 0.5rem;
   padding: 0.5rem 1rem;
   width: 100%;
-  height: 80%;
+  height: 75%;
   overflow-y: auto;
 `;
 

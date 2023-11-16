@@ -1,9 +1,13 @@
-import type { NextPage } from 'next'
+import type { NextPage } from 'next';
 import SelectDormitory from './selectDormitory';
+import { Header } from '@components/Header';
 
 const a: NextPage = () => {
   return (
-    <><SelectDormitory/></>
+    <>
+      <Header />
+      <SelectDormitory />
+    </>
   );
 };
 
