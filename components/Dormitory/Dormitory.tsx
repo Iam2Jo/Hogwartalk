@@ -50,7 +50,7 @@ const Dormitory = ({ chatId, dormName }) => {
   const [isConnected, setIsConnected] = useState([]);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
-  const [newDormName, setNewDormName] = useState(dormName);
+  // const [newDormName, setNewDormName] = useState(dormName);
 
   // const gryffindorChatInfo = useRecoilValue(gryffindorChatInfoState);
   // const hufflepuffChatInfo = useRecoilValue(hufflepuffChatInfoState);
@@ -72,7 +72,7 @@ const Dormitory = ({ chatId, dormName }) => {
     creationDate: extractDateFromString(currentDormChatInfo?.updatedAt),
     participants: currentDormChatInfo?.users,
   };
-  const [chatRoomTitle, setChatRoomTitle] = useState(modalData.title);
+  // const [chatRoomTitle, setChatRoomTitle] = useState(modalData.title);
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const messageContainerRef = useRef<HTMLDivElement | null>(null);
@@ -201,9 +201,9 @@ const Dormitory = ({ chatId, dormName }) => {
     setIsInfoModalOpen(false);
   };
 
-  const handleTitleChange = (newTitle) => {
-    setChatRoomTitle(newTitle);
-  };
+  // const handleTitleChange = (newTitle) => {
+  //   setChatRoomTitle(newTitle);
+  // };
 
   const openInviteModal = () => {
     const isDisabled = [
@@ -211,7 +211,7 @@ const Dormitory = ({ chatId, dormName }) => {
       'ravenclaw',
       'hufflepuff',
       'slytherin',
-    ].includes(modalData.title);
+    ].includes(dormName);
 
     if (!isDisabled) {
       setIsInviteModalOpen(true);
@@ -223,10 +223,20 @@ const Dormitory = ({ chatId, dormName }) => {
   };
 
   const leaveChatRoom = () => {
+    if (
+      dormName === 'gryffindor' ||
+      dormName === 'ravenclaw' ||
+      dormName === 'hufflepuff' ||
+      dormName === 'slytherin'
+    ) {
+      alert('해당 채팅방은 나갈 수 없습니다.');
+      return;
+    }
+
     try {
       axios.patch(CHATROOM_LEAVE_URL, { chatId }, { headers }).then((res) => {
         alert(res.data.message);
-        router.push('/selectDormitory');
+        router.push('/club');
       });
     } catch (error) {
       console.error('채팅방 나가기 실패!', error);
@@ -242,7 +252,7 @@ const Dormitory = ({ chatId, dormName }) => {
         host={modalData.host}
         creationDate={modalData.creationDate}
         participants={modalData.participants}
-        onTitleChange={handleTitleChange}
+        // onTitleChange={handleTitleChange}
         isOpen={isInfoModalOpen}
         onClose={closeInfoModal}
         isConnected={isConnected}
