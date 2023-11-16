@@ -10,7 +10,11 @@ import createDormitoryIfNone from '@hooks/createDormitoryIfNone';
 import { RequestBody as RequestBodyCreate } from '@/@types/RESTAPI/createChatting.types';
 import { RequestBody as RequestBodyParticipate } from '@/@types/RESTAPI/participateChatting.types';
 import { getToken } from '@utils/service';
-import { getFirebaseData, getFirebaseDatabyKeyVal } from '@hooks/useFireFetch';
+import {
+  getFirebaseData,
+  getFirebaseDatabyKeyVal,
+  updateFirebaseData,
+} from '@hooks/useFireFetch';
 
 interface RequestBody {
   name: string;
@@ -30,7 +34,7 @@ type ResponseValue = any;
 // type ResponseValue = Chat[]
 
 const SelectDormitory = () => {
-  const data: ResponseValue | null = readChatting();
+  // const data: ResponseValue | null = readChatting();
   const [chatData, setChatData] = useState<ResponseValue | null>();
   const [myName, setMyName] = useState('');
   const [myId, setMyId] = useState('');
@@ -80,21 +84,24 @@ const SelectDormitory = () => {
   const handleParticipate = (
     dormitoryName: string,
     myDorm: string,
-    chatId: string,
+    firebaseData,
   ) => {
     if (dormitoryName !== myDorm) {
       alert('본인 기숙사가 아닌 기숙사는 참여할 수 없습니다!');
       return;
     }
 
+    console.log('chatId: ', firebaseData[0].id);
+
     const PARTICIPATE_CHAT_URL = 'https://fastcampus-chat.net/chat/participate';
     const requestData: RequestBodyParticipate = {
-      chatId: chatId,
+      chatId: firebaseData[0].id,
     };
     axios
       .patch(PARTICIPATE_CHAT_URL, requestData, { headers })
       .then((response) => {
         console.log('채팅 참여 성공!', response.data);
+        updateFirebaseData('chatInfo', firebaseData[0].name, response.data);
       })
       .catch((error) => {
         console.error('채팅 참여 실패!', error);
@@ -105,10 +112,6 @@ const SelectDormitory = () => {
     const token = getToken();
     setAccessToken(token);
   }, []);
-
-  useEffect(() => {
-    setChatData(data);
-  }, [data]);
 
   useEffect(() => {
     axios.get(GET_MY_INFO_URL, { headers }).then((res) => {
@@ -157,13 +160,6 @@ const SelectDormitory = () => {
   doesDormitoryExist('hufflepuff', chatData, setHasHufflepuff);
   doesDormitoryExist('ravenclaw', chatData, setHasRavenclaw);
 
-  // 모듈화 필요
-  useEffect(() => {
-    axios.get(GET_MY_INFO_URL, { headers }).then((res) => {
-      setMyName(res.data.user.name);
-    });
-  }, []);
-
   useEffect(() => {
     createDormitoryIfNone(
       hasGryffindor,
@@ -172,8 +168,13 @@ const SelectDormitory = () => {
       headers,
       'gryffindor',
       myName,
-    ).then(() => {
-      const firebaseData = getFirebaseData('chatInfo', 'gryffindor', 'id');
+    ).then(async () => {
+      const firebaseData = await getFirebaseDatabyKeyVal(
+        'chatInfo',
+        'name',
+        'gryffindor',
+      );
+
       setGryffindorFirebaseData(firebaseData);
     });
   }, [hasGryffindor, chatData]);
@@ -186,8 +187,12 @@ const SelectDormitory = () => {
       headers,
       'slytherin',
       myName,
-    ).then(() => {
-      const firebaseData = getFirebaseData('chatInfo', 'slytherin', 'id');
+    ).then(async () => {
+      const firebaseData = await await getFirebaseDatabyKeyVal(
+        'chatInfo',
+        'name',
+        'slytherin',
+      );
       setSlytherinFirebaseData(firebaseData);
     });
   }, [hasSlytherin, chatData]);
@@ -200,8 +205,12 @@ const SelectDormitory = () => {
       headers,
       'hufflepuff',
       myName,
-    ).then(() => {
-      const firebaseData = getFirebaseData('chatInfo', 'hufflepuff', 'id');
+    ).then(async () => {
+      const firebaseData = await await getFirebaseDatabyKeyVal(
+        'chatInfo',
+        'name',
+        'hufflepuff',
+      );
       setHufflepuffFirebaseData(firebaseData);
     });
   }, [hasHufflepuff, chatData]);
@@ -214,8 +223,12 @@ const SelectDormitory = () => {
       headers,
       'ravenclaw',
       myName,
-    ).then(() => {
-      const firebaseData = getFirebaseData('chatInfo', 'ravenclaw', 'id');
+    ).then(async () => {
+      const firebaseData = await await getFirebaseDatabyKeyVal(
+        'chatInfo',
+        'name',
+        'ravenclaw',
+      );
       setRavenclawFirebaseData(firebaseData);
     });
   }, [hasRavenclaw, chatData]);
@@ -231,11 +244,7 @@ const SelectDormitory = () => {
               if ('gryffindor' !== myDorm) {
                 e.preventDefault();
               }
-              handleParticipate(
-                'gryffindor',
-                myDorm,
-                gryffindorFirebaseData[0]?.id,
-              );
+              handleParticipate('gryffindor', myDorm, gryffindorFirebaseData);
             }}
           >
             <styled.GryffindorSVG width="224" height="272" />
@@ -247,11 +256,7 @@ const SelectDormitory = () => {
               if ('ravenclaw' !== myDorm) {
                 e.preventDefault();
               }
-              handleParticipate(
-                'ravenclaw',
-                myDorm,
-                gryffindorFirebaseData[0]?.id,
-              );
+              handleParticipate('ravenclaw', myDorm, ravenclawFirebaseData);
             }}
           >
             <styled.RavenclawSVG width="224" height="272" />
@@ -270,11 +275,7 @@ const SelectDormitory = () => {
               if ('hufflepuff' !== myDorm) {
                 e.preventDefault();
               }
-              handleParticipate(
-                'hufflepuff',
-                myDorm,
-                gryffindorFirebaseData[0]?.id,
-              );
+              handleParticipate('hufflepuff', myDorm, hufflepuffFirebaseData);
             }}
           >
             <styled.HufflepuffSVG width="224" height="272" />
@@ -286,11 +287,7 @@ const SelectDormitory = () => {
               if ('slytherin' !== myDorm) {
                 e.preventDefault();
               }
-              handleParticipate(
-                'slytherin',
-                myDorm,
-                gryffindorFirebaseData[0]?.id,
-              );
+              handleParticipate('slytherin', myDorm, slytherinFirebaseData);
             }}
           >
             <styled.SlytherinSVG width="224" height="272" />
