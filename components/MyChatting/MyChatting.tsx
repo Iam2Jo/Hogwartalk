@@ -6,7 +6,6 @@ import * as styled from './MyChatting.styles';
 import Link from 'next/link';
 import { getToken } from '@utils/service';
 import UserIcon from '@assets/icon/UserIcon.svg';
-import { useRouter } from 'next/navigation';
 
 // import { ResponseValue } from '@/@types/RESTAPI/findMyChatting.types';
 type ResponseValue = any;
@@ -15,7 +14,8 @@ const MyChatting = () => {
   const SERVER_KEY = process.env.REACT_APP_SERVER_KEY;
   const FIND_MY_CHAT_URL = process.env.REACT_APP_FIND_MY_CHAT_URL;
   const [accessToken, setAccessToken] = useState('');
-
+  const isBrowser = typeof window !== 'undefined';
+  const [currentDormitory, setCurrentDormitory] = useState('');
   const headers = {
     'Content-Type': 'application/json',
     serverId: SERVER_KEY,
@@ -23,10 +23,7 @@ const MyChatting = () => {
   };
 
   const [data, setData] = useState<ResponseValue | null>(null);
-  const currentUrl = window.location.href;
-  const currentDormitory = currentUrl.substring(
-    currentUrl.lastIndexOf('/') + 1,
-  );
+
   // Polling 방식
   const fetchData = () => {
     axios
@@ -39,7 +36,15 @@ const MyChatting = () => {
         console.error('내 채팅방 조회 실패!', error);
       });
   };
-
+  useEffect(() => {
+    if (isBrowser) {
+      const currentUrl = window.location.href;
+      const currentDormitory = currentUrl.substring(
+        currentUrl.lastIndexOf('/') + 1,
+      );
+      setCurrentDormitory(currentDormitory);
+    }
+  }, [isBrowser]);
   useEffect(() => {
     const token = getToken();
     setAccessToken(token);
