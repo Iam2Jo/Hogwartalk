@@ -172,6 +172,7 @@ export const ProfileImagePreview = styled.img`
   margin-left: 4rem;
   border-radius: 50%;
   border: 2px solid rgba(255, 255, 255, 0.15);
+  font-size: 11px;
 
   object-fit: cover;
 `;

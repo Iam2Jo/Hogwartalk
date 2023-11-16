@@ -11,7 +11,7 @@ if (!accessTokenCookie) {
 
 const accessToken = accessTokenCookie.split('=')[1];
 
-const serverId = process.env.REACT_APP_SERVER_KEY;
+const serverId = process.env.NEXT_PUBLIC_SERVER_KEY;
 
 const socket = io('https://fastcampus-chat.net/server', {
   extraHeaders: {

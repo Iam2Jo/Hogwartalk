@@ -10,7 +10,7 @@ import { getToken } from '@utils/service';
 
 const joinModal = () => {
   const router = useRouter();
-  const SERVER_KEY = process.env.REACT_APP_SERVER_KEY;
+  const SERVER_KEY = process.env.NEXT_PUBLIC_SERVER_KEY;
   const [accessToken, setAccessToken] = useState('');
 
   const headers = {
@@ -25,7 +25,7 @@ const joinModal = () => {
   const chatId = chatInfo[0].id;
 
   const handleParticipate = (chatId: string) => {
-    const PARTICIPATE_CHAT_URL = process.env.REACT_APP_PARTICIPATE_CHAT_URL;
+    const PARTICIPATE_CHAT_URL = process.env.NEXT_PUBLIC_PARTICIPATE_CHAT_URL;
     const requestData: RequestBodyParticipate = {
       chatId: chatId,
     };
