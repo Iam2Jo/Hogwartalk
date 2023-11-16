@@ -71,7 +71,9 @@ const Header = () => {
           <styled.MainButton>MAIN</styled.MainButton>
         </Link>
         {play[0] === true ? <BgmIcon /> : <DisBgmIcon />}
-        <LogoutIcon />
+        <Link href="/">
+          <LogoutIcon />
+        </Link>
       </styled.RightIcons>
       {isMyPageVisible && (
         <MyPageToggle
