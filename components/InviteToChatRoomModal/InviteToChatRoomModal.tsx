@@ -11,6 +11,7 @@ import {
 import axios from 'axios';
 import { updateFirebaseData } from '@hooks/useFireFetch';
 import { getToken } from '@utils/service';
+import { getFirebaseDatabyKeyVal } from '@hooks/useFireFetch';
 
 interface DormChatInfo {
   id: string | null;
@@ -123,7 +124,7 @@ const InviteToChatRoomModal = ({
   useEffect(() => {
     axios
       .get(GET_ALL_USERS_URL, { headers })
-      .then((response) => {
+      .then(async (response) => {
         console.log('모든 유저: ', response.data);
         console.log('현재 채팅에 있는 유저: ', currentChatUsers);
 
@@ -133,7 +134,18 @@ const InviteToChatRoomModal = ({
               (currentChatUser) => user.id === currentChatUser.id,
             ),
         );
-        setAllUsers(otherUsers);
+
+        const allUsersFromDB = await getFirebaseDatabyKeyVal('users');
+        const tmpArr = otherUsers.map((userRes) => {
+          const matchingData = allUsersFromDB.find(
+            (userDB) => userDB.id === userRes.id,
+          );
+
+          return matchingData
+            ? { ...userRes, class: matchingData.class }
+            : userRes;
+        });
+        setAllUsers(tmpArr);
       })
       .catch((error) => {
         console.error('초대 가능한 유저 불러오기 실패!', error);
@@ -190,7 +202,7 @@ const InviteToChatRoomModal = ({
                     />
                     <UserInfo>
                       <Username>{user.name}</Username>
-                      <UserDormitory>그리핀도르</UserDormitory>
+                      <UserDormitory>{user.class}</UserDormitory>
                     </UserInfo>
                     <styled.InviteIcon
                       onClick={() =>

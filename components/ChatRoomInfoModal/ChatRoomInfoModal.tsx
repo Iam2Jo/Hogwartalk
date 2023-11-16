@@ -20,6 +20,7 @@ interface User {
   id: string;
   picture: string;
   username: string;
+  class?: string;
 }
 
 interface ChatRoomInfoModalProps {
@@ -64,6 +65,7 @@ ChatRoomInfoModalProps) => {
   const [newTitle, setNewTitle] = useState(title || '');
   const [isHost, setIsHost] = useState(false);
   const [chatInfo, setChatInfo] = useState({});
+  const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
     const token = getToken();
@@ -126,6 +128,30 @@ ChatRoomInfoModalProps) => {
       });
   }, []);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const allUsersFromDB = await getFirebaseDatabyKeyVal('users');
+        const tmpArr = participants.map(async (userRes) => {
+          const matchingData = allUsersFromDB.find(
+            (userDB) => userDB.id === userRes.id,
+          );
+
+          return matchingData
+            ? { ...userRes, class: matchingData.class }
+            : userRes;
+        });
+
+        const updatedUsers = await Promise.all(tmpArr);
+        setUsers(updatedUsers);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <styled.ModalOverlay onClick={handleOverlayClick}>
       <styled.ModalContainer>
@@ -166,7 +192,7 @@ ChatRoomInfoModalProps) => {
           <styled.ModalLabel>참여자 목록</styled.ModalLabel>
           <styled.ParticipantsWrapper>
             <styled.ParticipantsGrid>
-              {participants?.map((participant, index) => (
+              {users?.map((user, index) => (
                 <UserItem key={index}>
                   <ProfileImage
                     src="/assets/img/HarryPotter.png"
@@ -174,14 +200,14 @@ ChatRoomInfoModalProps) => {
                   />
                   <UserInfo>
                     <Username>
-                      {participant.username}{' '}
-                      {getStatusCircleColor(participant.username) ? (
+                      {user.username}{' '}
+                      {getStatusCircleColor(user.username) ? (
                         <Emoji>🟢</Emoji>
                       ) : (
                         <Emoji>🔴</Emoji>
                       )}
                     </Username>
-                    <UserDormitory>그리핀도르</UserDormitory>
+                    <UserDormitory>{user.class}</UserDormitory>
                   </UserInfo>
                 </UserItem>
               ))}
