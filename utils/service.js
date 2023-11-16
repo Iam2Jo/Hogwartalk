@@ -64,6 +64,7 @@ export async function loginUser(loginData) {
       'https://fastcampus-chat.net/login',
       loginData,
     );
+    console.log(resData)
     if (resData.status === 200) {
       const responseData = await resData.data;
       return responseData;

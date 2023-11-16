@@ -36,18 +36,23 @@ const main: NextPage = () => {
   const handleButtonClick = async () => {
     try {
       const token = await loginUser(loginData);
-      
+      if (token === undefined){
+        alert('아이디와 비밀번호가 올바른지 확인해주세요');
+        return;
+      }
       cookies.save('accessToken', token?.accessToken, {
         maxAge: 3600 * 24 * 7,
       });
       cookies.save('refreshToken', token?.refreshToken);
       const userData = await getUserdata();
       console.log(userData);
-      router.push('/selectDormitory');
+
     } catch (error) {
       console.log(error)
       alert('아이디와 비밀번호가 올바른지 확인해주세요');
+      return;
     }
+    router.push('/selectDormitory');
   };
 
   return (
