@@ -4,6 +4,10 @@ export function getToken() {
   const token = cookies.load('accessToken');
   return token;
 }
+export function getRefreshToken() {
+  const token = cookies.load('refreshToken');
+  return token;
+}
 //요청 인터셉터
 axios.interceptors.request.use(
   async(config) => {
@@ -27,37 +31,59 @@ axios.interceptors.request.use(
 );
 
 export async function getUserdata() {
-  const res = axios.get('https://fastcampus-chat.net/auth/me');
-  return (await res).data;
+  try {
+    const res = axios.get('https://fastcampus-chat.net/auth/me');
+    return (await res).data;
+  }
+  catch (error) {
+    console.log(error,'유저데이터를 가져오지 못했습니다.');
+  }
+  
 }
 
 export async function signupUser(formData) {
-  const resData = await axios.post(
-    'https://fastcampus-chat.net/signup',
-    formData,
-  );
-  if (resData.status === 200) {
-    const responseData = await resData.data;
-    console.log(responseData);
+  try {
+    const resData = await axios.post(
+      'https://fastcampus-chat.net/signup',
+      formData,
+    );
+    if (resData.status === 200) {
+      const responseData = await resData.data;
+      console.log(responseData);
+    }
+    console.log(resData)
+  }
+  catch (error){
+    console.log(error,'회원가입이 실패했습니다.');
   }
 }
 
 export async function loginUser(loginData) {
-  const resData = await axios.post(
-    'https://fastcampus-chat.net/login',
-    loginData,
-  );
-  if (resData.status === 200) {
-    const responseData = await resData.data;
-    return responseData;
+  try{
+    const resData = await axios.post(
+      'https://fastcampus-chat.net/login',
+      loginData,
+    );
+    if (resData.status === 200) {
+      const responseData = await resData.data;
+      return responseData;
+    }
+  }
+  catch (error){
+    console.log(error,'로그인이 실패했습니다.');
   }
 }
 
 export async function checkUserIdAvailability(id){
-    const resData = await axios.post('https://fastcampus-chat.net/check/id',{id:id})
+    try {
+      const resData = await axios.post('https://fastcampus-chat.net/check/id',{id:id})
     if (resData.status === 200) {
         const responseData = await resData.data;
         return responseData.isDuplicated;
+    }
+    }
+    catch (error) {
+      console.log(error,'아이디 중복검사에 실패했습니다.!');
     }
 }
 
