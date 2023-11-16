@@ -54,11 +54,7 @@ const createModal = () => {
         host: myName,
       };
       router.push(
-        '/club/chatting' +
-          '?id=' +
-          newDormChatInfo.id +
-          '&name=' +
-          newDormChatInfo.name,
+        '/club/' + newDormChatInfo.id + '&name=' + newDormChatInfo.name,
       );
 
       await addFirebaseData('chatInfo', name, newDormChatInfo);

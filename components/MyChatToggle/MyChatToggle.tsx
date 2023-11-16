@@ -97,7 +97,7 @@ const MyChatToggle: React.FC<MyChatToggleProps> = ({ isVisible, onClose }) => {
             });
 
             return (
-              <Link key={chat.id} href={`/selectDormitory/${chat.name}`}>
+              <Link key={chat.id} href={`/club/${chat.id}&name=${chat.name}`}>
                 <styled.MyChatting
                   $isCurrentChat={chat.name === currentDormitory}
                 >
