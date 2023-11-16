@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import io, { Socket } from 'socket.io-client';
+import io from 'socket.io-client';
 import * as styled from './FriendSearchToggle.styles';
 import { getUsersClass } from '@utils/firebase';
 
@@ -14,10 +14,6 @@ interface User {
   picture: string;
   isOnline?: boolean;
   class?: string;
-}
-
-interface ResponseData {
-  user: string[];
 }
 
 const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
@@ -41,34 +37,12 @@ const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
   const accessToken = accessTokenCookie.split('=')[1];
 
   const serverId = '660d616b';
-  const socket = useMemo(() => {
-    return io('https://fastcampus-chat.net/server', {
-      extraHeaders: {
-        'content-type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
-        serverId: serverId,
-      },
-    });
-  }, [accessToken]);
 
   // 모든 유저 불러오기
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         setLoading(true);
-
-        const accessTokenCookie = document.cookie
-          .split('; ')
-          .find((row) => row.startsWith('accessToken='));
-
-        if (!accessTokenCookie) {
-          console.error('Access token not found in cookies');
-          return;
-        }
-
-        const accessToken = accessTokenCookie.split('=')[1];
-
-        const serverId = '660d616b';
 
         const response = await fetch('https://fastcampus-chat.net/users', {
           method: 'GET',
@@ -107,6 +81,16 @@ const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
     }
     fetchUsers();
   }, [isVisible]);
+
+  const socket = useMemo(() => {
+    return io('https://fastcampus-chat.net/server', {
+      extraHeaders: {
+        'content-type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+        serverId: serverId,
+      },
+    });
+  }, [accessToken]);
 
   // 접속 유무
   useEffect(() => {
@@ -147,41 +131,42 @@ const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
       socket.disconnect();
     };
   }, [socket]);
+
   // }, [users]); // 무한 호출 때문에 잠시 주석
 
-  const checkDuplicateUserId = async (accessToken: string) => {
-    try {
-      const serverId = '660d616b';
+  // const checkDuplicateUserId = async (accessToken: string) => {
+  //   try {
+  //     const serverId = '660d616b';
 
-      const response = await fetch('https://fastcampus-chat.net/auth/me', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          serverId: serverId,
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+  //     const response = await fetch('https://fastcampus-chat.net/auth/me', {
+  //       method: 'GET',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         serverId: serverId,
+  //         Authorization: `Bearer ${accessToken}`,
+  //       },
+  //     });
 
-      if (response.ok) {
-        const data = await response.json();
+  //     if (response.ok) {
+  //       const data = await response.json();
 
-        if (data.auth && data.user) {
-          return data.user.id;
-        } else {
-          console.error(
-            'Authentication failed or user information not available.',
-          );
-          return null;
-        }
-      } else {
-        console.error('Failed to fetch user information:', response.statusText);
-        return null;
-      }
-    } catch (error) {
-      console.error('Error fetching user information:', error);
-      return null;
-    }
-  };
+  //       if (data.auth && data.user) {
+  //         return data.user.id;
+  //       } else {
+  //         console.error(
+  //           'Authentication failed or user information not available.',
+  //         );
+  //         return null;
+  //       }
+  //     } else {
+  //       console.error('Failed to fetch user information:', response.statusText);
+  //       return null;
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching user information:', error);
+  //     return null;
+  //   }
+  // };
 
   return (
     <styled.Sidebar isVisible={isVisible}>
