@@ -6,7 +6,7 @@ const home: NextPage = () => {
   return (
     <div>
       {/* <BgmPlayer /> */}
-      <Header />
+      {/* <Header /> */}
     </div>
   );
 };

@@ -1,5 +1,9 @@
 import styled from 'styled-components';
 
+export const ContentWrap = styled.div`
+  margin-top: 50px;
+`;
+
 export const Container = styled.div`
   margin: 0.3rem 6.38rem 3.81rem 6.38rem;
 `;

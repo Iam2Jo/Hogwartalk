@@ -90,46 +90,49 @@ const club = () => {
       {joinModalOpen && <JoinModal />}
       {createModalOpen && <CreateModal />}
       <Header />
-      <CandleImg width="100%" />
-      <styled.Container>
-        <styled.HeaderWrap>
-          <styled.Title>CLUB</styled.Title>
-          <styled.AddChatBtn onClick={setCreateModal}>+</styled.AddChatBtn>
-        </styled.HeaderWrap>
-        <styled.ChatList>
-          {' '}
-          {chatList
-            .filter(
-              (chat) =>
-                chat.name !== 'hufflepuff' &&
-                chat.name !== 'slytherin' &&
-                chat.name !== 'gryffindor' &&
-                chat.name !== 'ravenclaw',
-            )
-            .sort(
-              (a, b) =>
-                (new Date(b.updatedAt) as any) - (new Date(a.updatedAt) as any),
-            )
-            .map((chat) => {
-              const messageDate = new Date(chat.updatedAt);
-              const timeString = messageDate.toLocaleString('en-US', {
-                timeZone: 'Asia/Seoul',
-                hour12: false,
-                hour: 'numeric',
-                minute: 'numeric',
-              });
+      <styled.ContentWrap>
+        <CandleImg width="100%" />
+        <styled.Container>
+          <styled.HeaderWrap>
+            <styled.Title>CLUB</styled.Title>
+            <styled.AddChatBtn onClick={setCreateModal}>+</styled.AddChatBtn>
+          </styled.HeaderWrap>
+          <styled.ChatList>
+            {' '}
+            {chatList
+              .filter(
+                (chat) =>
+                  chat.name !== 'hufflepuff' &&
+                  chat.name !== 'slytherin' &&
+                  chat.name !== 'gryffindor' &&
+                  chat.name !== 'ravenclaw',
+              )
+              .sort(
+                (a, b) =>
+                  (new Date(b.updatedAt) as any) -
+                  (new Date(a.updatedAt) as any),
+              )
+              .map((chat) => {
+                const messageDate = new Date(chat.updatedAt);
+                const timeString = messageDate.toLocaleString('en-US', {
+                  timeZone: 'Asia/Seoul',
+                  hour12: false,
+                  hour: 'numeric',
+                  minute: 'numeric',
+                });
 
-              return (
-                <ChatItem
-                  key={chat.id}
-                  id={chat.id}
-                  name={chat.name}
-                  users={chat.users}
-                />
-              );
-            })}
-        </styled.ChatList>
-      </styled.Container>
+                return (
+                  <ChatItem
+                    key={chat.id}
+                    id={chat.id}
+                    name={chat.name}
+                    users={chat.users}
+                  />
+                );
+              })}
+          </styled.ChatList>
+        </styled.Container>
+      </styled.ContentWrap>
     </>
   );
 };
