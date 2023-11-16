@@ -1,5 +1,4 @@
 {
-  "homepage": "https://iam2jo.github.io/Hogwartalk/",
   "name": "toy2",
   "version": "0.1.0",
   "private": true,
@@ -7,8 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "deploy": "gh-pages -d build"
+    "lint": "next lint"
   },
   "dependencies": {
     "@chakra-ui/next-js": "^2.2.0",

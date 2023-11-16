@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import * as styled from './joinModal.styles';
-import CancelIcon from '@assets/icon/cancelIcon.svg';
+import CancelIcon from '@assets/icon/CancelIcon.svg';
 import { chatInfoState, joinModalState } from '@recoil/chatList';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import axios from 'axios';
