@@ -96,7 +96,7 @@ const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
 
     return () => {
       console.log('클린업 함수 호출됨');
-      socket.off('users-to-client', handlePullUsers);
+      socket.off('users-server-to-client', handlePullUsers);
     };
   }, [socket, handlePullUsers]);
 
