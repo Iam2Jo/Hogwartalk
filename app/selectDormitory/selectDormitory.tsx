@@ -10,7 +10,11 @@ import createDormitoryIfNone from '@hooks/createDormitoryIfNone';
 import { RequestBody as RequestBodyCreate } from '@/@types/RESTAPI/createChatting.types';
 import { RequestBody as RequestBodyParticipate } from '@/@types/RESTAPI/participateChatting.types';
 import { getRefreshToken, getToken } from '@utils/service';
-import { getFirebaseData, getFirebaseDatabyKeyVal, updateFirebaseData } from '@hooks/useFireFetch';
+import {
+  getFirebaseData,
+  getFirebaseDatabyKeyVal,
+  updateFirebaseData,
+} from '@hooks/useFireFetch';
 import { useRouter } from 'next/navigation';
 
 interface RequestBody {
@@ -46,11 +50,11 @@ const SelectDormitory = () => {
   const [hufflepuffFirebaseData, setHufflepuffFirebaseData] =
     useState<any>(null);
   const [ravenclawFirebaseData, setRavenclawFirebaseData] = useState<any>(null);
-  const SERVER_KEY = '660d616b';
+  const SERVER_KEY = process.env.REACT_APP_SERVER_KEY;
   const [accessToken, setAccessToken] = useState('');
-  const CREATE_CHAT_URL = 'https://fastcampus-chat.net/chat';
-  const FIND_ALL_USER_URL = 'https://fastcampus-chat.net/users';
-  const GET_MY_INFO_URL = 'https://fastcampus-chat.net/auth/me';
+  const CREATE_CHAT_URL = process.env.REACT_APP_CREATE_CHAT_URL;
+  const FIND_ALL_USER_URL = process.env.REACT_APP_FIND_ALL_USER_URL;
+  const GET_MY_INFO_URL = process.env.REACT_APP_GET_MY_INFO_URL;
 
   const headers = {
     'Content-Type': 'application/json',
@@ -90,7 +94,7 @@ const SelectDormitory = () => {
 
     console.log('chatId: ', firebaseData[0].id);
 
-    const PARTICIPATE_CHAT_URL = 'https://fastcampus-chat.net/chat/participate';
+    const PARTICIPATE_CHAT_URL = process.env.REACT_APP_PARTICIPATE_CHAT_URL;
     const requestData: RequestBodyParticipate = {
       chatId: firebaseData[0].id,
     };
@@ -105,15 +109,15 @@ const SelectDormitory = () => {
       });
   };
 
-    // 로그인되어있지 않다면 로그인페이지 유도
-    const router = useRouter();
-    useEffect(() => {
-      const refreshToken = getRefreshToken();
-      if (!refreshToken) {
-        alert('로그인이 필요합니다.');
-        router.push('/');
-      }
-    }, []);
+  // 로그인되어있지 않다면 로그인페이지 유도
+  const router = useRouter();
+  useEffect(() => {
+    const refreshToken = getRefreshToken();
+    if (!refreshToken) {
+      alert('로그인이 필요합니다.');
+      router.push('/');
+    }
+  }, []);
 
   useEffect(() => {
     const token = getToken();

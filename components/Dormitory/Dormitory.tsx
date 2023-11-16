@@ -28,6 +28,9 @@ import cutStringAfterColon from '@/utils/cutStringAfterColon';
 import { useRouter } from 'next/navigation';
 
 const Dormitory = ({ chatId, dormName }) => {
+  const [currentChatId, setCurrentChatId] = useState(chatId);
+  const [currentDormName, setCurrentDormName] = useState(dormName);
+
   const params = useSearchParams();
   const router = useRouter();
 
@@ -76,10 +79,10 @@ const Dormitory = ({ chatId, dormName }) => {
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const messageContainerRef = useRef<HTMLDivElement | null>(null);
-  const SERVER_KEY = '660d616b';
+  const SERVER_KEY = process.env.REACT_APP_SERVER_KEY;
   const [accessToken, setAccessToken] = useState('');
 
-  const CHATROOM_LEAVE_URL = 'https://fastcampus-chat.net/chat/leave';
+  const CHATROOM_LEAVE_URL = process.env.REACT_APP_CHATROOM_LEAVE_URL;
   const myId = findMyId(accessToken);
   const headers = {
     ...(accessToken && { Authorization: `Bearer ${accessToken}` }),

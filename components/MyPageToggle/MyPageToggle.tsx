@@ -44,7 +44,7 @@ const MyPageToggle: React.FC<MyPageToggleProps> = ({ isVisible, onClose }) => {
 
       const accessToken = accessTokenCookie.split('=')[1];
 
-      const serverId = '660d616b';
+      const serverId = process.env.REACT_APP_SERVER_KEY;
 
       const response = await fetch('https://fastcampus-chat.net/auth/me', {
         method: 'GET',
@@ -109,7 +109,7 @@ const MyPageToggle: React.FC<MyPageToggleProps> = ({ isVisible, onClose }) => {
 
       const accessToken = accessTokenCookie.split('=')[1];
 
-      const serverId = '660d616b';
+      const serverId = process.env.REACT_APP_SERVER_KEY;
 
       const response = await fetch('https://fastcampus-chat.net/user', {
         method: 'PATCH',
