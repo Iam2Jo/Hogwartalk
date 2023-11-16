@@ -63,6 +63,9 @@ const createModal = () => {
 
       await addFirebaseData('chatInfo', name, newDormChatInfo);
       console.log(`${name} 채팅방 생성 완료`, response.data);
+
+      setCreateModalOpen(false);
+      document.body.style.overflowY = 'auto';
     } catch (error) {
       console.error('방 생성 실패!', error);
     }
