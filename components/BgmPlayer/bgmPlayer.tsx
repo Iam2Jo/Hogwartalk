@@ -1,3 +1,4 @@
+'use client';
 import { audioState } from '@recoil/atom';
 import React, { useEffect, useRef } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
