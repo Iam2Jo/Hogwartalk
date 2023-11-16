@@ -37,7 +37,7 @@ const joinModal = () => {
           '/club/chatting' +
             '?id=' +
             response.data.id +
-            '?name=' +
+            '&name=' +
             response.data.name,
         );
       })

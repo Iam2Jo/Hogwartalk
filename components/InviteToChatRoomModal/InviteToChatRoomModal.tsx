@@ -21,6 +21,7 @@ interface DormChatInfo {
 }
 
 interface InviteToChatRoomModalProps {
+  title: string;
   isOpen: boolean;
   onClose: () => void;
   chatId: string;
@@ -39,6 +40,7 @@ interface InvitedUser {
 }
 
 const InviteToChatRoomModal = ({
+  title,
   isOpen,
   onClose,
   chatId,
@@ -84,7 +86,7 @@ const InviteToChatRoomModal = ({
       )
       .then((response) => {
         alert(`${invitedUsersName.join(', ')} 초대하기 성공!`);
-        updateFirebaseData('chatInfo', 'id', response.data.users);
+        updateFirebaseData('chatInfo', title, response.data);
       })
       .then(() => {
         onClose();

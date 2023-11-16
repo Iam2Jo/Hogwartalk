@@ -46,6 +46,8 @@ const Dormitory = ({ chatId, dormName }) => {
   });
   const [isOpen, setIsOpen] = useState(false);
   const [isConnected, setIsConnected] = useState([]);
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
 
   // const gryffindorChatInfo = useRecoilValue(gryffindorChatInfoState);
   // const hufflepuffChatInfo = useRecoilValue(hufflepuffChatInfoState);
@@ -57,7 +59,7 @@ const Dormitory = ({ chatId, dormName }) => {
       console.log('firebase chatInfo:  ', res);
       setCurrentDormChatInfo(res[0]);
     });
-  }, []);
+  }, [isInviteModalOpen]);
 
   // const { name, users, updatedAt, host } = currentDormChatInfo;
   const modalData = {
@@ -133,21 +135,38 @@ const Dormitory = ({ chatId, dormName }) => {
   };
 
   useEffect(() => {
-    useFetchMessages(chatSocket);
-    useMessageToClient(chatSocket, handleMessageToClient);
-    useFetchUsers(chatSocket);
-    usePullUsers(chatSocket, handlePullUsers);
-    useJoinUsers(chatSocket, handleJoinUsers);
-    useLeaveUsers(chatSocket, handleLeaveUsers);
+    const fetchDataAndAttachListeners = async () => {
+      try {
+        await useFetchMessages(chatSocket);
+        await useFetchUsers(chatSocket);
+        useMessageToClient(chatSocket, handleMessageToClient);
+        usePullUsers(chatSocket, handlePullUsers);
+        useJoinUsers(chatSocket, handleJoinUsers);
+        useLeaveUsers(chatSocket, handleLeaveUsers);
+      } catch (error) {
+        console.error(
+          '데이터 가져오기 또는 이벤트 리스너 추가 중 오류 발생:',
+          error,
+        );
+      }
+    };
+
+    fetchDataAndAttachListeners();
 
     return () => {
-      console.log('Cleanup function called');
+      console.log('클린업 함수 호출됨');
       chatSocket.off('message-to-client', handleMessageToClient);
       chatSocket.off('users-to-client', handlePullUsers);
       chatSocket.off('join', handleJoinUsers);
       chatSocket.off('leave', handleLeaveUsers);
     };
-  }, [chatSocket]);
+  }, [
+    chatSocket,
+    handleMessageToClient,
+    handlePullUsers,
+    handleJoinUsers,
+    handleLeaveUsers,
+  ]);
 
   useEffect(() => {
     useMessagesToClient(chatSocket, handleMessagesToClient);
@@ -171,9 +190,6 @@ const Dormitory = ({ chatId, dormName }) => {
   }, [isAtBottom]);
 
   /********************************************************** */
-  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
-  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
-
   const openInfoModal = () => {
     setIsInfoModalOpen(true);
   };
@@ -187,7 +203,16 @@ const Dormitory = ({ chatId, dormName }) => {
   };
 
   const openInviteModal = () => {
-    setIsInviteModalOpen(true);
+    const isDisabled = [
+      'gryffindor',
+      'ravenclaw',
+      'hufflepuff',
+      'slytherin',
+    ].includes(modalData.title);
+
+    if (!isDisabled) {
+      setIsInviteModalOpen(true);
+    }
   };
 
   const closeInviteModal = () => {
@@ -221,6 +246,7 @@ const Dormitory = ({ chatId, dormName }) => {
         dormName={dormName}
       />
       <InviteToChatRoomModal
+        title={modalData.title}
         isOpen={isInviteModalOpen}
         onClose={closeInviteModal}
         chatId={chatId}
@@ -235,7 +261,7 @@ const Dormitory = ({ chatId, dormName }) => {
       <styled.DormitoryHeader>
         <styled.TitleWrapper>
           <styled.Title>{dormName}</styled.Title>
-          <styled.Badge chatName={chatName} onClick={openInviteModal}>
+          <styled.Badge onClick={openInviteModal}>
             <styled.PersonIcon />
             {currentDormChatInfo?.users.length}
           </styled.Badge>

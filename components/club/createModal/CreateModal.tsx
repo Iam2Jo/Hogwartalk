@@ -57,7 +57,7 @@ const createModal = () => {
         '/club/chatting' +
           '?id=' +
           newDormChatInfo.id +
-          '?name=' +
+          '&name=' +
           newDormChatInfo.name,
       );
 

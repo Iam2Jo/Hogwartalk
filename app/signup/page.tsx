@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useState, useRef } from 'react';
 import { SignupContainer } from './signupStyle';
 import { BsCamera } from 'react-icons/bs';
-import { getStorageURL, setStorageImage,setUsersClass } from '@utils/firebase';
+import { getStorageURL, setStorageImage, setUsersClass } from '@utils/firebase';
 import { checkUserIdAvailability, signupUser } from '@utils/service.js';
 import { useRecoilValue, useRecoilState, useSetRecoilState } from 'recoil';
 import {
