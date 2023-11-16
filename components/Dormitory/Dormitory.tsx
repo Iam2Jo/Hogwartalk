@@ -25,6 +25,7 @@ import { getToken } from '@utils/service';
 import { getFirebaseDatabyKeyVal } from '@hooks/useFireFetch';
 import { useSearchParams } from 'next/navigation';
 import cutStringAfterColon from '@/utils/cutStringAfterColon';
+import Link from 'next/link';
 
 const Dormitory = ({ chatId, dormName }) => {
   const params = useSearchParams();
@@ -255,7 +256,9 @@ const Dormitory = ({ chatId, dormName }) => {
       {isOpen ? (
         <styled.MoreItemContainer>
           <styled.Button onClick={openInfoModal}>채팅방 정보</styled.Button>
-          <styled.Button onClick={leaveChatRoom}>나가기</styled.Button>
+          <Link href="/club">
+            <styled.Button onClick={leaveChatRoom}>나가기</styled.Button>
+          </Link>
         </styled.MoreItemContainer>
       ) : null}
       <styled.DormitoryHeader>
