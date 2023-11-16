@@ -91,7 +91,7 @@ const club = () => {
       {createModalOpen && <CreateModal />}
       <Header />
       <styled.ContentWrap>
-        <CandleImg width="100%" />
+        <CandleImg/>
         <styled.Container>
           <styled.HeaderWrap>
             <styled.Title>CLUB</styled.Title>
