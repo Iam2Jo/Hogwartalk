@@ -29,6 +29,28 @@ const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
   const [initialized, setInitialized] = useState(false);
   const [isConnected, setIsConnected] = useState([]);
 
+  const accessTokenCookie = document.cookie
+    .split('; ')
+    .find((row) => row.startsWith('accessToken='));
+
+  if (!accessTokenCookie) {
+    console.error('Access token not found in cookies');
+    return;
+  }
+
+  const accessToken = accessTokenCookie.split('=')[1];
+
+  const serverId = '660d616b';
+  const socket = useMemo(() => {
+    return io('https://fastcampus-chat.net/server', {
+      extraHeaders: {
+        'content-type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+        serverId: serverId,
+      },
+    });
+  }, [accessToken]);
+
   // 모든 유저 불러오기
   useEffect(() => {
     const fetchUsers = async () => {
@@ -60,25 +82,15 @@ const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
         if (response.ok) {
           const data: User[] = await response.json();
 
-          const myUserId = await checkDuplicateUserId(accessToken);
-          if (myUserId !== null) {
-            const onlineUsers = data.map((user) => ({
-              id: user.id,
-              isOnline: true,
-              ...user,
-            }));
+          // const myUserId = await checkDuplicateUserId(accessToken);
+          const updatedUsers = await Promise.all(
+            data.map(async (user) => {
+              const userClass = await getUsersClass(user.id);
+              return { ...user, class: userClass };
+            }),
+          );
 
-            const updatedUsers = await Promise.all(
-              onlineUsers.map(async (user) => {
-                const userClass = await getUsersClass(user.id);
-                return { ...user, class: userClass };
-              }),
-            );
-
-            setUsers(updatedUsers.filter((user) => user.id !== myUserId));
-          } else {
-            console.error('Failed to fetch user information');
-          }
+          setUsers(updatedUsers.filter((user) => user.id));
         } else {
           console.error('Failed to fetch users');
         }
@@ -96,37 +108,6 @@ const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
     fetchUsers();
   }, [isVisible]);
 
-  const accessTokenCookie = document.cookie
-    .split('; ')
-    .find((row) => row.startsWith('accessToken='));
-
-  if (!accessTokenCookie) {
-    console.error('Access token not found in cookies');
-    return;
-  }
-
-  const accessToken = accessTokenCookie.split('=')[1];
-
-  const serverId = '660d616b';
-
-  // const socket = io('https://fastcampus-chat.net/server', {
-  //   extraHeaders: {
-  //     'content-type': 'application/json',
-  //     Authorization: `Bearer ${accessToken}`,
-  //     serverId: serverId,
-  //   },
-  // });
-
-  const socket = useMemo(() => {
-    return io('https://fastcampus-chat.net/server', {
-      extraHeaders: {
-        'content-type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
-        serverId: serverId,
-      },
-    });
-  }, [accessToken]);
-
   // 접속 유무
   useEffect(() => {
     try {
@@ -141,15 +122,23 @@ const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
       console.log('S->C 접속 상태 유저 목록 pull 성공!');
       try {
         const connectedUserIds = response.users;
+
         const updatedUsers = users.map((user) => ({
           ...user,
           isOnline: connectedUserIds.includes(user.id),
         }));
 
+        const offlineUsers = users.filter(
+          (user) => !connectedUserIds.includes(user.id),
+        );
+
+        console.log(
+          'Online Users:',
+          updatedUsers.filter((user) => user.isOnline),
+        );
+        console.log('Offline Users:', offlineUsers);
+
         setUsers(updatedUsers);
-        // if (!arraysAreEqual(users, updatedUsers)) {
-        //   setUsers(updatedUsers);
-        // }
       } catch (error) {
         console.error('S->C 접속 상태 유저 목록 pull 실패!', error);
       }
@@ -193,20 +182,6 @@ const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
       return null;
     }
   };
-
-  // const arraysAreEqual = (arr1, arr2) => {
-  //   if (arr1.length !== arr2.length) {
-  //     return false;
-  //   }
-
-  //   for (let i = 0; i < arr1.length; i++) {
-  //     if (arr1[i] !== arr2[i]) {
-  //       return false;
-  //     }
-  //   }
-
-  //   return true;
-  // };
 
   return (
     <styled.Sidebar isVisible={isVisible}>
