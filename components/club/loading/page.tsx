@@ -10,7 +10,7 @@ const page = () => {
         <styled.Loading>
           <Image src={Loading} alt="로딩중" />
         </styled.Loading>
-        <styled.Title>채팅방 불러오는중 ...</styled.Title>
+        <styled.Title>불러오는 중 ...</styled.Title>
       </styled.LoadingWrap>
     </styled.Background>
   );

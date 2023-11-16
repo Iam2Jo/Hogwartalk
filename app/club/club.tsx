@@ -16,6 +16,7 @@ import JoinModal from '@components/club/joinModal/page';
 import CreateModal from '@components/club/createModal/page';
 import Loading from '@components/club/loading/page';
 import { getToken } from '@utils/service';
+import { loadingState } from '@recoil/atom';
 
 const club = () => {
   const SERVER_KEY = '660d616b';
@@ -31,7 +32,8 @@ const club = () => {
 
   const chatList = useRecoilValue(chatListState);
   const setChatList = useSetRecoilState(chatListState);
-  const [loading, setLoading] = useState(true);
+  const loading = useRecoilValue(loadingState);
+  const setLoading = useSetRecoilState(loadingState);
 
   useEffect(() => {
     const token = getToken();
@@ -53,8 +55,6 @@ const club = () => {
     };
     getChatList();
   }, []);
-
-  console.log(chatList[0]);
 
   const setMyChatList = useSetRecoilState(myChatListState);
 
@@ -106,14 +106,28 @@ const club = () => {
                 chat.name !== 'gryffindor' &&
                 chat.name !== 'ravenclaw',
             )
-            .map((chat) => (
-              <ChatItem
-                key={chat.id}
-                id={chat.id}
-                name={chat.name}
-                users={chat.users}
-              />
-            ))}
+            .sort(
+              (a, b) =>
+                (new Date(b.updatedAt) as any) - (new Date(a.updatedAt) as any),
+            )
+            .map((chat) => {
+              const messageDate = new Date(chat.updatedAt);
+              const timeString = messageDate.toLocaleString('en-US', {
+                timeZone: 'Asia/Seoul',
+                hour12: false,
+                hour: 'numeric',
+                minute: 'numeric',
+              });
+
+              return (
+                <ChatItem
+                  key={chat.id}
+                  id={chat.id}
+                  name={chat.name}
+                  users={chat.users}
+                />
+              );
+            })}
         </styled.ChatList>
       </styled.Container>
     </>

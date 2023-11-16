@@ -3,7 +3,7 @@ import { atom } from 'recoil';
 
 export const chatListState = atom({
   key: 'chatListState',
-  default: [{ id: '', name: '', users: [] }],
+  default: [{ id: '', name: '', users: [], isPrivate: false, updatedAt: null }],
 });
 
 export const myChatListState = atom({

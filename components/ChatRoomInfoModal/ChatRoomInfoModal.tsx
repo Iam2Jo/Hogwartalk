@@ -172,7 +172,7 @@ const ChatRoomInfoModal = ({
           <styled.ModalLabel>참여자 목록</styled.ModalLabel>
           <styled.ParticipantsWrapper>
             <styled.ParticipantsGrid>
-              {participants.map((participant, index) => (
+              {participants?.map((participant, index) => (
                 <UserItem key={index}>
                   <ProfileImage
                     src="/assets/img/HarryPotter.png"
