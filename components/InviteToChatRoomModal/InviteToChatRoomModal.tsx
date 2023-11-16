@@ -53,10 +53,10 @@ const InviteToChatRoomModal = ({
   const [currentChatUsers, setCurrentChatUsers] = useState<User[]>([]);
   const [invitedUsers, setInvitedUsers] = useState<InvitedUser[]>([]);
   const [accessToken, setAccessToken] = useState('');
-  const SERVER_KEY = process.env.REACT_APP_SERVER_KEY;
-  const GET_ALL_USERS_URL = process.env.REACT_APP_GET_ALL_USERS_URL;
-  const GET_ALL_CHATTINGS_URL = process.env.REACT_APP_GET_ALL_CHATTINGS_URL;
-  const INVITE_TO_CHATROOM_URL = process.env.REACT_APP_INVITE_TO_CHATROOM_URL;
+  const SERVER_KEY = process.env.NEXT_PUBLIC_SERVER_KEY;
+  const GET_ALL_USERS_URL = process.env.NEXT_PUBLIC_GET_ALL_USERS_URL;
+  const GET_ALL_CHATTINGS_URL = process.env.NEXT_PUBLIC_GET_ALL_CHATTINGS_URL;
+  const INVITE_TO_CHATROOM_URL = process.env.NEXT_PUBLIC_INVITE_TO_CHATROOM_URL;
 
   const headers = {
     'Content-Type': 'application/json',

@@ -4,8 +4,8 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 
 export function findMyId(ACCESS_TOKEN) {
-  const SERVER_KEY = process.env.REACT_APP_SERVER_KEY;
-  const FIND_MY_ID_URL = process.env.REACT_APP_FIND_MY_ID_URL;
+  const SERVER_KEY = process.env.NEXT_PUBLIC_SERVER_KEY;
+  const FIND_MY_ID_URL = process.env.NEXT_PUBLIC_FIND_MY_ID_URL;
 
   const headers = {
     'Content-Type': 'application/json',

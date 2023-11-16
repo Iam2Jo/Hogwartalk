@@ -41,8 +41,8 @@ const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
     return;
   }
 
-  const GET_ALL_USERS_URL = process.env.REACT_APP_GET_ALL_USERS_URL;
-  const SERVER_KEY = process.env.REACT_APP_SERVER_KEY;
+  const GET_ALL_USERS_URL = process.env.NEXT_PUBLIC_GET_ALL_USERS_URL;
+  const SERVER_KEY = process.env.NEXT_PUBLIC_SERVER_KEY;
   const ACCESS_TOKEN = accessTokenCookie.split('=')[1];
   const headers = {
     'Content-Type': 'application/json',

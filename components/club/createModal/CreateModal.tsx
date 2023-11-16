@@ -9,7 +9,7 @@ import { getToken } from '@utils/service';
 import { addFirebaseData } from '@hooks/useFireFetch';
 
 const createModal = () => {
-  const SERVER_KEY = process.env.REACT_APP_SERVER_KEY;
+  const SERVER_KEY = process.env.NEXT_PUBLIC_SERVER_KEY;
   const [accessToken, setAccessToken] = useState('');
   const headers = {
     'Content-Type': 'application/json',
@@ -25,7 +25,7 @@ const createModal = () => {
   };
   const [isPrivate, setIsPrivate] = useState(false);
   const [myName, setMyName] = useState('');
-  const GET_MY_INFO_URL = process.env.REACT_APP_GET_MY_INFO_URL;
+  const GET_MY_INFO_URL = process.env.NEXT_PUBLIC_GET_MY_INFO_URL;
 
   const handleCreateChat = async (
     name: string,
@@ -33,7 +33,7 @@ const createModal = () => {
     myName: string,
     isPrivate?: boolean,
   ) => {
-    const CREATE_CHAT_URL = process.env.REACT_APP_CREATE_CHAT_URL;
+    const CREATE_CHAT_URL = process.env.NEXT_PUBLIC_CREATE_CHAT_URL;
     const requestData: any = {
       name: name,
       users: users,

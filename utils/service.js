@@ -12,7 +12,7 @@ export function getRefreshToken() {
 axios.interceptors.request.use(
   async (config) => {
     config.headers['content-type'] = 'application/json';
-    config.headers.serverId = process.env.REACT_APP_SERVER_KEY;
+    config.headers.serverId = process.env.NEXT_PUBLIC_SERVER_KEY;
     // 헤더에 액세스 토큰을 추가
     const token = getToken();
     if (token === undefined) {

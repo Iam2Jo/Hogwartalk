@@ -15,8 +15,8 @@ interface MyChatToggleProps {
 }
 
 const MyChatToggle: React.FC<MyChatToggleProps> = ({ isVisible, onClose }) => {
-  const SERVER_KEY = process.env.REACT_APP_SERVER_KEY;
-  const FIND_MY_CHAT_URL = process.env.REACT_APP_FIND_MY_CHAT_URL;
+  const SERVER_KEY = process.env.NEXT_PUBLIC_SERVER_KEY;
+  const FIND_MY_CHAT_URL = process.env.NEXT_PUBLIC_FIND_MY_CHAT_URL;
   const [accessToken, setAccessToken] = useState('');
 
   const headers = {

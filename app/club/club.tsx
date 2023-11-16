@@ -21,10 +21,10 @@ import { loadingState } from '@recoil/atom';
 import { Router } from 'next/router';
 
 const club = () => {
-  const SERVER_KEY = process.env.REACT_APP_SERVER_KEY;
+  const SERVER_KEY = process.env.NEXT_PUBLIC_SERVER_KEY;
   const [accessToken, setAccessToken] = useState('');
-  const FIND_ALL_CHAT_URL = process.env.REACT_APP_FIND_ALL_CHAT_URL;
-  const FIND_MY_CHAT_URL = process.env.REACT_APP_FIND_MY_CHAT_URL;
+  const FIND_ALL_CHAT_URL = process.env.NEXT_PUBLIC_FIND_ALL_CHAT_URL;
+  const FIND_MY_CHAT_URL = process.env.NEXT_PUBLIC_FIND_MY_CHAT_URL;
 
   const headers = {
     'Content-Type': 'application/json',

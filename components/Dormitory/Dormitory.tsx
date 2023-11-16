@@ -79,10 +79,10 @@ const Dormitory = ({ chatId, dormName }) => {
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const messageContainerRef = useRef<HTMLDivElement | null>(null);
-  const SERVER_KEY = process.env.REACT_APP_SERVER_KEY;
+  const SERVER_KEY = process.env.NEXT_PUBLIC_SERVER_KEY;
   const [accessToken, setAccessToken] = useState('');
 
-  const CHATROOM_LEAVE_URL = process.env.REACT_APP_CHATROOM_LEAVE_URL;
+  const CHATROOM_LEAVE_URL = process.env.NEXT_PUBLIC_CHATROOM_LEAVE_URL;
   const myId = findMyId(accessToken);
   const headers = {
     ...(accessToken && { Authorization: `Bearer ${accessToken}` }),

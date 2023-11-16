@@ -50,11 +50,11 @@ const SelectDormitory = () => {
   const [hufflepuffFirebaseData, setHufflepuffFirebaseData] =
     useState<any>(null);
   const [ravenclawFirebaseData, setRavenclawFirebaseData] = useState<any>(null);
-  const SERVER_KEY = process.env.REACT_APP_SERVER_KEY;
+  const SERVER_KEY = process.env.NEXT_PUBLIC_SERVER_KEY;
   const [accessToken, setAccessToken] = useState('');
-  const CREATE_CHAT_URL = process.env.REACT_APP_CREATE_CHAT_URL;
-  const FIND_ALL_USER_URL = process.env.REACT_APP_FIND_ALL_USER_URL;
-  const GET_MY_INFO_URL = process.env.REACT_APP_GET_MY_INFO_URL;
+  const CREATE_CHAT_URL = process.env.NEXT_PUBLIC_CREATE_CHAT_URL;
+  const FIND_ALL_USER_URL = process.env.NEXT_PUBLIC_FIND_ALL_USER_URL;
+  const GET_MY_INFO_URL = process.env.NEXT_PUBLIC_GET_MY_INFO_URL;
 
   const headers = {
     'Content-Type': 'application/json',
@@ -94,7 +94,7 @@ const SelectDormitory = () => {
 
     console.log('chatId: ', firebaseData[0].id);
 
-    const PARTICIPATE_CHAT_URL = process.env.REACT_APP_PARTICIPATE_CHAT_URL;
+    const PARTICIPATE_CHAT_URL = process.env.NEXT_PUBLIC_PARTICIPATE_CHAT_URL;
     const requestData: RequestBodyParticipate = {
       chatId: firebaseData[0].id,
     };

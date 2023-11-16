@@ -51,8 +51,8 @@ const ChatRoomInfoModal = ({
 ChatRoomInfoModalProps) => {
   if (!isOpen) return null;
 
-  const SERVER_KEY = process.env.REACT_APP_SERVER_KEY;
-  const GET_MY_INFO_URL = process.env.REACT_APP_GET_MY_INFO_URL;
+  const SERVER_KEY = process.env.NEXT_PUBLIC_SERVER_KEY;
+  const GET_MY_INFO_URL = process.env.NEXT_PUBLIC_GET_MY_INFO_URL;
   const [accessToken, setAccessToken] = useState('');
   const headers = {
     'Content-Type': 'application/json',
