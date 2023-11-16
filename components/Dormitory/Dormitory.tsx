@@ -25,11 +25,13 @@ import { getToken } from '@utils/service';
 import { getFirebaseDatabyKeyVal } from '@hooks/useFireFetch';
 import { useSearchParams } from 'next/navigation';
 import cutStringAfterColon from '@/utils/cutStringAfterColon';
+import { useRouter } from 'next/navigation';
 
 const Dormitory = ({ chatId, dormName }) => {
   const params = useSearchParams();
-  const queryString = params.get('id');
+  const router = useRouter();
 
+  const queryString = params.get('id');
   const chatName = queryString?.split('?name=')[1];
 
   const [text, setText] = useState<RequestData>('');
@@ -48,6 +50,7 @@ const Dormitory = ({ chatId, dormName }) => {
   const [isConnected, setIsConnected] = useState([]);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+  const [newDormName, setNewDormName] = useState(dormName);
 
   // const gryffindorChatInfo = useRecoilValue(gryffindorChatInfoState);
   // const hufflepuffChatInfo = useRecoilValue(hufflepuffChatInfoState);
@@ -220,14 +223,14 @@ const Dormitory = ({ chatId, dormName }) => {
   };
 
   const leaveChatRoom = () => {
-    axios
-      .patch(CHATROOM_LEAVE_URL, { chatId }, { headers })
-      .then((response) => {
-        alert(response.data.message);
-      })
-      .catch((err) => {
-        console.error(err);
+    try {
+      axios.patch(CHATROOM_LEAVE_URL, { chatId }, { headers }).then((res) => {
+        alert(res.data.message);
+        router.push('/selectDormitory');
       });
+    } catch (error) {
+      console.error('채팅방 나가기 실패!', error);
+    }
   };
   /********************************************************** */
 
@@ -244,6 +247,7 @@ const Dormitory = ({ chatId, dormName }) => {
         onClose={closeInfoModal}
         isConnected={isConnected}
         dormName={dormName}
+        setDormName={setNewDormName}
       />
       <InviteToChatRoomModal
         title={modalData.title}
@@ -260,7 +264,7 @@ const Dormitory = ({ chatId, dormName }) => {
       ) : null}
       <styled.DormitoryHeader>
         <styled.TitleWrapper>
-          <styled.Title>{dormName}</styled.Title>
+          <styled.Title>{newDormName}</styled.Title>
           <styled.Badge onClick={openInviteModal}>
             <styled.PersonIcon />
             {currentDormChatInfo?.users.length}
