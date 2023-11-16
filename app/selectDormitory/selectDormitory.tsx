@@ -10,7 +10,11 @@ import createDormitoryIfNone from '@hooks/createDormitoryIfNone';
 import { RequestBody as RequestBodyCreate } from '@/@types/RESTAPI/createChatting.types';
 import { RequestBody as RequestBodyParticipate } from '@/@types/RESTAPI/participateChatting.types';
 import { getToken } from '@utils/service';
-import { getFirebaseData, getFirebaseDatabyKeyVal } from '@hooks/useFireFetch';
+import {
+  getFirebaseData,
+  getFirebaseDatabyKeyVal,
+  updateFirebaseData,
+} from '@hooks/useFireFetch';
 
 interface RequestBody {
   name: string;
@@ -80,23 +84,24 @@ const SelectDormitory = () => {
   const handleParticipate = (
     dormitoryName: string,
     myDorm: string,
-    chatId: string,
+    firebaseData,
   ) => {
     if (dormitoryName !== myDorm) {
       alert('본인 기숙사가 아닌 기숙사는 참여할 수 없습니다!');
       return;
     }
 
-    console.log('chatId: ', chatId);
+    console.log('chatId: ', firebaseData[0].id);
 
     const PARTICIPATE_CHAT_URL = 'https://fastcampus-chat.net/chat/participate';
     const requestData: RequestBodyParticipate = {
-      chatId: chatId,
+      chatId: firebaseData[0].id,
     };
     axios
       .patch(PARTICIPATE_CHAT_URL, requestData, { headers })
       .then((response) => {
         console.log('채팅 참여 성공!', response.data);
+        updateFirebaseData('chatInfo', firebaseData[0].name, response.data);
       })
       .catch((error) => {
         console.error('채팅 참여 실패!', error);
@@ -164,11 +169,12 @@ const SelectDormitory = () => {
       'gryffindor',
       myName,
     ).then(async () => {
-      const firebaseData = await getFirebaseData(
+      const firebaseData = await getFirebaseDatabyKeyVal(
         'chatInfo',
+        'name',
         'gryffindor',
-        'id',
       );
+
       setGryffindorFirebaseData(firebaseData);
     });
   }, [hasGryffindor, chatData]);
@@ -182,7 +188,11 @@ const SelectDormitory = () => {
       'slytherin',
       myName,
     ).then(async () => {
-      const firebaseData = await getFirebaseData('chatInfo', 'slytherin', 'id');
+      const firebaseData = await await getFirebaseDatabyKeyVal(
+        'chatInfo',
+        'name',
+        'slytherin',
+      );
       setSlytherinFirebaseData(firebaseData);
     });
   }, [hasSlytherin, chatData]);
@@ -196,10 +206,10 @@ const SelectDormitory = () => {
       'hufflepuff',
       myName,
     ).then(async () => {
-      const firebaseData = await getFirebaseData(
+      const firebaseData = await await getFirebaseDatabyKeyVal(
         'chatInfo',
+        'name',
         'hufflepuff',
-        'id',
       );
       setHufflepuffFirebaseData(firebaseData);
     });
@@ -214,7 +224,11 @@ const SelectDormitory = () => {
       'ravenclaw',
       myName,
     ).then(async () => {
-      const firebaseData = await getFirebaseData('chatInfo', 'ravenclaw', 'id');
+      const firebaseData = await await getFirebaseDatabyKeyVal(
+        'chatInfo',
+        'name',
+        'ravenclaw',
+      );
       setRavenclawFirebaseData(firebaseData);
     });
   }, [hasRavenclaw, chatData]);
