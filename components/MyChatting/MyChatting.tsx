@@ -78,7 +78,20 @@ const MyChatting = () => {
             });
 
             return (
-              <Link key={chat.id} href={`/selectDormitory/${chat.name}`}>
+              <Link
+                key={chat.id}
+                href={
+                  chat.name === 'gryffindor' ||
+                  chat.name === 'slytherin' ||
+                  chat.name === 'hufflepuff' ||
+                  chat.name === 'ravenclaw'
+                    ? `/selectDormitory/${chat.name}`
+                    : {
+                        pathname: '/club/chatting',
+                        query: { id: chat.id, name: chat.name },
+                      }
+                }
+              >
                 <styled.MyChatting
                   $isCurrentChat={chat.name === currentDormitory}
                 >

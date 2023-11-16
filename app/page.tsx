@@ -4,7 +4,12 @@ import { Fragment, useState } from 'react';
 import cookies from 'react-cookies';
 import { LoginContainer, LoginFormStyle } from './loginStyle';
 import { useRouter } from 'next/navigation';
-import { reissueAccessToken, getToken, getUserdata, loginUser } from '../utils/service';
+import {
+  reissueAccessToken,
+  getToken,
+  getUserdata,
+  loginUser,
+} from '../utils/service';
 import { audioState } from '@recoil/atom';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
@@ -31,19 +36,24 @@ const main: NextPage = () => {
   const handleButtonClick = async () => {
     try {
       const token = await loginUser(loginData);
+      if (token === undefined){
+        alert('아이디와 비밀번호가 올바른지 확인해주세요');
+        return;
+      }
+      cookies.save('accessToken', token?.accessToken, {
+        maxAge: 3600 * 24 * 7,
+      });
+      cookies.save('refreshToken', token?.refreshToken);
+      const userData = await getUserdata();
+      console.log(userData);
 
-    cookies.save('accessToken', token?.accessToken, { maxAge: 3600 * 24 * 7});
-    cookies.save('refreshToken', token?.refreshToken);
-    const userData = await getUserdata();
-    router.push('/selectDormitory');
-    }
-    catch (error) {
-
+    } catch (error) {
+      console.log(error)
       alert('아이디와 비밀번호가 올바른지 확인해주세요');
-      throw new Error(error);
+      return;
     }
+    router.push('/selectDormitory');
   };
-
 
   return (
     <LoginContainer>
@@ -74,9 +84,9 @@ const main: NextPage = () => {
                 onChange={handleInputChange}
               />
             </div>
-            <footer>
+            <div className="footer">
               <button type="button" onClick={handleButtonClick}>
-                등교하기
+                로그인
               </button>
               <button
                 type="button"
@@ -85,9 +95,9 @@ const main: NextPage = () => {
                   setPlay(true);
                 }}
               >
-                입학하기
+                회원가입
               </button>
-            </footer>
+            </div>
           </form>
         </LoginFormStyle>
       </main>

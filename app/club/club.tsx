@@ -1,5 +1,6 @@
 'use client';
 import { Header } from '@components/Header';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import * as styled from './club.styles';
 import ChatItem from '@components/club/chatItem/chatItem';
@@ -15,7 +16,9 @@ import CandleImg from '@assets/img/Candles.svg';
 import JoinModal from '@components/club/joinModal/page';
 import CreateModal from '@components/club/createModal/page';
 import Loading from '@components/club/loading/page';
-import { getToken } from '@utils/service';
+import { getRefreshToken, getToken } from '@utils/service';
+import { loadingState } from '@recoil/atom';
+import { Router } from 'next/router';
 
 const club = () => {
   const SERVER_KEY = '660d616b';
@@ -31,8 +34,16 @@ const club = () => {
 
   const chatList = useRecoilValue(chatListState);
   const setChatList = useSetRecoilState(chatListState);
-  const [loading, setLoading] = useState(true);
-
+  const loading = useRecoilValue(loadingState);
+  const setLoading = useSetRecoilState(loadingState);
+  const router = useRouter();
+  useEffect(() => {
+    const refreshToken = getRefreshToken();
+    if (!refreshToken) {
+      alert('로그인이 필요합니다.');
+      router.push('/');
+    }
+  }, []);
   useEffect(() => {
     const token = getToken();
     setAccessToken(token);
@@ -53,8 +64,6 @@ const club = () => {
     };
     getChatList();
   }, []);
-
-  console.log(chatList[0]);
 
   const setMyChatList = useSetRecoilState(myChatListState);
 
@@ -90,32 +99,49 @@ const club = () => {
       {joinModalOpen && <JoinModal />}
       {createModalOpen && <CreateModal />}
       <Header />
-      <CandleImg width="100%" />
-      <styled.Container>
-        <styled.HeaderWrap>
-          <styled.Title>CLUB</styled.Title>
-          <styled.AddChatBtn onClick={setCreateModal}>+</styled.AddChatBtn>
-        </styled.HeaderWrap>
-        <styled.ChatList>
-          {' '}
-          {chatList
-            .filter(
-              (chat) =>
-                chat.name !== 'hufflepuff' &&
-                chat.name !== 'slytherin' &&
-                chat.name !== 'gryffindor' &&
-                chat.name !== 'ravenclaw',
-            )
-            .map((chat) => (
-              <ChatItem
-                key={chat.id}
-                id={chat.id}
-                name={chat.name}
-                users={chat.users}
-              />
-            ))}
-        </styled.ChatList>
-      </styled.Container>
+      <styled.ContentWrap>
+        <CandleImg/>
+        <styled.Container>
+          <styled.HeaderWrap>
+            <styled.Title>CLUB</styled.Title>
+            <styled.AddChatBtn onClick={setCreateModal}>+</styled.AddChatBtn>
+          </styled.HeaderWrap>
+          <styled.ChatList>
+            {' '}
+            {chatList
+              .filter(
+                (chat) =>
+                  chat.name !== 'hufflepuff' &&
+                  chat.name !== 'slytherin' &&
+                  chat.name !== 'gryffindor' &&
+                  chat.name !== 'ravenclaw',
+              )
+              .sort(
+                (a, b) =>
+                  (new Date(b.updatedAt) as any) -
+                  (new Date(a.updatedAt) as any),
+              )
+              .map((chat) => {
+                const messageDate = new Date(chat.updatedAt);
+                const timeString = messageDate.toLocaleString('en-US', {
+                  timeZone: 'Asia/Seoul',
+                  hour12: false,
+                  hour: 'numeric',
+                  minute: 'numeric',
+                });
+
+                return (
+                  <ChatItem
+                    key={chat.id}
+                    id={chat.id}
+                    name={chat.name}
+                    users={chat.users}
+                  />
+                );
+              })}
+          </styled.ChatList>
+        </styled.Container>
+      </styled.ContentWrap>
     </>
   );
 };

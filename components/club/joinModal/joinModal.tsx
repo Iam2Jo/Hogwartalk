@@ -33,7 +33,13 @@ const joinModal = () => {
       .patch(PARTICIPATE_CHAT_URL, requestData, { headers })
       .then((response) => {
         console.log('채팅 참여 성공!', response.data);
-        router.push('/club/' + response.data.id);
+        router.push(
+          '/club/chatting' +
+            '?id=' +
+            response.data.id +
+            '&name=' +
+            response.data.name,
+        );
       })
       .catch((error) => {
         console.error('채팅 참여 실패!', error);
@@ -44,9 +50,7 @@ const joinModal = () => {
     e.preventDefault();
     console.log(chatId);
     handleParticipate(chatId);
-    const idParam = chatInfo[0].id;
-    const nameParam = chatInfo[0].name;
-    router.push('/club/chatting' + '?id=' + idParam + '?name=' + nameParam);
+    setJoinModalOpen(false);
   };
 
   useEffect(() => {

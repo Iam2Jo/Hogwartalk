@@ -30,9 +30,10 @@ interface ChatRoomInfoModalProps {
   participants?: User[];
   isOpen: boolean;
   onClose: () => void;
-  onTitleChange: (newTitle: string) => void;
+  // onTitleChange: (newTitle: string) => void;
   isConnected: string[];
   dormName: string;
+  // setDormName: any;
 }
 
 const ChatRoomInfoModal = ({
@@ -43,10 +44,11 @@ const ChatRoomInfoModal = ({
   participants,
   isOpen,
   onClose,
-  onTitleChange,
+  // onTitleChange,
   isConnected,
   dormName,
-}: ChatRoomInfoModalProps) => {
+}: // setDormName,
+ChatRoomInfoModalProps) => {
   if (!isOpen) return null;
 
   const SERVER_KEY = '660d616b';
@@ -84,25 +86,17 @@ const ChatRoomInfoModal = ({
     setIsEditingTitle(true);
   };
 
-  const handleTitleSaveClick = async () => {
-    onTitleChange(newTitle);
-    setIsEditingTitle(false);
-    // setGryffindorChatInfo((prevChatInfo) => {
-    //   const newChatInfo = {
-    //     ...prevChatInfo,
-    //     name: newTitle,
-    //   };
+  // const handleTitleSaveClick = async () => {
+  //   onTitleChange(newTitle);
+  //   setIsEditingTitle(false);
 
-    //   return newChatInfo;
-    // });
+  //   const newChatInfo = {
+  //     ...chatInfo,
+  //     name: newTitle,
+  //   };
 
-    const newChatInfo = {
-      ...chatInfo,
-      name: newTitle,
-    };
-
-    await updateFirebaseData('chatInfo', dormName, newChatInfo.name);
-  };
+  //   await updateFirebaseData('chatInfo', dormName, newChatInfo.name);
+  // };
 
   const handleOverlayClick = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
@@ -145,7 +139,7 @@ const ChatRoomInfoModal = ({
         <styled.ModalContent>
           <styled.TopWrapper>
             <styled.ModalLabel>채팅방 제목</styled.ModalLabel>
-            {isEditingTitle ? (
+            {/* {isEditingTitle ? (
               <styled.InputWrapper>
                 <styled.TitleInput
                   type="text"
@@ -156,7 +150,8 @@ const ChatRoomInfoModal = ({
               </styled.InputWrapper>
             ) : (
               <styled.ModalValue>{newTitle}</styled.ModalValue>
-            )}
+            )} */}
+            <styled.ModalValue>{newTitle}</styled.ModalValue>
           </styled.TopWrapper>
 
           <styled.MiddleWrapper>
@@ -172,7 +167,7 @@ const ChatRoomInfoModal = ({
           <styled.ModalLabel>참여자 목록</styled.ModalLabel>
           <styled.ParticipantsWrapper>
             <styled.ParticipantsGrid>
-              {participants.map((participant, index) => (
+              {participants?.map((participant, index) => (
                 <UserItem key={index}>
                   <ProfileImage
                     src="/assets/img/HarryPotter.png"

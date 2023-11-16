@@ -47,15 +47,22 @@ const chatItem = ({ id, name, users }: Chat) => {
 
   const setJoinModalOpen = useSetRecoilState(joinModalState);
   const setChatInfo = useSetRecoilState(chatInfoState);
+  const chatInfo = useRecoilValue(chatInfoState);
 
   const handleJoin = () => {
-    setJoinModalOpen(true);
-    document.body.style.overflowY = 'hidden';
     const chatDetail = {
       name,
       id,
     };
     setChatInfo(chatDetail);
+    if (isMyChat) {
+      const idParam = chatDetail.id;
+      const nameParam = chatDetail.name;
+      router.push('/club/chatting' + '?id=' + idParam + '&name=' + nameParam);
+      return;
+    }
+    setJoinModalOpen(true);
+    document.body.style.overflowY = 'hidden';
   };
 
   return (

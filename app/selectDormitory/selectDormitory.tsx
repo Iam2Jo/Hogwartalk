@@ -9,8 +9,9 @@ import { doesDormitoryExist } from '@hooks/doesDormitoryExist';
 import createDormitoryIfNone from '@hooks/createDormitoryIfNone';
 import { RequestBody as RequestBodyCreate } from '@/@types/RESTAPI/createChatting.types';
 import { RequestBody as RequestBodyParticipate } from '@/@types/RESTAPI/participateChatting.types';
-import { getToken } from '@utils/service';
-import { getFirebaseData } from '@hooks/useFireFetch';
+import { getRefreshToken, getToken } from '@utils/service';
+import { getFirebaseData, getFirebaseDatabyKeyVal, updateFirebaseData } from '@hooks/useFireFetch';
+import { useRouter } from 'next/navigation';
 
 interface RequestBody {
   name: string;
@@ -30,9 +31,11 @@ type ResponseValue = any;
 // type ResponseValue = Chat[]
 
 const SelectDormitory = () => {
-  const data: ResponseValue | null = readChatting();
+  // const data: ResponseValue | null = readChatting();
   const [chatData, setChatData] = useState<ResponseValue | null>();
   const [myName, setMyName] = useState('');
+  const [myId, setMyId] = useState('');
+  const [myDorm, setMyDorm] = useState('');
   const [hasGryffindor, setHasGryffindor] = useState(true);
   const [hasSlytherin, setHasSlytherin] = useState(true);
   const [hasHufflepuff, setHasHufflepuff] = useState(true);
@@ -75,20 +78,42 @@ const SelectDormitory = () => {
     users: [],
   };
 
-  const handleParticipate = (chatId: string) => {
+  const handleParticipate = (
+    dormitoryName: string,
+    myDorm: string,
+    firebaseData,
+  ) => {
+    if (dormitoryName !== myDorm) {
+      alert('본인 기숙사가 아닌 기숙사는 참여할 수 없습니다!');
+      return;
+    }
+
+    console.log('chatId: ', firebaseData[0].id);
+
     const PARTICIPATE_CHAT_URL = 'https://fastcampus-chat.net/chat/participate';
     const requestData: RequestBodyParticipate = {
-      chatId: chatId,
+      chatId: firebaseData[0].id,
     };
     axios
       .patch(PARTICIPATE_CHAT_URL, requestData, { headers })
       .then((response) => {
         console.log('채팅 참여 성공!', response.data);
+        updateFirebaseData('chatInfo', firebaseData[0].name, response.data);
       })
       .catch((error) => {
         console.error('채팅 참여 실패!', error);
       });
   };
+
+    // 로그인되어있지 않다면 로그인페이지 유도
+    const router = useRouter();
+    useEffect(() => {
+      const refreshToken = getRefreshToken();
+      if (!refreshToken) {
+        alert('로그인이 필요합니다.');
+        router.push('/');
+      }
+    }, []);
 
   useEffect(() => {
     const token = getToken();
@@ -96,14 +121,35 @@ const SelectDormitory = () => {
   }, []);
 
   useEffect(() => {
-    setChatData(data);
-  }, [data]);
-
-  useEffect(() => {
     axios.get(GET_MY_INFO_URL, { headers }).then((res) => {
+      setMyId(res.data.user.id);
       setMyName(res.data.user.name);
     });
   }, []);
+
+  useEffect(() => {
+    getFirebaseDatabyKeyVal('users', 'id', myId).then((res) => {
+      console.log('firebase userInfo:  ', res);
+      const dormitoryName = res[0]?.class;
+
+      switch (dormitoryName) {
+        case '그리핀도르':
+          setMyDorm('gryffindor');
+          break;
+        case '슬리데린':
+          setMyDorm('slytherin');
+          break;
+        case '후플푸프':
+          setMyDorm('hufflepuff');
+          break;
+        case '래번클로':
+          setMyDorm('ravenclaw');
+          break;
+        default:
+          break;
+      }
+    });
+  }, [myId]);
 
   useEffect(() => {
     axios
@@ -121,13 +167,6 @@ const SelectDormitory = () => {
   doesDormitoryExist('hufflepuff', chatData, setHasHufflepuff);
   doesDormitoryExist('ravenclaw', chatData, setHasRavenclaw);
 
-  // 모듈화 필요
-  useEffect(() => {
-    axios.get(GET_MY_INFO_URL, { headers }).then((res) => {
-      setMyName(res.data.user.name);
-    });
-  }, []);
-
   useEffect(() => {
     createDormitoryIfNone(
       hasGryffindor,
@@ -136,8 +175,13 @@ const SelectDormitory = () => {
       headers,
       'gryffindor',
       myName,
-    ).then(() => {
-      const firebaseData = getFirebaseData('chatInfo', 'gryffindor', 'id');
+    ).then(async () => {
+      const firebaseData = await getFirebaseDatabyKeyVal(
+        'chatInfo',
+        'name',
+        'gryffindor',
+      );
+
       setGryffindorFirebaseData(firebaseData);
     });
   }, [hasGryffindor, chatData]);
@@ -150,8 +194,12 @@ const SelectDormitory = () => {
       headers,
       'slytherin',
       myName,
-    ).then(() => {
-      const firebaseData = getFirebaseData('chatInfo', 'slytherin', 'id');
+    ).then(async () => {
+      const firebaseData = await await getFirebaseDatabyKeyVal(
+        'chatInfo',
+        'name',
+        'slytherin',
+      );
       setSlytherinFirebaseData(firebaseData);
     });
   }, [hasSlytherin, chatData]);
@@ -164,8 +212,12 @@ const SelectDormitory = () => {
       headers,
       'hufflepuff',
       myName,
-    ).then(() => {
-      const firebaseData = getFirebaseData('chatInfo', 'hufflepuff', 'id');
+    ).then(async () => {
+      const firebaseData = await await getFirebaseDatabyKeyVal(
+        'chatInfo',
+        'name',
+        'hufflepuff',
+      );
       setHufflepuffFirebaseData(firebaseData);
     });
   }, [hasHufflepuff, chatData]);
@@ -178,64 +230,78 @@ const SelectDormitory = () => {
       headers,
       'ravenclaw',
       myName,
-    ).then(() => {
-      const firebaseData = getFirebaseData('chatInfo', 'ravenclaw', 'id');
+    ).then(async () => {
+      const firebaseData = await await getFirebaseDatabyKeyVal(
+        'chatInfo',
+        'name',
+        'ravenclaw',
+      );
       setRavenclawFirebaseData(firebaseData);
     });
   }, [hasRavenclaw, chatData]);
 
   return (
-    <styled.Wrapper>
-      <styled.LeftSection>
-        <Link
-          href="/selectDormitory/gryffindor"
-          style={{ width: '100%', height: '100%' }}
-        >
-          <styled.GryffindorSVG
-            onClick={() => handleParticipate(gryffindorFirebaseData[0]?.id)}
-            width="224"
-            height="272"
-          />
-        </Link>
-        <Link
-          href="/selectDormitory/ravenclaw"
-          style={{ width: '100%', height: '100%' }}
-        >
-          <styled.RavenclawSVG
-            onClick={() => handleParticipate(ravenclawFirebaseData[0]?.id)}
-            width="224"
-            height="272"
-          />
-        </Link>
-      </styled.LeftSection>
-      <styled.CenterSection>
-        <Link href="/club">
-          <styled.ClubSVG />
-        </Link>
-      </styled.CenterSection>
-      <styled.RightSection>
-        <Link
-          href="/selectDormitory/hufflepuff"
-          style={{ width: '100%', height: '100%' }}
-        >
-          <styled.HufflepuffSVG
-            onClick={() => handleParticipate(hufflepuffFirebaseData[0]?.id)}
-            width="224"
-            height="272"
-          />
-        </Link>
-        <Link
-          href="/selectDormitory/slytherin"
-          style={{ width: '100%', height: '100%' }}
-        >
-          <styled.SlytherinSVG
-            onClick={() => handleParticipate(slytherinFirebaseData[0]?.id)}
-            width="224"
-            height="272"
-          />
-        </Link>
-      </styled.RightSection>
-    </styled.Wrapper>
+    <styled.Container>
+      <styled.Wrapper>
+        <styled.LeftSection>
+          <Link
+            href="/selectDormitory/gryffindor"
+            style={{ width: '100%', height: '100%' }}
+            onClick={(e) => {
+              if ('gryffindor' !== myDorm) {
+                e.preventDefault();
+              }
+              handleParticipate('gryffindor', myDorm, gryffindorFirebaseData);
+            }}
+          >
+            <styled.GryffindorSVG width="224" height="272" />
+          </Link>
+          <Link
+            href="/selectDormitory/ravenclaw"
+            style={{ width: '100%', height: '100%' }}
+            onClick={(e) => {
+              if ('ravenclaw' !== myDorm) {
+                e.preventDefault();
+              }
+              handleParticipate('ravenclaw', myDorm, ravenclawFirebaseData);
+            }}
+          >
+            <styled.RavenclawSVG width="224" height="272" />
+          </Link>
+        </styled.LeftSection>
+        <styled.CenterSection>
+          <Link href="/club">
+            <styled.ClubSVG />
+          </Link>
+        </styled.CenterSection>
+        <styled.RightSection>
+          <Link
+            href="/selectDormitory/hufflepuff"
+            style={{ width: '100%', height: '100%' }}
+            onClick={(e) => {
+              if ('hufflepuff' !== myDorm) {
+                e.preventDefault();
+              }
+              handleParticipate('hufflepuff', myDorm, hufflepuffFirebaseData);
+            }}
+          >
+            <styled.HufflepuffSVG width="224" height="272" />
+          </Link>
+          <Link
+            href="/selectDormitory/slytherin"
+            style={{ width: '100%', height: '100%' }}
+            onClick={(e) => {
+              if ('slytherin' !== myDorm) {
+                e.preventDefault();
+              }
+              handleParticipate('slytherin', myDorm, slytherinFirebaseData);
+            }}
+          >
+            <styled.SlytherinSVG width="224" height="272" />
+          </Link>
+        </styled.RightSection>
+      </styled.Wrapper>
+    </styled.Container>
   );
 };
 

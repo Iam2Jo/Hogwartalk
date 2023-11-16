@@ -3,10 +3,22 @@
 import { useState, useEffect } from 'react';
 import { Dormitory } from '@components/Dormitory';
 import { getFirebaseData } from '@hooks/useFireFetch';
+import { useRouter } from 'next/navigation';
+import { getRefreshToken } from '@utils/service';
 
 const Hufflepuff = () => {
   const [chatId, setChatId] = useState(null);
   const [name, setName] = useState(null);
+
+      // 로그인되어있지 않다면 로그인페이지 유도
+      const router = useRouter();
+      useEffect(() => {
+        const refreshToken = getRefreshToken();
+        if (!refreshToken) {
+          alert('로그인이 필요합니다.');
+          router.push('/');
+        }
+      }, []);
 
   useEffect(() => {
     const fetchData = async () => {

@@ -8,7 +8,8 @@ export const MyChattingContainer = styled.div`
   background-color: #030303;
   border-radius: 0.5rem;
   width: 25.6vw;
-  height: calc(100vh - 2rem); // 패딩 1rem 해줬어서
+  height: calc(100vh - 4rem); // 패딩 1rem 해줬어서
+  margin-top: 2rem; // header
   padding: 1.5rem 1rem 1.5rem 1.5rem;
   overflow-y: hidden;
 

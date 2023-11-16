@@ -25,12 +25,14 @@ import { getToken } from '@utils/service';
 import { getFirebaseDatabyKeyVal } from '@hooks/useFireFetch';
 import { useSearchParams } from 'next/navigation';
 import cutStringAfterColon from '@/utils/cutStringAfterColon';
+import { useRouter } from 'next/navigation';
 
 const Dormitory = ({ chatId, dormName }) => {
   const params = useSearchParams();
-  const queryString = params.get('id');
+  const router = useRouter();
 
-  const chatName = queryString.split('?name=')[1];
+  const queryString = params.get('id');
+  const chatName = queryString?.split('?name=')[1];
 
   const [text, setText] = useState<RequestData>('');
   const [previousMessages, setPreviousMessages] = useState<Message[]>([]);
@@ -46,6 +48,9 @@ const Dormitory = ({ chatId, dormName }) => {
   });
   const [isOpen, setIsOpen] = useState(false);
   const [isConnected, setIsConnected] = useState([]);
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+  // const [newDormName, setNewDormName] = useState(dormName);
 
   // const gryffindorChatInfo = useRecoilValue(gryffindorChatInfoState);
   // const hufflepuffChatInfo = useRecoilValue(hufflepuffChatInfoState);
@@ -57,17 +62,17 @@ const Dormitory = ({ chatId, dormName }) => {
       console.log('firebase chatInfo:  ', res);
       setCurrentDormChatInfo(res[0]);
     });
-  }, []);
+  }, [isInviteModalOpen]);
 
   // const { name, users, updatedAt, host } = currentDormChatInfo;
   const modalData = {
-    title: currentDormChatInfo.name,
-    numParticipants: currentDormChatInfo.users.length,
-    host: currentDormChatInfo.host,
-    creationDate: extractDateFromString(currentDormChatInfo.updatedAt),
-    participants: currentDormChatInfo.users,
+    title: currentDormChatInfo?.name,
+    numParticipants: currentDormChatInfo?.users.length,
+    host: currentDormChatInfo?.host,
+    creationDate: extractDateFromString(currentDormChatInfo?.updatedAt),
+    participants: currentDormChatInfo?.users,
   };
-  const [chatRoomTitle, setChatRoomTitle] = useState(modalData.title);
+  // const [chatRoomTitle, setChatRoomTitle] = useState(modalData.title);
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const messageContainerRef = useRef<HTMLDivElement | null>(null);
@@ -133,21 +138,38 @@ const Dormitory = ({ chatId, dormName }) => {
   };
 
   useEffect(() => {
-    useFetchMessages(chatSocket);
-    useMessageToClient(chatSocket, handleMessageToClient);
-    useFetchUsers(chatSocket);
-    usePullUsers(chatSocket, handlePullUsers);
-    useJoinUsers(chatSocket, handleJoinUsers);
-    useLeaveUsers(chatSocket, handleLeaveUsers);
+    const fetchDataAndAttachListeners = async () => {
+      try {
+        await useFetchMessages(chatSocket);
+        await useFetchUsers(chatSocket);
+        useMessageToClient(chatSocket, handleMessageToClient);
+        usePullUsers(chatSocket, handlePullUsers);
+        useJoinUsers(chatSocket, handleJoinUsers);
+        useLeaveUsers(chatSocket, handleLeaveUsers);
+      } catch (error) {
+        console.error(
+          '데이터 가져오기 또는 이벤트 리스너 추가 중 오류 발생:',
+          error,
+        );
+      }
+    };
+
+    fetchDataAndAttachListeners();
 
     return () => {
-      console.log('Cleanup function called');
+      console.log('클린업 함수 호출됨');
       chatSocket.off('message-to-client', handleMessageToClient);
       chatSocket.off('users-to-client', handlePullUsers);
       chatSocket.off('join', handleJoinUsers);
       chatSocket.off('leave', handleLeaveUsers);
     };
-  }, [chatSocket]);
+  }, [
+    chatSocket,
+    handleMessageToClient,
+    handlePullUsers,
+    handleJoinUsers,
+    handleLeaveUsers,
+  ]);
 
   useEffect(() => {
     useMessagesToClient(chatSocket, handleMessagesToClient);
@@ -171,9 +193,6 @@ const Dormitory = ({ chatId, dormName }) => {
   }, [isAtBottom]);
 
   /********************************************************** */
-  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
-  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
-
   const openInfoModal = () => {
     setIsInfoModalOpen(true);
   };
@@ -182,12 +201,21 @@ const Dormitory = ({ chatId, dormName }) => {
     setIsInfoModalOpen(false);
   };
 
-  const handleTitleChange = (newTitle) => {
-    setChatRoomTitle(newTitle);
-  };
+  // const handleTitleChange = (newTitle) => {
+  //   setChatRoomTitle(newTitle);
+  // };
 
   const openInviteModal = () => {
-    setIsInviteModalOpen(true);
+    const isDisabled = [
+      'gryffindor',
+      'ravenclaw',
+      'hufflepuff',
+      'slytherin',
+    ].includes(dormName);
+
+    if (!isDisabled) {
+      setIsInviteModalOpen(true);
+    }
   };
 
   const closeInviteModal = () => {
@@ -195,14 +223,24 @@ const Dormitory = ({ chatId, dormName }) => {
   };
 
   const leaveChatRoom = () => {
-    axios
-      .patch(CHATROOM_LEAVE_URL, { chatId }, { headers })
-      .then((response) => {
-        alert(response.data.message);
-      })
-      .catch((err) => {
-        console.error(err);
+    if (
+      dormName === 'gryffindor' ||
+      dormName === 'ravenclaw' ||
+      dormName === 'hufflepuff' ||
+      dormName === 'slytherin'
+    ) {
+      alert('해당 채팅방은 나갈 수 없습니다.');
+      return;
+    }
+
+    try {
+      axios.patch(CHATROOM_LEAVE_URL, { chatId }, { headers }).then((res) => {
+        alert(res.data.message);
+        router.push('/club');
       });
+    } catch (error) {
+      console.error('채팅방 나가기 실패!', error);
+    }
   };
   /********************************************************** */
 
@@ -214,13 +252,15 @@ const Dormitory = ({ chatId, dormName }) => {
         host={modalData.host}
         creationDate={modalData.creationDate}
         participants={modalData.participants}
-        onTitleChange={handleTitleChange}
+        // onTitleChange={handleTitleChange}
         isOpen={isInfoModalOpen}
         onClose={closeInfoModal}
         isConnected={isConnected}
         dormName={dormName}
+        // setDormName={setNewDormName}
       />
       <InviteToChatRoomModal
+        title={modalData.title}
         isOpen={isInviteModalOpen}
         onClose={closeInviteModal}
         chatId={chatId}
@@ -232,10 +272,10 @@ const Dormitory = ({ chatId, dormName }) => {
           <styled.Button onClick={leaveChatRoom}>나가기</styled.Button>
         </styled.MoreItemContainer>
       ) : null}
-      <styled.DormitoryHeader>
+      <styled.DormitoryHeader >
         <styled.TitleWrapper>
           <styled.Title>{dormName}</styled.Title>
-          <styled.Badge chatName={chatName} onClick={openInviteModal}>
+          <styled.Badge onClick={openInviteModal}>
             <styled.PersonIcon />
             {currentDormChatInfo?.users.length}
           </styled.Badge>

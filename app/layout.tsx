@@ -5,7 +5,7 @@ import GlobalStyle from '../styles/globalStyle';
 import '../styles/fonts/font.css';
 import { Registry } from './registry';
 import BgmPlayer from './home/page';
-import MousePointer from '@components/MousePointer/mousePointer';
+import { Header } from '@components/Header';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -29,7 +29,6 @@ export default function RootLayout({
               {children}
               <BgmPlayer />
             </Registry>
-            {/* <MousePointer /> */}
           </body>
         </html>
       </RecoilRoot>
