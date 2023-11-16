@@ -247,7 +247,7 @@ const Dormitory = ({ chatId, dormName }) => {
         onClose={closeInfoModal}
         isConnected={isConnected}
         dormName={dormName}
-        setDormName={setNewDormName}
+        // setDormName={setNewDormName}
       />
       <InviteToChatRoomModal
         title={modalData.title}
@@ -264,7 +264,7 @@ const Dormitory = ({ chatId, dormName }) => {
       ) : null}
       <styled.DormitoryHeader>
         <styled.TitleWrapper>
-          <styled.Title>{newDormName}</styled.Title>
+          <styled.Title>{dormName}</styled.Title>
           <styled.Badge onClick={openInviteModal}>
             <styled.PersonIcon />
             {currentDormChatInfo?.users.length}
