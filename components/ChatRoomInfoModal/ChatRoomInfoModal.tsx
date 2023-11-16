@@ -15,7 +15,7 @@ import {
   updateFirebaseData,
   getFirebaseDatabyKeyVal,
 } from '@hooks/useFireFetch';
-
+import { getToken } from '@utils/service';
 interface User {
   id: string;
   picture: string;
@@ -51,14 +51,12 @@ const ChatRoomInfoModal = ({
 ChatRoomInfoModalProps) => {
   if (!isOpen) return null;
 
-  const SERVER_KEY = '660d616b';
-  const ACCESS_TOKEN =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGQ2MTZiOmhhcnJ5cG90dGVyIiwiaWF0IjoxNjk5MzQ1NDkzLCJleHAiOjE2OTk5NTAyOTN9.b5s4_9f-pVBj9ki17SXc6VvoiApMJZCJXfk5G2wskyo';
-  const GET_MY_INFO_URL = 'https://fastcampus-chat.net/auth/me';
-
+  const SERVER_KEY = process.env.NEXT_PUBLIC_SERVER_KEY;
+  const GET_MY_INFO_URL = process.env.NEXT_PUBLIC_GET_MY_INFO_URL;
+  const [accessToken, setAccessToken] = useState('');
   const headers = {
     'Content-Type': 'application/json',
-    Authorization: `Bearer ${ACCESS_TOKEN}`,
+    ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
     serverId: SERVER_KEY,
   };
 
@@ -67,9 +65,10 @@ ChatRoomInfoModalProps) => {
   const [isHost, setIsHost] = useState(false);
   const [chatInfo, setChatInfo] = useState({});
 
-  // const setGryffindorChatInfo = useSetRecoilState(
-  //   dormChatInfo.gryffindorChatInfoState,
-  // );
+  useEffect(() => {
+    const token = getToken();
+    setAccessToken(token);
+  }, []);
 
   useEffect(() => {
     getFirebaseDatabyKeyVal('chatInfo', 'name', dormName).then((res) => {

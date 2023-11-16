@@ -28,6 +28,9 @@ import cutStringAfterColon from '@/utils/cutStringAfterColon';
 import { useRouter } from 'next/navigation';
 
 const Dormitory = ({ chatId, dormName }) => {
+  const [currentChatId, setCurrentChatId] = useState(chatId);
+  const [currentDormName, setCurrentDormName] = useState(dormName);
+
   const params = useSearchParams();
   const router = useRouter();
 
@@ -76,10 +79,10 @@ const Dormitory = ({ chatId, dormName }) => {
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const messageContainerRef = useRef<HTMLDivElement | null>(null);
-  const SERVER_KEY = '660d616b';
+  const SERVER_KEY = process.env.NEXT_PUBLIC_SERVER_KEY;
   const [accessToken, setAccessToken] = useState('');
 
-  const CHATROOM_LEAVE_URL = 'https://fastcampus-chat.net/chat/leave';
+  const CHATROOM_LEAVE_URL = process.env.NEXT_PUBLIC_CHATROOM_LEAVE_URL;
   const myId = findMyId(accessToken);
   const headers = {
     ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
@@ -195,10 +198,12 @@ const Dormitory = ({ chatId, dormName }) => {
   /********************************************************** */
   const openInfoModal = () => {
     setIsInfoModalOpen(true);
+    setIsOpen(false);
   };
 
   const closeInfoModal = () => {
     setIsInfoModalOpen(false);
+    setIsOpen(false);
   };
 
   // const handleTitleChange = (newTitle) => {
@@ -242,6 +247,14 @@ const Dormitory = ({ chatId, dormName }) => {
       console.error('채팅방 나가기 실패!', error);
     }
   };
+
+  const handleOverlayClick = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+  ) => {
+    if (e.target === e.currentTarget) {
+      setIsOpen(!isOpen);
+    }
+  };
   /********************************************************** */
 
   return (
@@ -267,12 +280,15 @@ const Dormitory = ({ chatId, dormName }) => {
         setCurrentRoomChatInfo={setCurrentDormChatInfo}
       />
       {isOpen ? (
-        <styled.MoreItemContainer>
-          <styled.Button onClick={openInfoModal}>채팅방 정보</styled.Button>
-          <styled.Button onClick={leaveChatRoom}>나가기</styled.Button>
-        </styled.MoreItemContainer>
+        <styled.ModalOverlay onClick={handleOverlayClick}>
+          <styled.MoreItemContainer>
+            <styled.Button onClick={openInfoModal}>채팅방 정보</styled.Button>
+            <styled.Line />
+            <styled.Button onClick={leaveChatRoom}>나가기</styled.Button>
+          </styled.MoreItemContainer>
+        </styled.ModalOverlay>
       ) : null}
-      <styled.DormitoryHeader >
+      <styled.DormitoryHeader>
         <styled.TitleWrapper>
           <styled.Title>{dormName}</styled.Title>
           <styled.Badge onClick={openInviteModal}>

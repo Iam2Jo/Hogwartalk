@@ -11,10 +11,11 @@ import UserIcon from '@assets/icon/UserIcon.svg';
 type ResponseValue = any;
 
 const MyChatting = () => {
-  const SERVER_KEY = '660d616b';
-  const FIND_MY_CHAT_URL = 'https://fastcampus-chat.net/chat';
+  const SERVER_KEY = process.env.NEXT_PUBLIC_SERVER_KEY;
+  const FIND_MY_CHAT_URL = process.env.NEXT_PUBLIC_FIND_MY_CHAT_URL;
   const [accessToken, setAccessToken] = useState('');
-
+  const isBrowser = typeof window !== 'undefined';
+  const [currentDormitory, setCurrentDormitory] = useState('');
   const headers = {
     'Content-Type': 'application/json',
     serverId: SERVER_KEY,
@@ -22,10 +23,7 @@ const MyChatting = () => {
   };
 
   const [data, setData] = useState<ResponseValue | null>(null);
-  const currentUrl = window.location.href;
-  const currentDormitory = currentUrl.substring(
-    currentUrl.lastIndexOf('/') + 1,
-  );
+
   // Polling 방식
   const fetchData = () => {
     axios
@@ -38,7 +36,15 @@ const MyChatting = () => {
         console.error('내 채팅방 조회 실패!', error);
       });
   };
-
+  useEffect(() => {
+    if (isBrowser) {
+      const currentUrl = window.location.href;
+      const currentDormitory = currentUrl.substring(
+        currentUrl.lastIndexOf('/') + 1,
+      );
+      setCurrentDormitory(currentDormitory);
+    }
+  }, [isBrowser]);
   useEffect(() => {
     const token = getToken();
     setAccessToken(token);
@@ -79,17 +85,13 @@ const MyChatting = () => {
 
             return (
               <Link
-                key={chat.id}
                 href={
                   chat.name === 'gryffindor' ||
                   chat.name === 'slytherin' ||
                   chat.name === 'hufflepuff' ||
                   chat.name === 'ravenclaw'
                     ? `/selectDormitory/${chat.name}`
-                    : {
-                        pathname: '/club/chatting',
-                        query: { id: chat.id, name: chat.name },
-                      }
+                    : `/club/${chat.id}&name=${chat.name}`
                 }
               >
                 <styled.MyChatting

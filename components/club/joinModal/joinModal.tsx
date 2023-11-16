@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import * as styled from './joinModal.styles';
-import CancelIcon from '@assets/icon/cancelIcon.svg';
+import CancelIcon from '@assets/icon/CancelIcon.svg';
 import { chatInfoState, joinModalState } from '@recoil/chatList';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import axios from 'axios';
@@ -10,7 +10,7 @@ import { getToken } from '@utils/service';
 
 const joinModal = () => {
   const router = useRouter();
-  const SERVER_KEY = '660d616b';
+  const SERVER_KEY = process.env.NEXT_PUBLIC_SERVER_KEY;
   const [accessToken, setAccessToken] = useState('');
 
   const headers = {
@@ -25,7 +25,7 @@ const joinModal = () => {
   const chatId = chatInfo[0].id;
 
   const handleParticipate = (chatId: string) => {
-    const PARTICIPATE_CHAT_URL = 'https://fastcampus-chat.net/chat/participate';
+    const PARTICIPATE_CHAT_URL = process.env.NEXT_PUBLIC_PARTICIPATE_CHAT_URL;
     const requestData: RequestBodyParticipate = {
       chatId: chatId,
     };

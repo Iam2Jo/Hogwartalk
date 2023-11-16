@@ -21,10 +21,10 @@ import { loadingState } from '@recoil/atom';
 import { Router } from 'next/router';
 
 const club = () => {
-  const SERVER_KEY = '660d616b';
+  const SERVER_KEY = process.env.NEXT_PUBLIC_SERVER_KEY;
   const [accessToken, setAccessToken] = useState('');
-  const FIND_ALL_CHAT_URL = 'https://fastcampus-chat.net/chat/all';
-  const FIND_MY_CHAT_URL = 'https://fastcampus-chat.net/chat';
+  const FIND_ALL_CHAT_URL = process.env.NEXT_PUBLIC_FIND_ALL_CHAT_URL;
+  const FIND_MY_CHAT_URL = process.env.NEXT_PUBLIC_FIND_MY_CHAT_URL;
 
   const headers = {
     'Content-Type': 'application/json',
@@ -100,7 +100,7 @@ const club = () => {
       {createModalOpen && <CreateModal />}
       <Header />
       <styled.ContentWrap>
-        <CandleImg/>
+        <CandleImg />
         <styled.Container>
           <styled.HeaderWrap>
             <styled.Title>CLUB</styled.Title>

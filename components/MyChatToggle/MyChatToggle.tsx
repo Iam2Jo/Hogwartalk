@@ -15,8 +15,8 @@ interface MyChatToggleProps {
 }
 
 const MyChatToggle: React.FC<MyChatToggleProps> = ({ isVisible, onClose }) => {
-  const SERVER_KEY = '660d616b';
-  const FIND_MY_CHAT_URL = 'https://fastcampus-chat.net/chat';
+  const SERVER_KEY = process.env.NEXT_PUBLIC_SERVER_KEY;
+  const FIND_MY_CHAT_URL = process.env.NEXT_PUBLIC_FIND_MY_CHAT_URL;
   const [accessToken, setAccessToken] = useState('');
 
   const headers = {
@@ -24,12 +24,11 @@ const MyChatToggle: React.FC<MyChatToggleProps> = ({ isVisible, onClose }) => {
     serverId: SERVER_KEY,
     ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
   };
+  const [currentDormitory, setCurrentDormitory] = useState('');
+  const isBrowser = typeof window !== 'undefined';
 
   const [data, setData] = useState<ResponseValue | null>(null);
-  const currentUrl = window.location.href;
-  const currentDormitory = currentUrl.substring(
-    currentUrl.lastIndexOf('/') + 1,
-  );
+
   // Polling 방식
   const fetchData = () => {
     axios
@@ -42,7 +41,15 @@ const MyChatToggle: React.FC<MyChatToggleProps> = ({ isVisible, onClose }) => {
         console.error('내 채팅방 조회 실패!', error);
       });
   };
-
+  useEffect(() => {
+    if (isBrowser) {
+      const currentUrl = window.location.href;
+      const currentDormitory = currentUrl.substring(
+        currentUrl.lastIndexOf('/') + 1,
+      );
+      setCurrentDormitory(currentDormitory);
+    }
+  }, [isBrowser]);
   useEffect(() => {
     const token = getToken();
     setAccessToken(token);

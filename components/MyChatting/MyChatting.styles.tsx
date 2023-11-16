@@ -60,6 +60,13 @@ export const MyChatting = styled.div<MyChattingProps>`
   border: ${(props) =>
     props.$isCurrentChat ? '1px solid #f2cc00' : '1px solid #4a4a4a'};
   border-radius: 0.5rem;
+
+  &:hover {
+    border: 1px solid #f2cc00;
+    background: #191919;
+    color: var(--color-main-yellow);
+    box-shadow: 0px 0px 20px 0px rgba(242, 204, 0, 0.49);
+  }
 `;
 
 export const ChattingInfo = styled.div`

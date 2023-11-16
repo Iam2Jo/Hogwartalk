@@ -3,20 +3,24 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { ResponseValue } from '@/@types/RESTAPI/findAllChatting.types';
-
+import { getToken } from '@utils/service';
 export function readChatting() {
-  const SERVER_KEY = '660d616b';
-  const CREATE_CHAT_URL = 'https://fastcampus-chat.net/chat/all';
-  const ACCESS_TOKEN =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGQ2MTZiOmhhcnJ5cG90dGVyIiwiaWF0IjoxNjk5MzQ1NDkzLCJleHAiOjE2OTk5NTAyOTN9.b5s4_9f-pVBj9ki17SXc6VvoiApMJZCJXfk5G2wskyo';
+  const SERVER_KEY = process.env.NEXT_PUBLIC_SERVER_KEY;
+  const CREATE_CHAT_URL = process.env.NEXT_PUBLIC_CREATE_CHAT_URL;
+  const [accessToken, setAccessToken] = useState('');
 
   const headers = {
     'Content-Type': 'application/json',
+    ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
     serverId: SERVER_KEY,
-    Authorization: `Bearer ${ACCESS_TOKEN}`,
   };
 
   const [data, setData] = useState<ResponseValue | null>(null);
+
+  useEffect(() => {
+    const token = getToken();
+    setAccessToken(token);
+  }, []);
 
   useEffect(() => {
     axios
