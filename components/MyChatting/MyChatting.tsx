@@ -12,8 +12,8 @@ import { useRouter } from 'next/navigation';
 type ResponseValue = any;
 
 const MyChatting = () => {
-  const SERVER_KEY = '660d616b';
-  const FIND_MY_CHAT_URL = 'https://fastcampus-chat.net/chat';
+  const SERVER_KEY = process.env.REACT_APP_SERVER_KEY;
+  const FIND_MY_CHAT_URL = process.env.REACT_APP_FIND_MY_CHAT_URL;
   const [accessToken, setAccessToken] = useState('');
 
   const headers = {

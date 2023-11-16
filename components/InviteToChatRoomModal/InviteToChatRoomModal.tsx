@@ -10,6 +10,7 @@ import {
 } from '../FriendSearchToggle/FriendSearchToggle.styles';
 import axios from 'axios';
 import { updateFirebaseData } from '@hooks/useFireFetch';
+import { getToken } from '@utils/service';
 
 interface DormChatInfo {
   id: string | null;
@@ -51,17 +52,15 @@ const InviteToChatRoomModal = ({
   const [allUsers, setAllUsers] = useState([]);
   const [currentChatUsers, setCurrentChatUsers] = useState<User[]>([]);
   const [invitedUsers, setInvitedUsers] = useState<InvitedUser[]>([]);
-
-  const SERVER_KEY = '660d616b';
-  const ACCESS_TOKEN =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGQ2MTZiOmhlcm1pb25lIiwiaWF0IjoxNjk5NDIzOTI4LCJleHAiOjE3MDAwMjg3Mjh9.9FA24mkoipWSd4KlpxTX0L8mKmJj7LAVd_XEcW1Xt7w';
-  const GET_ALL_USERS_URL = 'https://fastcampus-chat.net/users';
-  const GET_ALL_CHATTINGS_URL = 'https://fastcampus-chat.net/chat/all';
-  const INVITE_TO_CHATROOM_URL = 'https://fastcampus-chat.net/chat/invite';
+  const [accessToken, setAccessToken] = useState('');
+  const SERVER_KEY = process.env.REACT_APP_SERVER_KEY;
+  const GET_ALL_USERS_URL = process.env.REACT_APP_GET_ALL_USERS_URL;
+  const GET_ALL_CHATTINGS_URL = process.env.REACT_APP_GET_ALL_CHATTINGS_URL;
+  const INVITE_TO_CHATROOM_URL = process.env.REACT_APP_INVITE_TO_CHATROOM_URL;
 
   const headers = {
     'Content-Type': 'application/json',
-    Authorization: `Bearer ${ACCESS_TOKEN}`,
+    ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
     serverId: SERVER_KEY,
   };
 
@@ -100,6 +99,10 @@ const InviteToChatRoomModal = ({
       users: [...prev.users, ...invitedUsersName],
     }));
   };
+  useEffect(() => {
+    const token = getToken();
+    setAccessToken(token);
+  }, []);
 
   // 현재 채팅에 있는 유저 불러오기
   useEffect(() => {

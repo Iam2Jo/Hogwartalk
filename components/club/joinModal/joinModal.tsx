@@ -10,7 +10,7 @@ import { getToken } from '@utils/service';
 
 const joinModal = () => {
   const router = useRouter();
-  const SERVER_KEY = '660d616b';
+  const SERVER_KEY = process.env.REACT_APP_SERVER_KEY;
   const [accessToken, setAccessToken] = useState('');
 
   const headers = {
@@ -25,7 +25,7 @@ const joinModal = () => {
   const chatId = chatInfo[0].id;
 
   const handleParticipate = (chatId: string) => {
-    const PARTICIPATE_CHAT_URL = 'https://fastcampus-chat.net/chat/participate';
+    const PARTICIPATE_CHAT_URL = process.env.REACT_APP_PARTICIPATE_CHAT_URL;
     const requestData: RequestBodyParticipate = {
       chatId: chatId,
     };
