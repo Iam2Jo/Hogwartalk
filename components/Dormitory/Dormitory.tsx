@@ -61,11 +61,21 @@ const Dormitory = ({ chatId, dormName }) => {
   // const slytherinChatInfo = useRecoilValue(slytherinChatInfoState);
 
   useEffect(() => {
-    getFirebaseDatabyKeyVal('chatInfo', 'name', dormName).then((res) => {
-      console.log('firebase chatInfo:  ', res);
-      setCurrentDormChatInfo(res[0]);
-    });
-  }, [previousMessages]);
+    const fetchData = async () => {
+      try {
+        const res = await getFirebaseDatabyKeyVal('chatInfo', 'name', dormName);
+        console.log('firebase chatInfo:  ', res);
+        setCurrentDormChatInfo(res[0]);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    fetchData();
+    const intervalId = setInterval(() => {
+      fetchData();
+    }, 5000);
+    return () => clearInterval(intervalId);
+  }, []);
 
   // const { name, users, updatedAt, host } = currentDormChatInfo;
   const modalData = {
