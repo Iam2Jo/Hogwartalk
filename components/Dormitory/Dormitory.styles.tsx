@@ -199,3 +199,23 @@ export const Button = styled.button`
   border: none;
   cursor: pointer;
 `;
+
+export const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+`;
+
+export const Line = styled.div`
+  width: 100%;
+  height: 0.5px;
+  background: rgba(225, 225, 225, 0.4);
+  margin: 5px 0;
+`;

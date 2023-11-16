@@ -195,10 +195,12 @@ const Dormitory = ({ chatId, dormName }) => {
   /********************************************************** */
   const openInfoModal = () => {
     setIsInfoModalOpen(true);
+    setIsOpen(false);
   };
 
   const closeInfoModal = () => {
     setIsInfoModalOpen(false);
+    setIsOpen(false);
   };
 
   // const handleTitleChange = (newTitle) => {
@@ -242,6 +244,14 @@ const Dormitory = ({ chatId, dormName }) => {
       console.error('채팅방 나가기 실패!', error);
     }
   };
+
+  const handleOverlayClick = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+  ) => {
+    if (e.target === e.currentTarget) {
+      setIsOpen(!isOpen);
+    }
+  };
   /********************************************************** */
 
   return (
@@ -267,12 +277,15 @@ const Dormitory = ({ chatId, dormName }) => {
         setCurrentRoomChatInfo={setCurrentDormChatInfo}
       />
       {isOpen ? (
-        <styled.MoreItemContainer>
-          <styled.Button onClick={openInfoModal}>채팅방 정보</styled.Button>
-          <styled.Button onClick={leaveChatRoom}>나가기</styled.Button>
-        </styled.MoreItemContainer>
+        <styled.ModalOverlay onClick={handleOverlayClick}>
+          <styled.MoreItemContainer>
+            <styled.Button onClick={openInfoModal}>채팅방 정보</styled.Button>
+            <styled.Line />
+            <styled.Button onClick={leaveChatRoom}>나가기</styled.Button>
+          </styled.MoreItemContainer>
+        </styled.ModalOverlay>
       ) : null}
-      <styled.DormitoryHeader >
+      <styled.DormitoryHeader>
         <styled.TitleWrapper>
           <styled.Title>{dormName}</styled.Title>
           <styled.Badge onClick={openInviteModal}>
