@@ -1,5 +1,6 @@
 'use client';
 import { Header } from '@components/Header';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import * as styled from './club.styles';
 import ChatItem from '@components/club/chatItem/chatItem';
@@ -15,8 +16,9 @@ import CandleImg from '@assets/img/Candles.svg';
 import JoinModal from '@components/club/joinModal/page';
 import CreateModal from '@components/club/createModal/page';
 import Loading from '@components/club/loading/page';
-import { getToken } from '@utils/service';
+import { getRefreshToken, getToken } from '@utils/service';
 import { loadingState } from '@recoil/atom';
+import { Router } from 'next/router';
 
 const club = () => {
   const SERVER_KEY = '660d616b';
@@ -34,7 +36,14 @@ const club = () => {
   const setChatList = useSetRecoilState(chatListState);
   const loading = useRecoilValue(loadingState);
   const setLoading = useSetRecoilState(loadingState);
-
+  const router = useRouter();
+  useEffect(() => {
+    const refreshToken = getRefreshToken();
+    if (!refreshToken) {
+      alert('로그인이 필요합니다.');
+      router.push('/');
+    }
+  }, []);
   useEffect(() => {
     const token = getToken();
     setAccessToken(token);
@@ -91,7 +100,7 @@ const club = () => {
       {createModalOpen && <CreateModal />}
       <Header />
       <styled.ContentWrap>
-        <CandleImg width="100%" />
+        <CandleImg/>
         <styled.Container>
           <styled.HeaderWrap>
             <styled.Title>CLUB</styled.Title>

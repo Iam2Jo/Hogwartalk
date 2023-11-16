@@ -29,11 +29,10 @@ export const MoreItemContainer = styled.button`
 `;
 
 export const DormitoryContainer = styled.div`
-  /* position: relative; */
   background-color: #1f1f1f;
   width: 73.4vw;
   height: calc(100vh -2rem); // 패딩 1rem 해줬어서
-  margin-top: 50px; // header
+  margin-top: 2rem; // header
 
   ::-webkit-scrollbar {
     width: 10px;
@@ -60,10 +59,11 @@ export const DormitoryHeader = styled.div`
   font-weight: bold;
   color: #f2cc00;
   margin-bottom: 1rem;
+  border-radius: 0.5rem;
 `;
 
 export const MessageContainer = styled.div`
-  background-color: black;
+  background-color: #000000;
   border-radius: 0.5rem;
   padding: 0.5rem 1rem;
   width: 100%;
@@ -100,13 +100,19 @@ export const MessageText = styled.span<MessageProps>`
 `;
 
 export const InputWrapper = styled.div`
+  margin-top: 0.8rem;
+  display: flex;
+  justify-content: center;
   background-color: #1f1f1f;
   width: 100%;
   height: 10%;
   input {
-    width: 80%;
+    width: 78%;
     height: 100%;
     border-radius: 0.5rem;
+    border: none;
+    margin-right: 1rem;
+    outline: none;
   }
   button {
     background-color: #f2cc00;
@@ -116,6 +122,8 @@ export const InputWrapper = styled.div`
     width: 20%;
     height: 100%;
     border-radius: 0.5rem;
+    border: none;
+    cursor: pointer;
   }
 `;
 
@@ -189,4 +197,5 @@ export const Button = styled.button`
   color: white;
   font-size: 0.9rem;
   border: none;
+  cursor: pointer;
 `;

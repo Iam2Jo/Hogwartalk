@@ -9,12 +9,9 @@ import { doesDormitoryExist } from '@hooks/doesDormitoryExist';
 import createDormitoryIfNone from '@hooks/createDormitoryIfNone';
 import { RequestBody as RequestBodyCreate } from '@/@types/RESTAPI/createChatting.types';
 import { RequestBody as RequestBodyParticipate } from '@/@types/RESTAPI/participateChatting.types';
-import { getToken } from '@utils/service';
-import {
-  getFirebaseData,
-  getFirebaseDatabyKeyVal,
-  updateFirebaseData,
-} from '@hooks/useFireFetch';
+import { getRefreshToken, getToken } from '@utils/service';
+import { getFirebaseData, getFirebaseDatabyKeyVal, updateFirebaseData } from '@hooks/useFireFetch';
+import { useRouter } from 'next/navigation';
 
 interface RequestBody {
   name: string;
@@ -107,6 +104,16 @@ const SelectDormitory = () => {
         console.error('채팅 참여 실패!', error);
       });
   };
+
+    // 로그인되어있지 않다면 로그인페이지 유도
+    const router = useRouter();
+    useEffect(() => {
+      const refreshToken = getRefreshToken();
+      if (!refreshToken) {
+        alert('로그인이 필요합니다.');
+        router.push('/');
+      }
+    }, []);
 
   useEffect(() => {
     const token = getToken();

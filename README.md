@@ -1,28 +1,186 @@
-git commit convention제목 : 제목은 간단하게 해당 커밋의 목적을 요약해서 작성합니다.`Feat: "로그인 함수 추가"`
+# 호그와톡
 
-1. 50자 이내
-2. 시작할 때는 대문자로 시작 (보통 Fix, Add, Change 등의 명령어로 시작)
-3. 마칠 때 마침표 등의 특수문자 없이 작성,
-4. 개조식으로 작성
-5. “타입: 내용” 의 형식으로 작성
+## 💁 프로젝트 정보
+
+> 주어진 API와 소켓을 활용한 채팅앱 제작 프로젝트입니다. <br>
+> 호그와트 학생 체험을 할 수 있도록 구성하였습니다. <br>
+> 개발기간: 2023.11.06 ~ 2023.11.16
+> <br>
+
+<br>
+
+## 🌐 배포 주소
+
+> 배포 주소:
+> <br>
+
+<br>
+
+## 🚖 개발 팀 소개
+
+|                          어승준                           |                           이승연                           |                          이승현                           |                           배경규                           |                          장문용                           |
+| :-------------------------------------------------------: | :--------------------------------------------------------: | :-------------------------------------------------------: | :--------------------------------------------------------: | :-------------------------------------------------------: |
+|      [@seungjun222](https://github.com/seungjun222)       |          [@ewinkite](https://github.com/ewinkite)          |     [@seungsimdang](https://github.com/seungsimdang)      |       [@kyungkyuBae](https://github.com/kyungkyuBae)       |          [@moonyah](https://github.com/moonyah)           |
+| ![](https://avatars.githubusercontent.com/u/39702832?v=4) | ![](https://avatars.githubusercontent.com/u/139189610?v=4) | ![](https://avatars.githubusercontent.com/u/93538221?v=4) | ![](https://avatars.githubusercontent.com/u/131759810?v=4) | ![](https://avatars.githubusercontent.com/u/51106050?v=4) |
+|                         채팅 기능                         |                퀴즈, 클럽 페이지 관련 기능                 |                         채팅 기능                         |                   로그인/ 회원가입 기능                    |        공통 컴포넌트(헤더 - 마이페이지, 친구 목록)        |
+
+<br>
+
+## 💻 개발 스택
+
+### 환경
+
+`VSC` `GIT` `GITHUB`
+
+### 개발
+
+`Next.js` `REACT` `FIREBASE` `TYPESCRIPT` `Recoil`
+
+### 🌙 이슈 관리 및 소통
+
+`JIRA` `SLACK` `NOTION`
+
+<br/>
+
+## 🤝 협업 방식
+
+커밋 컨벤션, 코딩 컨벤션, 깃허브 규칙 등의 내용은 아래의 노션 페이지를 참고해주세요! </br>
+
+### [🔗 노션 페이지](https://www.notion.so/I-am-2-bb6a5448abf64a9bb941c8e98bef31f2?pvs=4) </br>
+
+<br/>
+<br/>
+
+## 🤝 요구사항 반영 여부
+
+### 필수 구현 사항
+
+✅ `useState`, `useReducer`를 활용한 상태 관리 구현 <br/>
+✅ `Sass` 또는 `styled-component`를 활용한 스타일 구현 <br/>
+✅ `react` 상태를 통한 CRUD 구현 <br/>
+✅ 상태에 따라 달라지는 스타일 구현 <br/>
+✅ `custom hook`을 통한 비동기 처리 구현 <br/>
+✅ 유저인증 시스템(로그인, 회원가입) 구현 <br/>
+✅ `jwt`등의 유저 인증 시스템 (로그인, 회원가입 기능) <br/>
+✅ 소켓을 이용한 채팅 구현 <br/>
+
+### 선택 구현 사항
+
+✅ `Next.js`를 활용한 서버 사이드 렌더링 구현 <br/>
+✅ `typescript`를 활용한 앱 구현
+
+<br/>
+<br/>
+
+## 🔍 팀원별 세부 구현 사항
+
+<details>
+<summary style="font-size: 18px">어승준: 💬 채팅</summary>
+<div markdown="1">
+
+내용 써주세요
+
+</div>
+</details>
+
+<br>
+
+<details>
+<summary style="font-size: 18px"> 이승연: 🌐 퀴즈, 클럽, 공통</summary>
+<div markdown="1">
+
+### 1. 기숙사 배정 퀴즈 페이지 (회원가입)
+
+#### 시나리오에 따른 기숙사 배정 로직 구현
+
+![1퀴즈](https://github.com/Iam2Jo/Hogwartalk/assets/139189610/700a2eda-905e-4e08-9921-4085c59fcc94)
 
 ```
-Feat : 새로운 기능 추가
-Fix : 버그 수정
-Env : 개발 환경 관련 설정
-Style : 코드 스타일 수정 (세미 콜론, 인덴트 등의 스타일적인 부분만)
-Refactor : 코드 리팩토링 (더 효율적인 코드로 변경 등)
-Design : CSS 등 디자인 추가/수정
-Comment : 주석 추가/수정
-Docs : 내부 문서 추가/수정
-Test : 테스트 추가/수정
-Chore : 빌드 관련 코드 수정
-Rename : 파일 및 폴더명 수정
-Remove : 파일 삭제
+💡 시나리오에 따라 답변을 클릭하면 점수가 누적되며, 이에 따른 기숙사 배정이 이루어집니다.
+문항별 선택한 답변 정보를 저장하여 이전/다음 이동시에도 답변이 유지됩니다.
 ```
 
-본문은 다음과 같이 작성합니다.`로그인 기능 구현을 위해 로그인 요청을 보내는 axios 함수 작성`
+### 2. 클럽 페이지
 
-1. 한 줄 당 72자 이내
-2. 아무리 길어도 괜찮으니, 최대한 상세히 작성
-3. 무엇을, 왜 변경했는지 작성 (코드 자체를 상세히 적는 것은 지양)
+#### 채팅방 목록 조회
+
+![3채팅방목록조회](https://github.com/Iam2Jo/Hogwartalk/assets/139189610/e5757be6-5b08-4240-95ac-4ae671b0a504)
+
+```
+💡 네 개의 기숙사 채팅방을 제외한 모든 채팅방을 불러옵니다.
+이때 update 일시를 기준, 최신순으로 정렬되어 노출됩니다.
+로그인한 사용자가 참여중인 채팅방의 경우 개별적으로 표기합니다.
+```
+
+#### 채팅방 생성
+
+![4채팅방생성](https://github.com/Iam2Jo/Hogwartalk/assets/139189610/39f42276-9339-496e-88a1-794f95097996)
+
+```
+💡 새로운 채팅방을 생성하며, 생성이 완료되면 해당되는 채팅방으로 이동합니다.
+제목은 필수값이며 채팅방 공개 여부 설정에 따라 목록 조회가 업데이트 됩니다.
+```
+
+#### 채팅방 참여
+
+![5채팅방참여](https://github.com/Iam2Jo/Hogwartalk/assets/139189610/dee4cf96-696c-438d-9ca6-378a68096c93)
+
+```
+💡 현재 참여중인 채팅방의 경우 바로 해당되는 채팅방으로 이동하며,
+참여중이지 않은 채팅방의 경우 참여 여부를 묻는 다이얼로그가 노출됩니다.
+```
+
+### 3. 공통
+
+#### 로딩 페이지
+
+![2클럽로딩](https://github.com/Iam2Jo/Hogwartalk/assets/139189610/d592854e-93a4-4f67-908d-e11e740f0bc3)
+
+```
+💡 API 호출 중 로딩 페이지가 노출됩니다.
+```
+
+#### BGM(헤더)
+
+![6BGM](https://github.com/Iam2Jo/Hogwartalk/assets/139189610/9ad95e5a-1ee6-4a75-b7a0-640e478cb3cb)
+
+```
+💡 홈페이지 최초 진입 후 특정 영역을 클릭시 BGM이 재생됩니다.
+헤더에서 아이콘을 통해 제어가 가능하며, 경로 이동되어도 재생 상태가 유지됩니다.
+```
+
+</div>
+</details>
+
+<br>
+
+<details>
+<summary style="font-size: 18px">이승현: 💬 채팅</summary>
+<div markdown="1">
+
+</div>
+</details>
+
+<br>
+
+<details>
+<summary style="font-size: 18px">배경규: 🔑 로그인/ 회원가입</summary>
+<div markdown="1">
+
+내용써주세요
+
+</div>
+</details>
+
+<br>
+
+<details>
+<summary style="font-size: 18px">장문용: 📑 공통 컴포넌트</summary>
+<div markdown="1">
+
+내용써주세요
+
+</div>
+</details>
+
+<br>

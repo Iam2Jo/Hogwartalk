@@ -65,6 +65,8 @@ const signup: NextPage = () => {
       const imageURL = await getStorageURL(formData.id);
       const data = { ...formData, picture: imageURL };
       await signupUser(data);
+      alert('회원가입이 완료되었습니다.');
+      router.push('/');
       return;
     }
     await signupUser(formData);

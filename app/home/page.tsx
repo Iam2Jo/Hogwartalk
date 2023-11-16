@@ -5,8 +5,7 @@ import BgmPlayer from '@components/BgmPlayer/bgmPlayer';
 const home: NextPage = () => {
   return (
     <div>
-      {/* <BgmPlayer /> */}
-      {/* <Header /> */}
+      <BgmPlayer />
     </div>
   );
 };
