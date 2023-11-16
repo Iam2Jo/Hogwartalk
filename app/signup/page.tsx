@@ -37,25 +37,29 @@ const signup: NextPage = () => {
   const handleButtonClick = async () => {
     if (formData.id.trim() === '') {
       alert('아이디를 입력하세요');
-      throw new Error('아이디를 입력하세요');
+      return;
     }
     const isDuplicated = await checkUserIdAvailability(formData.id);
     if (isDuplicated === true) {
       alert('이미 존재하는 아이디입니다.');
-      throw new Error('이미 존재하는 아이디입니다.');
+      return
     }
     if (formData.password.trim() === '') {
       alert('비밀번호를 입력하세요.');
-      throw new Error('비밀번호를 입력하세요.');
+      return
     } else if (formData.password.length < 6) {
-      alert('비밀번호는 최소 6자 이상이어야 합니다.');
-      throw new Error('비밀번호는 최소 6자 이상이어야 합니다.');
+      alert('비밀번호는 최소 6자 이상이어야 합니다.')
+      return
+    }
+    if (formData.name === ''){
+      alert('이름을 입력하세요')
+      return
     }
     if (team.trim() === '') {
       alert('기숙사를 선택하세요');
-      throw new Error('기숙사를 선택하세요');
+      return
     }
-    await setUsersClass(formData.id, team);
+    await setUsersClass(formData?.id,team);
     if (userImage) {
       await setStorageImage(userImage, formData.id);
       const imageURL = await getStorageURL(formData.id);
@@ -64,6 +68,9 @@ const signup: NextPage = () => {
       return;
     }
     await signupUser(formData);
+    alert('회원가입이 완료되었습니다.');
+    router.push('/');
+    
   };
   const handleInputImgChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
