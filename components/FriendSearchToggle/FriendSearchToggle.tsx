@@ -8,6 +8,7 @@ import {
   useServerPullUsers,
 } from '@hooks/useChatSocketHooks';
 import axios from 'axios';
+import { getFirebaseDatabyKeyVal } from '@hooks/useFireFetch';
 
 interface FriendSearchToggleProps {
   isVisible: boolean;
@@ -59,10 +60,23 @@ const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
   useEffect(() => {
     axios
       .get(GET_ALL_USERS_URL, { headers })
-      .then((response) => {
+      .then(async (response) => {
         console.log('모든 유저: ', response.data);
 
-        setAllUsers(response.data);
+        const allUsersFromRes = response.data;
+
+        const allUsersFromDB = await getFirebaseDatabyKeyVal('users');
+        const tmpArr = allUsersFromRes.map((userRes) => {
+          const matchingData = allUsersFromDB.find(
+            (userDB) => userDB.id === userRes.id,
+          );
+
+          return matchingData
+            ? { ...userRes, class: matchingData.class }
+            : userRes;
+        });
+
+        setAllUsers(tmpArr);
       })
       .catch((error) => {
         console.error('초대 가능한 유저 불러오기 실패!', error);
