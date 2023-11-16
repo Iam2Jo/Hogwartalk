@@ -40,9 +40,13 @@ export const ProfileImage = styled.img`
   width: 13rem;
   height: 13rem;
   border-radius: 50%;
-  border: 3px solid rgba(255, 255, 255, 0.35);
   margin: 3.125rem 0;
   object-fit: cover;
+
+  border: 2px solid #f2cc00;
+  background: #191919;
+  color: var(--color-main-yellow);
+  box-shadow: 0px 0px 20px 0px rgba(242, 204, 0, 0.49);
 `;
 
 export const LabelsContainer = styled.div`
