@@ -7,6 +7,7 @@ import axios from 'axios';
 import { RequestBody as RequestBodyParticipate } from '@hooks/RESTAPI/participateChatting.types';
 import { useRouter } from 'next/navigation';
 import { getToken } from '@utils/service';
+import { updateFirebaseData } from '@hooks/useFireFetch';
 
 const joinModal = () => {
   const router = useRouter();
@@ -33,6 +34,7 @@ const joinModal = () => {
       .patch(PARTICIPATE_CHAT_URL, requestData, { headers })
       .then((response) => {
         console.log('채팅 참여 성공!', response.data);
+        updateFirebaseData('chatInfo', response.data.name, response.data);
         router.push(
           '/club/' + response.data.id + '&name=' + response.data.name,
         );
