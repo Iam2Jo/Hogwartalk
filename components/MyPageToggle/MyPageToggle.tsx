@@ -253,7 +253,7 @@ const MyPageToggle: React.FC<MyPageToggleProps> = ({ isVisible, onClose }) => {
         <styled.ProfileSection>
           {editMode ? (
             <>
-              <styled.ProfileImage src={tempNewPicture} alt="Profile" />
+              <styled.ProfileImage src={tempNewPicture} alt="" />
               <styled.LabelsContainer>
                 <styled.NameLabel>이름</styled.NameLabel>
                 <styled.EditInput
