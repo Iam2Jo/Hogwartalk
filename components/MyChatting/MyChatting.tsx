@@ -6,13 +6,14 @@ import * as styled from './MyChatting.styles';
 import Link from 'next/link';
 import { getToken } from '@utils/service';
 import UserIcon from '@assets/icon/UserIcon.svg';
+import { useRouter } from 'next/navigation';
 
 // import { ResponseValue } from '@/@types/RESTAPI/findMyChatting.types';
 type ResponseValue = any;
 
 const MyChatting = () => {
-  const SERVER_KEY = '660d616b';
-  const FIND_MY_CHAT_URL = 'https://fastcampus-chat.net/chat';
+  const SERVER_KEY = process.env.REACT_APP_SERVER_KEY;
+  const FIND_MY_CHAT_URL = process.env.REACT_APP_FIND_MY_CHAT_URL;
   const [accessToken, setAccessToken] = useState('');
 
   const headers = {
@@ -79,17 +80,13 @@ const MyChatting = () => {
 
             return (
               <Link
-                key={chat.id}
                 href={
                   chat.name === 'gryffindor' ||
                   chat.name === 'slytherin' ||
                   chat.name === 'hufflepuff' ||
                   chat.name === 'ravenclaw'
                     ? `/selectDormitory/${chat.name}`
-                    : {
-                        pathname: '/club/chatting',
-                        query: { id: chat.id, name: chat.name },
-                      }
+                    : `/club/${chat.id}&name=${chat.name}`
                 }
               >
                 <styled.MyChatting

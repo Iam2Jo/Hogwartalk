@@ -41,8 +41,8 @@ const FriendSearchToggle: React.FC<FriendSearchToggleProps> = ({
     return;
   }
 
-  const GET_ALL_USERS_URL = 'https://fastcampus-chat.net/users';
-  const SERVER_KEY = '660d616b';
+  const GET_ALL_USERS_URL = process.env.REACT_APP_GET_ALL_USERS_URL;
+  const SERVER_KEY = process.env.REACT_APP_SERVER_KEY;
   const ACCESS_TOKEN = accessTokenCookie.split('=')[1];
   const headers = {
     'Content-Type': 'application/json',
