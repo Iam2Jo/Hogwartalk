@@ -34,11 +34,7 @@ const joinModal = () => {
       .then((response) => {
         console.log('채팅 참여 성공!', response.data);
         router.push(
-          '/club/chatting' +
-            '?id=' +
-            response.data.id +
-            '&name=' +
-            response.data.name,
+          '/club/' + response.data.id + '&name=' + response.data.name,
         );
       })
       .catch((error) => {
