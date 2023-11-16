@@ -192,7 +192,7 @@ const MyPageToggle: React.FC<MyPageToggleProps> = ({ isVisible, onClose }) => {
   };
 
   const ProfileImagePreview: React.FC<{ picture: string }> = ({ picture }) => (
-    <styled.ProfileImagePreview src={picture} alt="Preview" />
+    <styled.ProfileImagePreview src={picture} alt=" " />
   );
 
   const handleProfileImageChange = async () => {

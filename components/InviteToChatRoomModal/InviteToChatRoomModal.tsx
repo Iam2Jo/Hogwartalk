@@ -96,7 +96,7 @@ const InviteToChatRoomModal = ({
 
     setCurrentRoomChatInfo((prev) => ({
       ...prev,
-      users: [...prev.users, ...invitedUsersName],
+      users: [...prev?.users, ...invitedUsersName],
     }));
   };
   useEffect(() => {

@@ -65,7 +65,7 @@ const Dormitory = ({ chatId, dormName }) => {
       console.log('firebase chatInfo:  ', res);
       setCurrentDormChatInfo(res[0]);
     });
-  }, [isInviteModalOpen]);
+  }, [previousMessages]);
 
   // const { name, users, updatedAt, host } = currentDormChatInfo;
   const modalData = {
