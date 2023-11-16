@@ -272,7 +272,7 @@ const Dormitory = ({ chatId, dormName }) => {
           <styled.Button onClick={leaveChatRoom}>나가기</styled.Button>
         </styled.MoreItemContainer>
       ) : null}
-      <styled.DormitoryHeader>
+      <styled.DormitoryHeader >
         <styled.TitleWrapper>
           <styled.Title>{dormName}</styled.Title>
           <styled.Badge onClick={openInviteModal}>

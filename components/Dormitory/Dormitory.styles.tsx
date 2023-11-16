@@ -16,7 +16,7 @@ export const MoreItemContainer = styled.button`
   color: var(--color-white);
   padding: 1rem;
   position: absolute;
-  top: 8%;
+  top: 13%;
   right: 3%;
   display: flex;
   flex-direction: column;
