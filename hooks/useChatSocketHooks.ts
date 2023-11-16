@@ -78,3 +78,20 @@ export const useLeaveUsers = async (chatSocket, handleLeaveUsers) => {
     console.error('S->C 유저 퇴장 정보 불러오기 실패!', error);
   }
 };
+
+export const useServerFetchUsers = async (chatSocket) => {
+  try {
+    await chatSocket.emit('users-server');
+    console.log('C->S 접속 상태 유저 목록 fetch 성공!(server)');
+  } catch (error) {
+    console.error('C->S 접속 상태 유저 목록 fetch 실패!(server)', error);
+  }
+};
+
+export const useServerPullUsers = async (chatSocket, handlePullUsers) => {
+  try {
+    await chatSocket.on('users-server-to-client', handlePullUsers);
+  } catch (error) {
+    console.error('S->C 접속 상태 유저 목록 pull 실패!(server)', error);
+  }
+};
