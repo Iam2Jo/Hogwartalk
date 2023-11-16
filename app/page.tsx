@@ -1,95 +1,108 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+'use client';
+import type { NextPage } from 'next';
+import { Fragment, useState } from 'react';
+import cookies from 'react-cookies';
+import { LoginContainer, LoginFormStyle } from './loginStyle';
+import { useRouter } from 'next/navigation';
+import {
+  reissueAccessToken,
+  getToken,
+  getUserdata,
+  loginUser,
+} from '../utils/service';
+import { audioState } from '@recoil/atom';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 
-export default function Home() {
+type LoginData = {
+  id: string;
+  password: string;
+};
+const main: NextPage = () => {
+  const setPlay = useSetRecoilState(audioState);
+
+  const router = useRouter();
+  const [loginData, setLoginData] = useState<LoginData>({
+    id: '',
+    password: '',
+  });
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setLoginData({ ...loginData, [id]: value });
+  };
+  const handleAudio = (e: React.MouseEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    setPlay(true);
+  };
+  const handleButtonClick = async () => {
+    try {
+      const token = await loginUser(loginData);
+      if (token === undefined){
+        alert('아이디와 비밀번호가 올바른지 확인해주세요');
+        return;
+      }
+      cookies.save('accessToken', token?.accessToken, {
+        maxAge: 3600 * 24 * 7,
+      });
+      cookies.save('refreshToken', token?.refreshToken);
+      const userData = await getUserdata();
+      console.log(userData);
+
+    } catch (error) {
+      console.log(error)
+      alert('아이디와 비밀번호가 올바른지 확인해주세요');
+      return;
+    }
+    router.push('/selectDormitory');
+  };
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+    <LoginContainer>
+      <header>
+        <img src="/LoginTitle.png" alt="logintitle" />
+      </header>
+      <main>
+        <LoginFormStyle>
+          <form>
+            <div className="form__input">
+              <label htmlFor="id">아이디</label>
+              <input
+                type="text"
+                name=""
+                id="id"
+                value={loginData.id}
+                onChange={handleInputChange}
+                onClick={handleAudio}
+              />
+            </div>
+            <div className="form__input">
+              <label htmlFor="password">비밀번호</label>
+              <input
+                type="password"
+                name=""
+                id="password"
+                value={loginData.password}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className="footer">
+              <button type="button" onClick={handleButtonClick}>
+                로그인
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  router.push('/signup');
+                  setPlay(true);
+                }}
+              >
+                회원가입
+              </button>
+            </div>
+          </form>
+        </LoginFormStyle>
+      </main>
+    </LoginContainer>
+  );
+};
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
-}
+export default main;
