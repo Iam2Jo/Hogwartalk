@@ -1,6 +1,7 @@
 import type { NextPage } from 'next';
 import Ravenclaw from './ravenclaw';
 import { MyChatting } from '@components/MyChatting';
+import { Header } from '@components/Header';
 
 const DormRavenclaw: NextPage = () => {
   return (
