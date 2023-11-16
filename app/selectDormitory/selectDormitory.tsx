@@ -30,7 +30,7 @@ type ResponseValue = any;
 // type ResponseValue = Chat[]
 
 const SelectDormitory = () => {
-  const data: ResponseValue | null = readChatting();
+  // const data: ResponseValue | null = readChatting();
   const [chatData, setChatData] = useState<ResponseValue | null>();
   const [myName, setMyName] = useState('');
   const [myId, setMyId] = useState('');
@@ -87,6 +87,8 @@ const SelectDormitory = () => {
       return;
     }
 
+    console.log('chatId: ', chatId);
+
     const PARTICIPATE_CHAT_URL = 'https://fastcampus-chat.net/chat/participate';
     const requestData: RequestBodyParticipate = {
       chatId: chatId,
@@ -105,10 +107,6 @@ const SelectDormitory = () => {
     const token = getToken();
     setAccessToken(token);
   }, []);
-
-  useEffect(() => {
-    setChatData(data);
-  }, [data]);
 
   useEffect(() => {
     axios.get(GET_MY_INFO_URL, { headers }).then((res) => {
@@ -157,13 +155,6 @@ const SelectDormitory = () => {
   doesDormitoryExist('hufflepuff', chatData, setHasHufflepuff);
   doesDormitoryExist('ravenclaw', chatData, setHasRavenclaw);
 
-  // 모듈화 필요
-  useEffect(() => {
-    axios.get(GET_MY_INFO_URL, { headers }).then((res) => {
-      setMyName(res.data.user.name);
-    });
-  }, []);
-
   useEffect(() => {
     createDormitoryIfNone(
       hasGryffindor,
@@ -172,8 +163,12 @@ const SelectDormitory = () => {
       headers,
       'gryffindor',
       myName,
-    ).then(() => {
-      const firebaseData = getFirebaseData('chatInfo', 'gryffindor', 'id');
+    ).then(async () => {
+      const firebaseData = await getFirebaseData(
+        'chatInfo',
+        'gryffindor',
+        'id',
+      );
       setGryffindorFirebaseData(firebaseData);
     });
   }, [hasGryffindor, chatData]);
@@ -186,8 +181,8 @@ const SelectDormitory = () => {
       headers,
       'slytherin',
       myName,
-    ).then(() => {
-      const firebaseData = getFirebaseData('chatInfo', 'slytherin', 'id');
+    ).then(async () => {
+      const firebaseData = await getFirebaseData('chatInfo', 'slytherin', 'id');
       setSlytherinFirebaseData(firebaseData);
     });
   }, [hasSlytherin, chatData]);
@@ -200,8 +195,12 @@ const SelectDormitory = () => {
       headers,
       'hufflepuff',
       myName,
-    ).then(() => {
-      const firebaseData = getFirebaseData('chatInfo', 'hufflepuff', 'id');
+    ).then(async () => {
+      const firebaseData = await getFirebaseData(
+        'chatInfo',
+        'hufflepuff',
+        'id',
+      );
       setHufflepuffFirebaseData(firebaseData);
     });
   }, [hasHufflepuff, chatData]);
@@ -214,8 +213,8 @@ const SelectDormitory = () => {
       headers,
       'ravenclaw',
       myName,
-    ).then(() => {
-      const firebaseData = getFirebaseData('chatInfo', 'ravenclaw', 'id');
+    ).then(async () => {
+      const firebaseData = await getFirebaseData('chatInfo', 'ravenclaw', 'id');
       setRavenclawFirebaseData(firebaseData);
     });
   }, [hasRavenclaw, chatData]);
@@ -231,11 +230,7 @@ const SelectDormitory = () => {
               if ('gryffindor' !== myDorm) {
                 e.preventDefault();
               }
-              handleParticipate(
-                'gryffindor',
-                myDorm,
-                gryffindorFirebaseData[0]?.id,
-              );
+              handleParticipate('gryffindor', myDorm, gryffindorFirebaseData);
             }}
           >
             <styled.GryffindorSVG width="224" height="272" />
@@ -247,11 +242,7 @@ const SelectDormitory = () => {
               if ('ravenclaw' !== myDorm) {
                 e.preventDefault();
               }
-              handleParticipate(
-                'ravenclaw',
-                myDorm,
-                gryffindorFirebaseData[0]?.id,
-              );
+              handleParticipate('ravenclaw', myDorm, ravenclawFirebaseData);
             }}
           >
             <styled.RavenclawSVG width="224" height="272" />
@@ -270,11 +261,7 @@ const SelectDormitory = () => {
               if ('hufflepuff' !== myDorm) {
                 e.preventDefault();
               }
-              handleParticipate(
-                'hufflepuff',
-                myDorm,
-                gryffindorFirebaseData[0]?.id,
-              );
+              handleParticipate('hufflepuff', myDorm, hufflepuffFirebaseData);
             }}
           >
             <styled.HufflepuffSVG width="224" height="272" />
@@ -286,11 +273,7 @@ const SelectDormitory = () => {
               if ('slytherin' !== myDorm) {
                 e.preventDefault();
               }
-              handleParticipate(
-                'slytherin',
-                myDorm,
-                gryffindorFirebaseData[0]?.id,
-              );
+              handleParticipate('slytherin', myDorm, slytherinFirebaseData);
             }}
           >
             <styled.SlytherinSVG width="224" height="272" />
