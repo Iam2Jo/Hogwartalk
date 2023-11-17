@@ -78,7 +78,15 @@
 <summary style="font-size: 18px">어승준: 💬 채팅</summary>
 <div markdown="1">
 
-내용 써주세요
+![image](https://github.com/KDT1-FE/Y_FE_Toy2/assets/39702832/13264393-9f03-4f52-b7ec-a4a65d8f1817)
+
+### 1. 소켓 연결
+
+### 2. 실시간 채팅
+
+### 3. 클럽 채팅방 생성 동적라우팅
+
+### 4. 내가 참여중인 대화방
 
 </div>
 </details>
