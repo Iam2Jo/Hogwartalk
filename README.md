@@ -213,7 +213,16 @@
 <summary style="font-size: 18px">배경규: 🔑 로그인/ 회원가입</summary>
 <div markdown="1">
 
-내용써주세요
+로그인시 Jwt토큰 발급하여 쿠키에 저장
+![login__token](https://github.com/Iam2Jo/Hogwartalk/assets/131759810/1189bbec-8ef0-4503-80df-065f3bcebb4f)
+```
+토큰은 액세스 토큰,리프레시 토큰
+```
+회원가입
+![signup](https://github.com/Iam2Jo/Hogwartalk/assets/131759810/1636bc0c-e2f4-4fc8-9569-410d1a858f15)
+```
+회원가입시 유효성 검사
+```
 
 </div>
 </details>
