@@ -11,7 +11,7 @@
 
 ## 🌐 배포 주소
 
-> 배포 주소: https://hogwartalk.vercel.app/  <br>
+> 배포 주소: https://hogwartalk.vercel.app/ <br>
 > 테스트 계정 : ID : dumbledore / Password : dumbledore
 > <br>
 
@@ -81,13 +81,23 @@
 
 ![image](https://github.com/KDT1-FE/Y_FE_Toy2/assets/39702832/13264393-9f03-4f52-b7ec-a4a65d8f1817)
 
-### 1. 소켓 연결
+### 1. 실시간 채팅
 
-### 2. 실시간 채팅
+```
+💡 소켓 연결을 통해 실시간 채팅을 할 수 있습니다. 클라이언트 화면 높이를 계산해 스크롤 맨 밑으로 이동 가능합니다.
+```
 
-### 3. 클럽 채팅방 생성 동적라우팅
+### 2. 클럽 채팅방 생성 동적라우팅
 
-### 4. 내가 참여중인 대화방
+```
+💡 Next.js 동적라우팅을 통해 클럽 채팅방 생성 시, id, name값을 쿼리파라미터로 넘겨 정보에 맞게 페이지 렌더링을 시켜줍니다.
+```
+
+### 3. 내가 참여중인 대화방
+
+```
+💡 내가 참여중인 대화방을 보여줍니다. Polling 방식을 통해 latestMessages를 5초마다 업데이트 해줍니다.
+```
 
 </div>
 </details>
@@ -215,33 +225,39 @@
 <div markdown="1">
 
 ### 로그인시 Jwt토큰 발급하여 쿠키에 저장
+
 ![login__token](https://github.com/Iam2Jo/Hogwartalk/assets/131759810/1189bbec-8ef0-4503-80df-065f3bcebb4f)
+
 ```
 토큰은 액세스 토큰,리프레시 토큰
 ```
+
 ### 회원가입
+
 ![signup](https://github.com/Iam2Jo/Hogwartalk/assets/131759810/1636bc0c-e2f4-4fc8-9569-410d1a858f15)
+
 ```
 제공된 api의 이미지 용량이슈 때문에 타db를 사용하여 이미지를 저장하고 url사용
-회원가입시 빈칸 있는지 유효성 검사  
+회원가입시 빈칸 있는지 유효성 검사
 중복된 아이디가 있는지 체크
 퀴즈를 보러가도 회원가입 폼 상태저장
 ```
 
 ### 모든 페이지에서 액세스 토큰 만료시 재발급
+
 ![Retoken](https://github.com/Iam2Jo/Hogwartalk/assets/131759810/c6ff8f25-a3e8-4316-a310-9a415e0feb94)
+
 ```
 모든 페이지에서 액세스토큰 만료시 axios 요청 가로채서 인터셉터로 액세스토큰을 재발급 하는 로직구현
 ```
 
 ### 권한 없을 시(리프레시 토큰x) 로그인 페이지 유도
+
 ![로그인페이지유도](https://github.com/Iam2Jo/Hogwartalk/assets/131759810/69885ba8-189e-41e6-908b-0ebaccacdc68)
+
 ```
 로그인 페이지 유도
 ```
-
-
-
 
 </div>
 </details>
