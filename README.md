@@ -214,16 +214,34 @@
 <summary style="font-size: 18px">배경규: 🔑 로그인/ 회원가입</summary>
 <div markdown="1">
 
-로그인시 Jwt토큰 발급하여 쿠키에 저장
+### 로그인시 Jwt토큰 발급하여 쿠키에 저장
 ![login__token](https://github.com/Iam2Jo/Hogwartalk/assets/131759810/1189bbec-8ef0-4503-80df-065f3bcebb4f)
 ```
 토큰은 액세스 토큰,리프레시 토큰
 ```
-회원가입
+### 회원가입
 ![signup](https://github.com/Iam2Jo/Hogwartalk/assets/131759810/1636bc0c-e2f4-4fc8-9569-410d1a858f15)
 ```
-회원가입시 유효성 검사
+제공된 api의 이미지 용량이슈 때문에 타db를 사용하여 이미지를 저장하고 url사용
+회원가입시 빈칸 있는지 유효성 검사  
+중복된 아이디가 있는지 체크
+퀴즈를 보러가도 회원가입 폼 상태저장
 ```
+
+### 모든 페이지에서 액세스 토큰 만료시 재발급
+![Retoken](https://github.com/Iam2Jo/Hogwartalk/assets/131759810/c6ff8f25-a3e8-4316-a310-9a415e0feb94)
+```
+모든 페이지에서 액세스토큰 만료시 axios 요청 가로채서 인터셉터로 액세스토큰을 재발급 하는 로직구현
+```
+
+### 권한 없을 시(리프레시 토큰x) 로그인 페이지 유도
+![로그인페이지유도](https://github.com/Iam2Jo/Hogwartalk/assets/131759810/69885ba8-189e-41e6-908b-0ebaccacdc68)
+```
+로그인 페이지 유도
+```
+
+
+
 
 </div>
 </details>
